@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AanleveringInformatieObject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:geo="https://standaarden.overheid.nl/stop/imop/geo/" xmlns="https://standaarden.overheid.nl/lvbb/stop/aanlevering/" schemaversie="1.2.0" xsi:schemaLocation="https://standaarden.overheid.nl/lvbb/stop/aanlevering https://standaarden.overheid.nl/lvbb/1.2.0/lvbb-stop-aanlevering.xsd">
+	<InformatieObjectVersie>
+		<ExpressionIdentificatie xmlns="https://standaarden.overheid.nl/stop/imop/data/" schemaversie="1.3.0">
+			<FRBRWork>/join/id/regdata/pv28/2023/41gio37</FRBRWork>
+			<FRBRExpression>/join/id/regdata/pv28/2023/41gio37/nld@2023-09-29;2093</FRBRExpression>
+			<soortWork>/join/id/stop/work_010</soortWork>
+		</ExpressionIdentificatie>
+		<InformatieObjectVersieMetadata xmlns="https://standaarden.overheid.nl/stop/imop/data/" schemaversie="1.3.0">
+			<heeftGeboorteregeling>/akn/nl/act/pv28/2023/2_41</heeftGeboorteregeling>
+			<heeftBestanden>
+				<heeftBestand>
+					<Bestand>
+						<bestandsnaam>locaties_NatuurnetwerkNederland2-v1.gml</bestandsnaam>
+						<hash>0333896715518b2622eb99e60e5972d18f3bc1fb3ad2dbf7a554606ac451631c9e6a27f697b13a0623e9f54fce6ed5fbdd1066791ea68e593b02a6a84ec54a92</hash>
+					</Bestand>
+				</heeftBestand>
+			</heeftBestanden>
+		</InformatieObjectVersieMetadata>
+		<InformatieObjectMetadata xmlns="https://standaarden.overheid.nl/stop/imop/data/" schemaversie="1.3.0">
+			<eindverantwoordelijke>/tooi/id/provincie/pv28</eindverantwoordelijke>
+			<maker>/tooi/id/provincie/pv28</maker>
+			<naamInformatieObject>Natuurnetwerk Nederland2</naamInformatieObject>
+			<officieleTitel>/join/id/regdata/pv28/2023/41gio37</officieleTitel>
+			<publicatieinstructie>TeConsolideren</publicatieinstructie>
+			<formaatInformatieobject>/join/id/stop/informatieobject/gio_002</formaatInformatieobject>
+		</InformatieObjectMetadata>
+	</InformatieObjectVersie>
+</AanleveringInformatieObject>

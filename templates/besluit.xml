@@ -1,0 +1,28 @@
+<BesluitVersie>
+    <ExpressionIdentificatie xmlns="https://standaarden.overheid.nl/stop/imop/data/">
+        <FRBRWork>{{ besluitversie.FRBRWork }}</FRBRWork>
+        <FRBRExpression>{{ besluitversie.FRBRExpression }}</FRBRExpression>
+        <soortWork>{{ besluitversie.soortWork }}</soortWork>
+    </ExpressionIdentificatie>
+    <BesluitMetadata xmlns="https://standaarden.overheid.nl/stop/imop/data/">
+        <eindverantwoordelijke>{{ besluitversie.eindverantwoordelijke }}</eindverantwoordelijke>
+        <maker>{{ besluitversie.maker }}</maker>
+        <soortBestuursorgaan>{{ besluitversie.soortBestuursorgaan }}</soortBestuursorgaan>
+        <officieleTitel>{{ besluitversie.officieleTitel }}</officieleTitel>
+        <onderwerpen>
+            <onderwerp>{{ besluitversie.onderwerp }}</onderwerp>
+        </onderwerpen>
+        <rechtsgebieden>
+            <rechtsgebied>{{ besluitversie.rechtsgebied }}</rechtsgebied>
+        </rechtsgebieden>
+        <soortProcedure>{{ besluitversie.soortProcedure }}</soortProcedure>
+        <informatieobjectRefs>
+            {% for ref in besluitversie.informatieobjectRef %}
+                <informatieobjectRef>{{ ref }}</informatieobjectRef>
+            {% endfor %}
+        </informatieobjectRefs>
+    </BesluitMetadata>
+    {% include 'templates/besluit/procedureverloop.xml' %}
+    {% include 'templates/besluit/consolidatieinfo.xml' %}
+    {% include 'templates/besluit/besluitcompact.xml' %}
+</BesluitVersie>

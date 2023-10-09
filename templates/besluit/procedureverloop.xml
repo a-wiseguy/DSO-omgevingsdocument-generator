@@ -1,0 +1,7 @@
+<Procedureverloop xmlns="https://standaarden.overheid.nl/stop/imop/data/">
+    <bekendOp>{{ procedure.bekendOp }}</bekendOp>
+    <procedurestappen> {% for stap in procedure.stappen %} <Procedurestap>
+            <soortStap>{{ stap.soortStap }}</soortStap>
+            <voltooidOp>{{ stap.voltooidOp }}</voltooidOp>
+        </Procedurestap> {% endfor %} </procedurestappen>
+</Procedureverloop>

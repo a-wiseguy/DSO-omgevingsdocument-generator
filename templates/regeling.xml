@@ -1,0 +1,29 @@
+<RegelingVersieInformatie>
+    <ExpressionIdentificatie xmlns="https://standaarden.overheid.nl/stop/imop/data/">
+        <FRBRWork>{{ regeling.FRBRWork }}</FRBRWork>
+        <FRBRExpression>{{ regeling.FRBRExpression }}</FRBRExpression>
+        <soortWork>{{ regeling.soortWork }}</soortWork>
+    </ExpressionIdentificatie>
+    <RegelingVersieMetadata xmlns="https://standaarden.overheid.nl/stop/imop/data/">
+        <versienummer>{{ regeling.versienummer }}</versienummer>
+    </RegelingVersieMetadata>
+    <RegelingMetadata xmlns="https://standaarden.overheid.nl/stop/imop/data/">
+        <soortRegeling>{{ regeling.soortRegeling }}</soortRegeling>
+        <eindverantwoordelijke>{{ regeling.eindverantwoordelijke }}</eindverantwoordelijke>
+        <maker>{{ regeling.maker }}</maker>
+        <soortBestuursorgaan>{{ regeling.soortBestuursorgaan }}</soortBestuursorgaan>
+        <officieleTitel>{{ regeling.officieleTitel }}</officieleTitel>
+        <heeftCiteertitelInformatie>
+            <CiteertitelInformatie>
+                <citeertitel>{{ regeling.citeertitel }}</citeertitel>
+                <isOfficieel>{{ regeling.isOfficieel }}</isOfficieel>
+            </CiteertitelInformatie>
+        </heeftCiteertitelInformatie>
+        <onderwerpen>
+            <onderwerp>{{ regeling.onderwerp }}</onderwerp>
+        </onderwerpen>
+        <rechtsgebieden>
+            <rechtsgebied>{{ regeling.rechtsgebied }}</rechtsgebied>
+        </rechtsgebieden>
+    </RegelingMetadata>
+</RegelingVersieInformatie>
