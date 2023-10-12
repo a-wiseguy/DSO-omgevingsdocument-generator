@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AanleveringInformatieObject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:geo="https://standaarden.overheid.nl/stop/imop/geo/" xmlns="https://standaarden.overheid.nl/lvbb/stop/aanlevering/" schemaversie="1.2.0" xsi:schemaLocation="https://standaarden.overheid.nl/lvbb/stop/aanlevering https://standaarden.overheid.nl/lvbb/1.2.0/lvbb-stop-aanlevering.xsd">
+	<InformatieObjectVersie>
+		<ExpressionIdentificatie xmlns="https://standaarden.overheid.nl/stop/imop/data/" schemaversie="{{ dso_versioning.STOP }}">
+			<FRBRWork>{{ gio.FRBRWork }}</FRBRWork>
+			<FRBRExpression>{{ gio.FRBRExpression }}</FRBRExpression>
+			<soortWork>{{ gio.soortWork }}</soortWork>
+		</ExpressionIdentificatie>
+		<InformatieObjectVersieMetadata xmlns="https://standaarden.overheid.nl/stop/imop/data/" schemaversie="{{ dso_versioning.STOP }}">
+			<heeftGeboorteregeling>{{ gio.heeftGeboorteregeling }}</heeftGeboorteregeling>
+			<heeftBestanden>
+				<heeftBestand>
+					<Bestand>
+						<bestandsnaam>{{ gio.geo_bestandsnaam }}</bestandsnaam>
+						<hash>{{ gio.hash }}</hash>
+					</Bestand>
+				</heeftBestand>
+			</heeftBestanden>
+		</InformatieObjectVersieMetadata>
+		<InformatieObjectMetadata xmlns="https://standaarden.overheid.nl/stop/imop/data/" schemaversie="{{ dso_versioning.STOP }}">
+			<eindverantwoordelijke>{{ gio.eindverantwoordelijke }}</eindverantwoordelijke>
+			<maker>{{ gio.maker }}</maker>
+			<naamInformatieObject>{{ gio.naamInformatieObject }}</naamInformatieObject>
+			<officieleTitel>{{ gio.officieleTitel }}</officieleTitel>
+			<publicatieinstructie>{{ gio.publicatieinstructie }}</publicatieinstructie>
+			<formaatInformatieobject>{{ gio.formaatInformatieobject }}</formaatInformatieobject>
+		</InformatieObjectMetadata>
+	</InformatieObjectVersie>
+</AanleveringInformatieObject>

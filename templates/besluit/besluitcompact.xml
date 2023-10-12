@@ -8,11 +8,11 @@
     <Lichaam eId="body" wId="body">
         <WijzigArtikel eId="art_I" wId="pv28_1__art_I">
             <Kop>
-                <Label>{{ besluitcompact.WijzigArtikel_Label }}</Label>
-                <Nummer>{{ besluitcompact.WijzigArtikel_Nummer }}</Nummer>
+                <Label>{{ besluitcompact.WijzigArtikel.Label }}</Label>
+                <Nummer>{{ besluitcompact.WijzigArtikel.Nummer }}</Nummer>
             </Kop>
             <Wat>
-                {{ besluitcompact.WijzigArtikel_Wat }}
+                {{ besluitcompact.WijzigArtikel.Wat }}
             </Wat>
         </WijzigArtikel>
         {% for artikel in besluitcompact.Artikelen %}

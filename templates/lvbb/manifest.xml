@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lvbb:manifest xmlns:lvbb="http://www.overheid.nl/2017/lvbb">
 	<lvbb:bestand>
-		<lvbb:bestandsnaam>akn_nl_bill_pv28-2-2093.xml</lvbb:bestandsnaam>
+		<lvbb:bestandsnaam>{{ akn }}.xml</lvbb:bestandsnaam>
 		<lvbb:contentType>application/xml</lvbb:contentType>
 	</lvbb:bestand>
 	<lvbb:bestand>
