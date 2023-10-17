@@ -1,0 +1,93 @@
+from pprint import pprint
+import subprocess
+from typing import Dict, List
+import os
+
+import click
+
+from helpers.helpers import Schemas, Module, compile_schematrons, generate_report_filename, list_files_recursive, report_contains_errors, resolve_namespace, resolve_namespaces, resolve_schemas
+import config
+
+
+os.environ["SGML_CATALOG_FILES"] = config.SGML_CATALOG_FILES
+
+
+@click.group()
+def cli():
+    """Validation commands."""
+    pass
+
+
+@click.command()
+@click.argument("path")
+def xsd_all(path):
+    schemas: Dict[str, Schemas] = resolve_schemas(config.MODULES)
+    files = list_files_recursive(path, ["xml", "gml"])
+
+    for file in files:
+        namespace = resolve_namespace(file)
+        if not namespace in schemas:
+            click.echo(click.style(f"Nothing to test {file} against", fg="orange"))
+            continue
+        for xsd in schemas.get(namespace).xsds:
+            cmd = [
+                    'xmllint',
+                    '--catalogs',
+                    '--schema',
+                    xsd,
+                    '--noout',
+                    file,
+            ]
+            result = subprocess.run(cmd, capture_output=True, text=True)
+
+            if result.returncode == 0:
+                click.echo(
+                    click.style(file, fg="green") + click.style(f" against {xsd} is ") + click.style("valid", fg="green", bold=True))
+            
+            else:
+                click.echo(
+                    click.style(file, fg="yellow") + click.style(f" against {xsd} ") + click.style("failed", fg="red", bold=True))
+                click.echo(click.style(result.stderr,  fg="red"))
+
+
+@click.command()
+@click.argument("path")
+def schematron_all(path):
+    schemas: Dict[str, Schemas] = resolve_schemas(config.MODULES)
+    schematrons: Dict[str, str] = compile_schematrons(schemas)
+    files = list_files_recursive(path, ["xml", "gml"])
+
+    for file in files:
+        namespace = resolve_namespace(file)
+        if not namespace in schemas:
+            click.echo(click.style(f"Nothing to test {file} against", fg="orange"))
+            continue
+
+        for schematron in schemas.get(namespace).schematrons:
+            report_filename = generate_report_filename(path, file, schematron.local)
+            cmd = [
+                'java',
+                '-jar',
+                config.SAXON_JAR,
+                f'-s:{file}',
+                f'-xsl:{schematron.compiled_file}',
+                f'-o:{report_filename}',
+            ]
+            result = subprocess.run(cmd, capture_output=True, text=True)
+
+            if result.returncode == 0:
+                color = "red"
+                if not report_contains_errors(report_filename):
+                    color = "green"
+                click.echo(f"Report generated for {file} with " + click.style(schematron.local, fg=color))
+
+            else:
+                click.echo(click.style(f"Could not generate report for {file} with {schematron.local}", fg="red"))
+
+
+cli.add_command(xsd_all)
+cli.add_command(schematron_all)
+
+
+if __name__ == '__main__':
+    cli()

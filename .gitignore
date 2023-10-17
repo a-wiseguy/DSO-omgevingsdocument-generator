@@ -18,6 +18,3 @@ output/*
 .vscode
 notes.md
 .python-version
-validation/saxon
-validation/saxon-download
-validation/report

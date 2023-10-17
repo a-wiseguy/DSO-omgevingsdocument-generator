@@ -1,0 +1,1038 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:lvbbt="http://www.overheid.nl/2017/lvbb"
+           xmlns:stop="http://www.overheid.nl/2017/stop"
+           xmlns:tns="http://www.logius.nl/digikoppeling/gb/2010/10"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           targetNamespace="http://www.overheid.nl/2017/lvbb"
+           version="1.2.0">
+   <xs:annotation>
+      <xs:documentation>LVBB-Transport-schema</xs:documentation>
+      <xs:documentation>versie 1.2.0</xs:documentation>
+   </xs:annotation>
+   <xs:import namespace="http://www.logius.nl/digikoppeling/gb/2010/10"
+              schemaLocation="https://standaarden.overheid.nl/lvbb/1.2.0/gb-meta.xsd"/>
+   <xs:import namespace="http://www.overheid.nl/2017/stop"
+              schemaLocation="https://standaarden.overheid.nl/lvbb/1.2.0/stop_toevoeging.xsd"/>
+   <!--===========================================================================
+  
+  Schema voor de LVBB berichten en bestanden die via het Digikoppeling
+  aanleverkoppelvlak worden uitgewisseld.
+  
+  ============================================================================-->
+   <!--
+  Basistypen voor het Digikoppeling berichtenverkeer : ebMS
+  -->
+   <xs:element name="validatieVerzoek" type="lvbbt:LeveringVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:validatieVerzoek"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="publicatieVerzoek" type="lvbbt:LeveringVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:publicatieVerzoek"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="raadpleegVerzoek" type="lvbbt:LeveringVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:raadpleegVerzoek"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="breekPublicatieAfVerzoek" type="lvbbt:LeveringVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:breekPublicatieAfVerzoek"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="directeMutatieVerzoek" type="lvbbt:LeveringVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:directeMutatieVerzoek"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="validatieDirecteMutatieVerzoek" type="lvbbt:LeveringVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:validatieDirecteMutatieVerzoek"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="LeveringVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:LeveringVerzoekType"/>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="idLevering"
+                     type="lvbbt:dtIdLevering"
+                     minOccurs="1"
+                     maxOccurs="1">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:idLevering:LeveringVerzoekType"/>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="softwareVersie" type="lvbbt:SoftwareVersieType">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:softwareVersie:LeveringVerzoekType"/>
+            </xs:annotation>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="dtIdLevering">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="80"/>
+         <xs:pattern value="[0-9A-z][0-9A-z_-]+"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:element name="validatieGBVerzoek" type="lvbbt:LeveringGBVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:validatieGBVerzoek"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="publicatieGBVerzoek" type="lvbbt:LeveringGBVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:publicatieGBVerzoek"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="directeMutatieGBVerzoek" type="lvbbt:LeveringGBVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:directeMutatieGBVerzoek"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="validatieDirecteMutatieGBVerzoek"
+               type="lvbbt:LeveringGBVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:validatieDirecteMutatieGBVerzoek"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="LeveringGBVerzoekType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:LeveringGBVerzoekType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:LeveringVerzoekType">
+            <xs:sequence>
+               <xs:element name="external-data-reference" type="tns:data-reference">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:external-data-reference:LeveringGBVerzoekType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="SoftwareVersieType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:SoftwareVersieType"/>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="leverancier" type="xs:string">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:leverancier:SoftwareVersieType"/>
+            </xs:annotation>
+         </xs:element>
+         <xs:element minOccurs="0" name="product" type="xs:string">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:product:SoftwareVersieType"/>
+            </xs:annotation>
+         </xs:element>
+         <xs:element minOccurs="0" name="versie" type="xs:string">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:versie:SoftwareVersieType"/>
+            </xs:annotation>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <!--
+  Opdrachtbestand: manifest.xml
+  -->
+   <xs:element name="manifest">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:manifest"/>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded"
+                        minOccurs="2"
+                        name="bestand"
+                        type="lvbbt:BestandType">
+               <xs:annotation>
+                  <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:manifest:bestand"/>
+               </xs:annotation>
+            </xs:element>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:complexType name="BestandType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:BestandType"/>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="bestandsnaam" type="lvbbt:dtBestandsnaam">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:bestandsnaam:BestandType"/>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="contentType" type="xs:string">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:contentType:BestandType"/>
+            </xs:annotation>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="dtBestandsnaam">
+      <xs:restriction base="xs:token">
+         <xs:pattern value="[0-9A-Za-z\._-]+"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <!--
+  Opdrachtbestand: opdracht.xml
+  -->
+   <xs:complexType abstract="true" name="OpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:OpdrachtType"/>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="idLevering"
+                     type="lvbbt:dtIdLevering"
+                     minOccurs="1"
+                     maxOccurs="1">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:idLevering:OpdrachtType"/>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="idBevoegdGezag" type="lvbbt:dtOIN">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:idBevoegdGezag:OpdrachtType"/>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="idAanleveraar" type="lvbbt:dtOIN">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:idAanleveraar:OpdrachtType"/>
+            </xs:annotation>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="dtOIN">
+      <xs:restriction base="xs:token">
+         <xs:maxLength value="20"/>
+         <xs:minLength value="20"/>
+         <xs:pattern value="[0-9]+"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:element name="validatieOpdracht" type="lvbbt:ValidatieOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:validatieOpdracht"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="ValidatieOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:ValidatieOpdrachtType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtType">
+            <xs:sequence>
+               <xs:element name="publicatie" type="xs:NCName">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:publicatie:ValidatieOpdrachtType"/>
+                  </xs:annotation>
+               </xs:element>
+               <xs:element name="datumBekendmaking" type="lvbbt:dtDatumISO">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:datumBekendmaking:ValidatieOpdrachtType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:simpleType name="dtDatumISO">
+      <xs:restriction base="xs:date">
+         <xs:pattern value="[0-9]{4}-[01][0-9]-[0-9]{2}"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:element name="publicatieOpdracht" type="lvbbt:PublicatieOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:publicatieOpdracht"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="PublicatieOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:PublicatieOpdrachtType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtType">
+            <xs:sequence>
+               <xs:element name="publicatie" type="xs:NCName">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:publicatie:PublicatieOpdrachtType"/>
+                  </xs:annotation>
+               </xs:element>
+               <xs:element name="datumBekendmaking" type="xs:date">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:datumBekendmaking:PublicatieOpdrachtType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:element name="validatieDirecteMutatieOpdracht"
+               type="lvbbt:ValidatieDirecteMutatieOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:validatieDirecteMutatieOpdracht"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="ValidatieDirecteMutatieOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:ValidatieDirecteMutatieOpdrachtType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtType">
+            <xs:sequence>
+               <xs:element maxOccurs="1"
+                           minOccurs="0"
+                           name="directeMutatie"
+                           type="xs:NCName">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:directeMutatie:ValidatieDirecteMutatieOpdrachtType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:element name="directeMutatieOpdracht" type="lvbbt:DirecteMutatieOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:directeMutatieOpdracht"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="DirecteMutatieOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:DirecteMutatieOpdrachtType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtType">
+            <xs:sequence>
+               <xs:element maxOccurs="1"
+                           minOccurs="0"
+                           name="directeMutatie"
+                           type="xs:NCName">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:directeMutatie:DirecteMutatieOpdrachtType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:element name="raadpleegOpdracht" type="lvbbt:RaadpleegOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:raadpleegOpdracht"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="RaadpleegOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:RaadpleegOpdrachtType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtType">
+            <xs:sequence>
+               <xs:element name="identificatie" type="xs:string">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:identificatie:RaadpleegOpdrachtType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:element name="breekPublicatieAfOpdracht"
+               type="lvbbt:BreekPublicatieAfOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:breekPublicatieAfOpdracht"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="BreekPublicatieAfOpdrachtType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:BreekPublicatieAfOpdrachtType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtType">
+            <xs:sequence>
+               <xs:element name="identificatie" type="xs:string">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:identificatie:BreekPublicatieAfOpdrachtType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <!--
+  Antwoordberichten
+  -->
+   <xs:complexType abstract="true" name="VerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:VerzoekResultaatType"/>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="uitkomst" type="lvbbt:VerzoekUitkomstCode">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:uitkomst:VerzoekResultaatType"/>
+            </xs:annotation>
+         </xs:element>
+         <xs:element minOccurs="0" name="meldingen">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:meldingen:VerzoekResultaatType"/>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element maxOccurs="unbounded" name="melding" type="stop:melding">
+                     <xs:annotation>
+                        <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:melding:VerzoekResultaatType"/>
+                     </xs:annotation>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="VerzoekUitkomstCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft of de uitvoering van een verzoek is geslaagd.
+      </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="succes">
+            <xs:annotation>
+               <xs:documentation> De LVBB heeft met succes het verzoek uitgevoerd. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="mislukt">
+            <xs:annotation>
+               <xs:documentation> De LVBB heeft het verzoek niet kunnen uitvoeren. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="OpdrachtverslagType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:OpdrachtverslagType"/>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="idLevering"
+                     type="lvbbt:dtIdLevering"
+                     minOccurs="1"
+                     maxOccurs="1">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:idLevering:OpdrachtverslagType"/>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="tijdstipVerslag" type="xs:dateTime">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:tijdstipVerslag:OpdrachtverslagType"/>
+            </xs:annotation>
+         </xs:element>
+         <xs:element minOccurs="0" name="meldingen">
+            <xs:annotation>
+               <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:meldingen:OpdrachtverslagType"/>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element maxOccurs="unbounded" name="melding" type="stop:melding">
+                     <xs:annotation>
+                        <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:melding:OpdrachtverslagType"/>
+                     </xs:annotation>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <!--
+  Antwoord voor validatie opdracht
+  -->
+   <xs:element name="validatieVerzoekResultaat"
+               type="lvbbt:ValidatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:validatieVerzoekResultaat"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="validatieStatusVerzoekResultaat"
+               type="lvbbt:ValidatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:validatieStatusVerzoekResultaat"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="ValidatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:ValidatieVerzoekResultaatType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:VerzoekResultaatType">
+            <xs:sequence>
+               <xs:element minOccurs="0" name="verslag" type="lvbbt:ValidatieVerslagType">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:verslag:ValidatieVerzoekResultaatType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="ValidatieVerslagType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:ValidatieVerslagType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtverslagType">
+            <xs:sequence>
+               <xs:choice>
+                  <xs:element name="uitkomst" type="lvbbt:ValidatieUitkomstCode">
+                     <xs:annotation>
+                        <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:uitkomst:ValidatieVerslagType"/>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="voortgang" type="lvbbt:ValidatieVoortgangCode">
+                     <xs:annotation>
+                        <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:voortgang:ValidatieVerslagType"/>
+                     </xs:annotation>
+                  </xs:element>
+               </xs:choice>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:simpleType name="ValidatieUitkomstCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft of de behandeling van een validatieopdracht is geslaagd.
+      </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="valide">
+            <xs:annotation>
+               <xs:documentation> De mededeling of het besluit voldoet aan alle eisen die de LVBB er op
+            dit moment aan stelt. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="niet-valide">
+            <xs:annotation>
+               <xs:documentation> De mededeling of het besluit voldoet niet aan de eisen die de LVBB er
+            aan stelt. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="consolidatie-niet-valide">
+            <xs:annotation>
+               <xs:documentation> De mededeling of het besluit voldoet aan de eisen die de LVBB er aan
+            stelt, de consolidatie info voldoet niet aan de eisen die de LVBB er aan stelt
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="opdracht-niet-valide">
+            <xs:annotation>
+               <xs:documentation> De opdracht voldoet niet aan de eisen die de LVBB er aan stelt.
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="behandeling-afgebroken">
+            <xs:annotation>
+               <xs:documentation> De behandeling van de opdracht is afgebroken. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="ValidatieVoortgangCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft hoe ver de behandeling van een validatieopdracht is
+        gevorderd. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="opdracht-ontvangen">
+            <xs:annotation>
+               <xs:documentation> De opdracht is ontvangen en in behandeling genomen. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="validatie-voltooid">
+            <xs:annotation>
+               <xs:documentation> De validatie van de mededeling of het besluit is voltooid.
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="behandeling-afgebroken">
+            <xs:annotation>
+               <xs:documentation> De behandeling van de opdracht is afgebroken. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <!--
+  Antwoord voor publicatie opdracht
+  -->
+   <xs:element name="publicatieVerzoekResultaat"
+               type="lvbbt:PublicatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:publicatieVerzoekResultaat"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="publicatieStatusVerzoekResultaat"
+               type="lvbbt:PublicatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:publicatieStatusVerzoekResultaat"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="PublicatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:PublicatieVerzoekResultaatType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:VerzoekResultaatType">
+            <xs:sequence>
+               <xs:element minOccurs="0" name="verslag" type="lvbbt:PublicatieVerslagType">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:verslag:PublicatieVerzoekResultaatType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="PublicatieVerslagType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:PublicatieVerslagType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtverslagType">
+            <xs:sequence>
+               <xs:choice>
+                  <xs:element name="uitkomst" type="lvbbt:PublicatieUitkomstCode">
+                     <xs:annotation>
+                        <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:uitkomst:PublicatieVerslagType"/>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="voortgang" type="lvbbt:PublicatieVoortgangCode">
+                     <xs:annotation>
+                        <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:voortgang:PublicatieVerslagType"/>
+                     </xs:annotation>
+                  </xs:element>
+               </xs:choice>
+               <xs:element minOccurs="0" name="tijdstipPublicatie" type="xs:dateTime">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:tijdstipPublicatie:PublicatieVerslagType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:simpleType name="PublicatieUitkomstCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft of de behandeling van een publicatieopdracht is geslaagd.
+      </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="gepubliceerd">
+            <xs:annotation>
+               <xs:documentation> De mededeling of het besluit is gepubliceerd. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="niet-valide">
+            <xs:annotation>
+               <xs:documentation> De mededeling of het besluit voldoet niet aan de eisen die de LVBB er
+            aan stelt. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="opdracht-niet-valide">
+            <xs:annotation>
+               <xs:documentation> De opdracht voldoet niet aan de eisen die de LVBB er aan stelt.
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="behandeling-afgebroken">
+            <xs:annotation>
+               <xs:documentation> De behandeling van de opdracht is afgebroken. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="PublicatieVoortgangCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft hoe ver de behandeling van een publicatieopdracht is
+        gevorderd. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="opdracht-ontvangen">
+            <xs:annotation>
+               <xs:documentation> De opdracht is ontvangen en in behandeling genomen. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="validatie-voltooid">
+            <xs:annotation>
+               <xs:documentation> De validatie van de mededeling of het besluit is voltooid.
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="registratie-voltooid">
+            <xs:annotation>
+               <xs:documentation> De aangeleverde mededeling of besluit en afgeleide producten zijn
+            geregistreerd in LVBB en staan klaar om gepubliceerd te worden. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="publicatie-voltooid">
+            <xs:annotation>
+               <xs:documentation> De aangeleverde mededeling of besluit en afgeleide producten zijn
+            gepubliceerd en worden door LVBB beschikbaar gesteld. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="behandeling-afgebroken">
+            <xs:annotation>
+               <xs:documentation> De behandeling van de opdracht is afgebroken. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <!--
+  Antwoord voor raadpleegVerzoek 
+  -->
+   <xs:element name="raadpleegVerzoekResultaat"
+               type="lvbbt:RaadpleegVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:raadpleegVerzoekResultaat"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="RaadpleegVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:RaadpleegVerzoekResultaatType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:VerzoekResultaatType">
+            <xs:sequence>
+               <xs:element minOccurs="0" name="verslag" type="lvbbt:RaadpleegVerslagType">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:verslag:RaadpleegVerzoekResultaatType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="RaadpleegVerslagType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:RaadpleegVerslagType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtverslagType">
+            <xs:sequence>
+               <xs:element name="uitkomst" type="lvbbt:RaadpleegUitkomstCode">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:uitkomst:RaadpleegVerslagType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:simpleType name="RaadpleegUitkomstCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft of de behandeling van een raadpleegOpdracht is geslaagd.
+      </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="ok">
+            <xs:annotation>
+               <xs:documentation> De opdracht is met succes afgerond. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="akn-iri-niet-valide">
+            <xs:annotation>
+               <xs:documentation> De identificatie is geen geldige AKN werk of expressie iri.
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="akn-iri-niet-gevonden">
+            <xs:annotation>
+               <xs:documentation> Geen regeling gevonden. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="behandeling-afgebroken">
+            <xs:annotation>
+               <xs:documentation> De behandeling van de opdracht is afgebroken. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <!--
+  Antwoord voor breekPublicatieAfVerzoek 
+  -->
+   <xs:element name="breekPublicatieAfVerzoekResultaat"
+               type="lvbbt:BreekPublicatieAfVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:breekPublicatieAfVerzoekResultaat"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="BreekPublicatieAfVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:BreekPublicatieAfVerzoekResultaatType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:VerzoekResultaatType">
+            <xs:sequence>
+               <xs:element minOccurs="0"
+                           name="verslag"
+                           type="lvbbt:BreekPublicatieAfVerslagType">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:verslag:BreekPublicatieAfVerzoekResultaatType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="BreekPublicatieAfVerslagType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:BreekPublicatieAfVerslagType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtverslagType">
+            <xs:sequence>
+               <xs:element name="uitkomst" type="lvbbt:BreekPublicatieAfUitkomstCode">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:uitkomst:BreekPublicatieAfVerslagType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:simpleType name="BreekPublicatieAfUitkomstCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft of de behandeling van een breekPublicatieAfOpdracht is
+        geslaagd. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="ok">
+            <xs:annotation>
+               <xs:documentation> De opdracht is met succes afgerond. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="akn-iri-niet-valide">
+            <xs:annotation>
+               <xs:documentation> De identificatie is geen geldige AKN werk of expressie iri.
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="akn-iri-niet-gevonden">
+            <xs:annotation>
+               <xs:documentation> Publicatie niet gevonden. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="behandeling-mislukt">
+            <xs:annotation>
+               <xs:documentation> De behandeling van de opdracht is mislukt. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <!--
+  Antwoord voor opdracht tot validatie van de directe mutatie
+  -->
+   <xs:element name="validatieDirecteMutatieVerzoekResultaat"
+               type="lvbbt:ValidatieDirecteMutatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:validatieDirecteMutatieVerzoekResultaat"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="validatieDirecteMutatieStatusVerzoekResultaat"
+               type="lvbbt:ValidatieDirecteMutatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:validatieDirecteMutatieStatusVerzoekResultaat"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="ValidatieDirecteMutatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:ValidatieDirecteMutatieVerzoekResultaatType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:VerzoekResultaatType">
+            <xs:sequence>
+               <xs:element minOccurs="0"
+                           name="verslag"
+                           type="lvbbt:ValidatieDirecteMutatieVerslagType">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:verslag:ValidatieDirecteMutatieVerzoekResultaatType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="ValidatieDirecteMutatieVerslagType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:ValidatieDirecteMutatieVerslagType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtverslagType">
+            <xs:sequence>
+               <xs:choice>
+                  <xs:element name="uitkomst" type="lvbbt:ValidatieDirecteMutatieUitkomstCode">
+                     <xs:annotation>
+                        <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:uitkomst:ValidatieDirecteMutatieVerslagType"/>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="voortgang" type="lvbbt:ValidatieDirecteMutatieVoortgangCode">
+                     <xs:annotation>
+                        <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:voortgang:ValidatieDirecteMutatieVerslagType"/>
+                     </xs:annotation>
+                  </xs:element>
+               </xs:choice>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:simpleType name="ValidatieDirecteMutatieUitkomstCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft of de behandeling van een opdracht tot validatie van een
+        directe mutatie is geslaagd. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="valide">
+            <xs:annotation>
+               <xs:documentation> De directe mutatie voldoet aan alle eisen die de LVBB er op dit moment
+            aan stelt. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="niet-valide">
+            <xs:annotation>
+               <xs:documentation> De directe mutatie voldoet niet aan de eisen die de LVBB er aan stelt.
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="opdracht-niet-valide">
+            <xs:annotation>
+               <xs:documentation> De opdracht voldoet niet aan de eisen die de LVBB er aan stelt.
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="ValidatieDirecteMutatieVoortgangCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft hoe ver de behandeling van een opdracht tot validatie van
+        een directe mutatie is gevorderd. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="opdracht-ontvangen">
+            <xs:annotation>
+               <xs:documentation>De opdracht is ontvangen en in behandeling genomen.</xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="validatie-voltooid">
+            <xs:annotation>
+               <xs:documentation> De validatie van de directe mutatie is voltooid. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <!--
+  Antwoord voor opdracht voor een directe mutatie
+  -->
+   <xs:element name="directeMutatieVerzoekResultaat"
+               type="lvbbt:DirecteMutatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:directeMutatieVerzoekResultaat"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="directeMutatieStatusVerzoekResultaat"
+               type="lvbbt:DirecteMutatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:directeMutatieStatusVerzoekResultaat"/>
+      </xs:annotation>
+   </xs:element>
+   <xs:complexType name="DirecteMutatieVerzoekResultaatType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:DirecteMutatieVerzoekResultaatType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:VerzoekResultaatType">
+            <xs:sequence>
+               <xs:element minOccurs="0" name="verslag" type="lvbbt:DirecteMutatieVerslagType">
+                  <xs:annotation>
+                     <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:verslag:DirecteMutatieVerzoekResultaatType"/>
+                  </xs:annotation>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="DirecteMutatieVerslagType">
+      <xs:annotation>
+         <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:DirecteMutatieVerslagType"/>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="lvbbt:OpdrachtverslagType">
+            <xs:sequence>
+               <xs:choice>
+                  <xs:element name="uitkomst" type="lvbbt:DirecteMutatieUitkomstCode">
+                     <xs:annotation>
+                        <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:uitkomst:DirecteMutatieVerslagType"/>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="voortgang" type="lvbbt:DirecteMutatieVoortgangCode">
+                     <xs:annotation>
+                        <xs:documentation source="https://koop.gitlab.io/lvbb/bronhouderkoppelvlak/1.2.0/go/go.html?id=xsd:lvbbt:voortgang:DirecteMutatieVerslagType"/>
+                     </xs:annotation>
+                  </xs:element>
+               </xs:choice>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:simpleType name="DirecteMutatieUitkomstCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft of de behandeling van een opdracht voor een directe
+        mutatie is geslaagd. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="ok">
+            <xs:annotation>
+               <xs:documentation> De opdracht is met succes afgerond. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="niet-valide">
+            <xs:annotation>
+               <xs:documentation> De directe mutatie voldoet niet aan de eisen die de LVBB er aan stelt.
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="opdracht-niet-valide">
+            <xs:annotation>
+               <xs:documentation> De opdracht voldoet niet aan de eisen die de LVBB er aan stelt.
+          </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="DirecteMutatieVoortgangCode">
+      <xs:annotation>
+         <xs:documentation> Code die aangeeft hoe ver de behandeling van een opdracht voor een directe
+        mutatie is gevorderd. </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="opdracht-ontvangen">
+            <xs:annotation>
+               <xs:documentation> De opdracht is ontvangen en in behandeling genomen. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="validatie-voltooid">
+            <xs:annotation>
+               <xs:documentation> De directe mutatie is voltooid. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="mutatie-voltooid">
+            <xs:annotation>
+               <xs:documentation> De aangeleverde mutatie is uitgevoerd. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="behandeling-afgebroken">
+            <xs:annotation>
+               <xs:documentation> De behandeling van de opdracht is afgebroken. </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>
