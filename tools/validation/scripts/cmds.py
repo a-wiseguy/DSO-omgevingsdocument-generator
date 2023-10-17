@@ -27,7 +27,7 @@ def xsd_all(path):
     for file in files:
         namespace = resolve_namespace(file)
         if not namespace in schemas:
-            click.echo(click.style(f"Nothing to test {file} against", fg="orange"))
+            click.echo(click.style(f"Nothing to test {file} against", fg="yellow"))
             continue
         for xsd in schemas.get(namespace).xsds:
             cmd = [
@@ -60,7 +60,7 @@ def schematron_all(path):
     for file in files:
         namespace = resolve_namespace(file)
         if not namespace in schemas:
-            click.echo(click.style(f"Nothing to test {file} against", fg="orange"))
+            click.echo(click.style(f"Nothing to test {file} against", fg="yellow"))
             continue
 
         for schematron in schemas.get(namespace).schematrons:
