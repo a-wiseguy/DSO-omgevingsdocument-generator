@@ -1,0 +1,7 @@
+/saxon
+/saxon-download
+/report
+/data/compiled
+!/data/compiled/.gitkeep
+/data/tmp
+!/data/tmp/.gitkeep
