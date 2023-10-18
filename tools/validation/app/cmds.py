@@ -4,8 +4,8 @@ from typing import Dict, List
 import os
 
 import click
-
-from helpers.helpers import Schemas, Module, compile_schematrons, generate_report_filename, list_files_recursive, report_contains_errors, resolve_namespace, resolve_namespaces, resolve_schemas
+from helpers.models import Schematron, Schemas, Module
+from helpers.helpers import compile_schematrons, empty_directory, generate_report_filename, list_files_recursive, report_contains_errors, resolve_namespace, resolve_namespaces, resolve_schemas, resolve_schematrons
 import config
 
 
@@ -54,16 +54,19 @@ def xsd_all(path):
 @click.argument("path")
 def schematron_all(path):
     schemas: Dict[str, Schemas] = resolve_schemas(config.MODULES)
-    schematrons: Dict[str, str] = compile_schematrons(schemas)
-    files = list_files_recursive(path, ["xml", "gml"])
 
+    empty_directory("./report")
+    compile_schematrons(schemas)
+
+    files = list_files_recursive(path, ["xml", "gml"])
     for file in files:
-        namespace = resolve_namespace(file)
-        if not namespace in schemas:
+        namespaces: List[str] = resolve_namespaces(file)
+        schematrons: List[Schematron] = resolve_schematrons(schemas, namespaces)
+        if not schematrons:
             click.echo(click.style(f"Nothing to test {file} against", fg="yellow"))
             continue
 
-        for schematron in schemas.get(namespace).schematrons:
+        for schematron in schematrons:
             report_filename = generate_report_filename(path, file, schematron.local)
             cmd = [
                 'java',
