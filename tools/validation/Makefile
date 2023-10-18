@@ -20,7 +20,7 @@ compile-lvbb-aanlevering: ./saxon/saxon-he-11.6.jar
 	java -jar ./saxon/saxon-he-11.6.jar -s:./sch/parsed/lvbb-aanlevering-step2-output.xsl -xsl:./xslt/iso_svrl_for_xslt2.xsl -o:./sch/parsed/lvbb-aanlevering-compiled.xsl
 
 
-test: test-xsd test-schematron
+test: ./saxon/saxon-he-11.6.jar test-xsd test-schematron
 
 
 test-xsd:
