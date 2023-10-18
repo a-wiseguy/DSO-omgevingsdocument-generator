@@ -1,5 +1,6 @@
 import os
 import os.path
+import shutil
 from pprint import pprint
 import subprocess
 from typing import Dict, List, Optional, Set, Tuple
@@ -9,6 +10,14 @@ from lxml import etree
 
 from config import SCHEMATRON_MAP
 from helpers.models import Module, Schemas, Schematron
+
+
+def empty_directory(dir_path):
+    for root, dirs, files in os.walk(dir_path, topdown=False):
+        for name in files:
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            shutil.rmtree(os.path.join(root, name))
 
 
 def resolve_schemas(modules: List[Module]) -> Dict[str, Schemas]:
@@ -42,6 +51,17 @@ def resolve_schemas(modules: List[Module]) -> Dict[str, Schemas]:
                 result[ns].schematrons.add(schematron)
     
     return result
+
+
+def resolve_schematrons(schemas: Dict[str, Schemas], namespaces: List[str]) -> List[Schematron]:
+    schematrons: Set[Schematron] = set()
+    for namespace in namespaces:
+        if not namespace in schemas:
+            continue
+        for schematron in schemas.get(namespace).schematrons:
+            schematrons.add(schematron)
+
+    return list(schematrons)
 
 
 def list_files_recursive(directory, extensions=None):
