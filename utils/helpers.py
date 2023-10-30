@@ -1,12 +1,31 @@
 import os
 import json
 from jinja2 import Environment, FileSystemLoader
+from lxml import etree
+
 env = Environment(loader=FileSystemLoader("."))
 
 
-def load_template_and_write_file(template_name, output_file, **context):
+def load_template(template_name, pretty_print=False, **context):
     template = env.get_template(template_name)
     output = template.render(**context)
+
+    if pretty_print:
+        # Convert the string to bytes if it has an XML declaration
+        if output.startswith("<?xml"):
+            parser = etree.XMLParser(remove_blank_text=True)
+            tree = etree.fromstring(output.encode('utf-8'), parser=parser)
+        else:
+            tree = etree.fromstring(output)
+
+        # Convert back to string, retaining the XML declaration and with pretty-printing
+        output = etree.tostring(tree, pretty_print=True, xml_declaration=True, encoding="utf-8").decode("utf-8")
+
+    return output
+
+
+def load_template_and_write_file(template_name, output_file, pretty_print=False, **context):
+    output = load_template(template_name, pretty_print=pretty_print, **context)
     with open(output_file, "w") as f:
         f.write(output)
 

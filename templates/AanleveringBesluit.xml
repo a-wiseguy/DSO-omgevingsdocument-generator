@@ -2,6 +2,6 @@
 <AanleveringBesluit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="https://standaarden.overheid.nl/lvbb/stop/aanlevering/" schemaversie="1.2.0"
 	xsi:schemaLocation="https://standaarden.overheid.nl/lvbb/stop/aanlevering https://standaarden.overheid.nl/lvbb/1.2.0/lvbb-stop-aanlevering.xsd">
-	{% include 'templates/besluit.xml' %}
-	{% include 'templates/regeling.xml' %}
+	{% include 'templates/BesluitVersie.xml' %}
+	{% include 'templates/RegelingVersieInformatie.xml' %}
 </AanleveringBesluit>

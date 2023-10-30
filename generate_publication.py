@@ -1,10 +1,15 @@
+from typing import List
 import uuid
 import glob
 from jinja2 import Environment, FileSystemLoader
+from app.gio.gio_service import GioService
+from app.gio.models import Werkingsgebied
+from app.models import FRBR, Besluit, Bestand, BestuursDocument, ProcedureStap, ProcedureVerloop, Regeling
 
 from utils.helpers import load_template_and_write_file, load_json_data, get_file_entries
 from utils.geo import parse_gml_metadata
 from utils.waardelijsten import (
+    ProcedureType,
     Provincie,
     ProcedureStappenDefinitief,
     RegelingType,
@@ -36,40 +41,79 @@ PZH_ID = "pv28"
 PZH_REF = Provincie.Zuid_Holland.value
 DATUM_BEKENDMAKING = "2023-09-30"
 
-# Input data for templates
-regeling = {
-    "FRBRWork": f"/akn/nl/act/{PZH_ID}/2023/2_41",
-    "FRBRExpression": f"/akn/nl/act/{PZH_ID}/2023/2_41/nld@2093",
-    "soortWork": WorkType.Regeling.value,
-    "versienummer": "v1",
-    "soortRegeling": RegelingType.Omgevingsvisie.value,
-    "eindverantwoordelijke": PZH_REF,
-    "maker": PZH_REF,
-    "soortBestuursorgaan": "/tooi/def/thes/kern/c_411b4e4a",
-    "officieleTitel": "dossier naam Hello World Programma",
-    "citeertitel": "citeertitel programma hello World",
-    "isOfficieel": "true",
-    "onderwerp": OnderwerpType.ruimtelijke_ordening.value,
-    "rechtsgebied": RechtsgebiedType.omgevingsrecht.value,
-}
 
-besluit_versie = {
-    "FRBRWork": "/akn/nl/bill/new_work/2023/2_3000",
-    "FRBRExpression": "/akn/nl/bill/new_work/2023/2_3000/nld@2023-10-01;3000",
-    "soortWork": WorkType.Besluit.value,
-    "eindverantwoordelijke": PZH_REF,
-    "maker": PZH_REF,
-    "soortBestuursorgaan": "/tooi/def/thes/kern/c_new",
-    "officieleTitel": "dossier naam Hello World Programma",
-    "onderwerp": OnderwerpType.ruimtelijke_ordening.value,
-    "rechtsgebied": RechtsgebiedType.omgevingsrecht.value,
-    "soortProcedure": PublicatieType.Bekendmaking.value,
-    "informatieobjectRef": [  # Gio refs?
-        "/join/id/regdata/new_province/2023/new_pdf",
-        "/join/id/regdata/new_province/2023/new_gio1",
-        "/join/id/regdata/new_province/2023/new_gio2",
-    ],
-}
+
+# Input data for templates
+# regeling = {
+#     "FRBRWork": f"/akn/nl/act/{PZH_ID}/2023/2_41",
+#     "FRBRExpression": f"/akn/nl/act/{PZH_ID}/2023/2_41/nld@2093",
+#     "soortWork": WorkType.Regeling.value,
+#     "versienummer": "v1",
+#     "soortRegeling": RegelingType.Omgevingsvisie.value,
+#     "eindverantwoordelijke": PZH_REF,
+#     "maker": PZH_REF,
+#     "soortBestuursorgaan": "/tooi/def/thes/kern/c_411b4e4a",
+#     "officieleTitel": "dossier naam Hello World Programma",
+#     "citeertitel": "citeertitel programma hello World",
+#     "isOfficieel": "true",
+#     "onderwerp": OnderwerpType.ruimtelijke_ordening.value,
+#     "rechtsgebied": RechtsgebiedType.omgevingsrecht.value,
+# }
+
+
+# @todo: calculate
+bestuurs_document: BestuursDocument = BestuursDocument(
+    eindverantwoordelijke=PZH_REF,
+    maker=PZH_REF,
+    soort_bestuursorgaan="/tooi/def/thes/kern/c_411b4e4a",
+    onderwerp=OnderwerpType.ruimtelijke_ordening.value,
+    rechtsgebied=RechtsgebiedType.omgevingsrecht.value,
+)
+
+
+besluit_frbr = FRBR(
+    work=f"/akn/nl/bill/{PZH_ID}/2023/2_3000",
+    expression=f"/akn/nl/bill/{PZH_ID}/2023/2_3000/nld@2023-10-01;2093",
+)
+besluit: Besluit = Besluit(
+    frbr=besluit_frbr,
+    bestuurs_document=bestuurs_document,
+    officiele_titel="Opschrift besluit - Dossier naam Hello World Programma",
+    soort_procedure=ProcedureType.Definitief_besluit,
+)
+
+regeling_frbr = FRBR(
+    work=f"/akn/nl/act/{PZH_ID}/2023/2_41",
+    expression=f"/akn/nl/act/{PZH_ID}/2023/2_41/nld@2093",
+)
+regeling: Regeling = Regeling(
+    frbr=regeling_frbr,
+    bestuurs_document=bestuurs_document,
+    versienummer="v1",
+    officiele_titel="Dossier naam Hello World Programma",
+    citeertitel="citeertitel programma hello World",
+    is_officieel="true",
+)
+
+
+
+# besluit_versie = {
+#     "FRBRWork": "/akn/nl/bill/new_work/2023/2_3000",
+#     "FRBRExpression": "/akn/nl/bill/new_work/2023/2_3000/nld@2023-10-01;3000",
+#     "soortWork": WorkType.Besluit.value,
+#     "eindverantwoordelijke": PZH_REF,
+#     "maker": PZH_REF,
+#     "soortBestuursorgaan": "/tooi/def/thes/kern/c_new",
+#     "officieleTitel": "dossier naam Hello World Programma",
+#     "onderwerp": OnderwerpType.ruimtelijke_ordening.value,
+#     "rechtsgebied": RechtsgebiedType.omgevingsrecht.value,
+#     "soortProcedure": PublicatieType.Bekendmaking.value,
+#     "informatieobjectRef": [  # Gio refs?
+#         "/join/id/regdata/new_province/2023/new_pdf",
+#         "/join/id/regdata/new_province/2023/new_gio1",
+#         "/join/id/regdata/new_province/2023/new_gio2",
+#     ],
+# }
 
 besluit_compact = {
     "RegelingOpschrift": "regeling dossier naam Hello World Programma",
@@ -114,19 +158,19 @@ publicatie_opdracht = {
 }
 
 # https://gitlab.com/koop/lvbb/bronhouderkoppelvlak/-/blob/1.2.0/waardelijsten/procedurestap_definitief.xml?ref_type=tags
-procedure_metadata = {
-    "bekendOp": DATUM_BEKENDMAKING,
-    "stappen": [
-        {
-            "soortStap": ProcedureStappenDefinitief.Vaststelling.value,
-            "voltooidOp": "2023-09-27",
-        },
-        {
-            "soortStap": ProcedureStappenDefinitief.Ondertekening.value,
-            "voltooidOp": "2023-09-27",
-        },
-    ],
-}
+procedure: ProcedureVerloop = ProcedureVerloop(
+    bekend_op=DATUM_BEKENDMAKING,
+    stappend = [
+        ProcedureStap(
+            soort_stap=ProcedureStappenDefinitief.Vaststelling.value,
+            voltooid_op="2023-09-27",
+        ),
+        ProcedureStap(
+            soort_stap=ProcedureStappenDefinitief.Ondertekening.value,
+            voltooid_op="2023-09-27",
+        ),
+    ]
+)
 
 
 # Write LVBB PublicatieOpdracht
@@ -137,26 +181,32 @@ load_template_and_write_file(
 )
 
 # Generate GIO files
-gml_file_paths = glob.glob("./input/attachments/*.gml")
-gio_data = parse_gml_metadata(gml_file_paths)
-for data in gio_data:
-    filename = data["bestandsnaam"]
-    load_template_and_write_file(
-        "templates/geo/gio.xml",
-        f"output/{filename}",
-        gio=data,
-        dso_versioning=DSO_VERSIONING,
-    )
+bestanden: List[Bestand] = []
+gio_service = GioService(regeling)
+
+werkingsgebieden_jsons = glob.glob("./input/werkingsgebieden/*.json")
+for werkingsgebieden_json in werkingsgebieden_jsons:
+    data = load_json_data(werkingsgebieden_json)
+    werkingsgebied = Werkingsgebied(**data)
+    gio_service.add_werkingsgebied(werkingsgebied)
+
+gio_files: List[Bestand] = gio_service.generate_files()
+bestanden = bestanden + gio_files
+
+gml_refs: List[str] = gio_service.get_refs()
+besluit.informatieobject_refs = besluit.informatieobject_refs + gml_refs
+
 
 # TODO: IO files
 
+
 # Write LVBB Manifest
-file_entries = get_file_entries("input/attachments", content_type_map)
 load_template_and_write_file(
     "templates/lvbb/manifest.xml",
     "output/manifest.xml",
-    file_entries=file_entries,
+    bestanden=bestanden,
     akn=PUBLICATIE_AKN,
+    pretty_print=True,
 )
 
 # Load policy objects
@@ -166,12 +216,15 @@ beleidskeuzes = json_data["beleidskeuzes"]
 
 # Write full regeling
 load_template_and_write_file(
-    "templates/visie.xml",
+    "templates/AanleveringBesluit.xml",
     f"output/{PUBLICATIE_AKN}.xml",
     regeling=regeling,
-    besluitversie=besluit_versie,
+    besluit=besluit,
+
     besluitcompact=besluit_compact,
-    procedure=procedure_metadata,
+    procedure=procedure,
     ambities=ambities,
     beleidskeuzes=beleidskeuzes,
+
+    pretty_print=True,
 )

@@ -1,0 +1,34 @@
+<GMLFeatureClassList>
+  <GMLFeatureClass>
+    <Name>Locatie</Name>
+    <ElementPath>Locatie</ElementPath>
+    <GeometryName>geometrie</GeometryName>
+    <GeometryElementPath>geometrie|Geometrie|geometrie</GeometryElementPath>
+    <SRSName>urn:ogc:def:crs:EPSG::28992</SRSName>
+    <DatasetSpecificInfo>
+      <FeatureCount>3</FeatureCount>
+      <ExtentXMin>74148.19570</ExtentXMin>
+      <ExtentXMax>110710.21790</ExtentXMax>
+      <ExtentYMin>443493.91890</ExtentYMin>
+      <ExtentYMax>472954.04950</ExtentYMax>
+    </DatasetSpecificInfo>
+    <PropertyDefn>
+      <Name>naam</Name>
+      <ElementPath>naam</ElementPath>
+      <Type>String</Type>
+      <Width>50</Width>
+    </PropertyDefn>
+    <PropertyDefn>
+      <Name>id</Name>
+      <ElementPath>geometrie|Geometrie|id</ElementPath>
+      <Type>String</Type>
+      <Width>42</Width>
+    </PropertyDefn>
+    <PropertyDefn>
+      <Name>groepID</Name>
+      <ElementPath>groepID</ElementPath>
+      <Type>String</Type>
+      <Width>42</Width>
+    </PropertyDefn>
+  </GMLFeatureClass>
+</GMLFeatureClassList>

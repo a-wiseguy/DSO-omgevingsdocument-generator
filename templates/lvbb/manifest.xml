@@ -32,10 +32,10 @@
 	</lvbb:bestand>
 
 	<!-- Attachment files -->
-    {% for attachment in file_entries %}
-    <lvbb:bestand>
-        <lvbb:bestandsnaam>{{ attachment.filename }}</lvbb:bestandsnaam>
-        <lvbb:contentType>{{ attachment.contentType }}</lvbb:contentType>
-    </lvbb:bestand>
+    {% for bestand in bestanden %}
+		<lvbb:bestand>
+			<lvbb:bestandsnaam>{{ bestand.bestandsnaam }}</lvbb:bestandsnaam>
+			<lvbb:contentType>{{ bestand.content_type }}</lvbb:contentType>
+		</lvbb:bestand>
     {% endfor %}
 </lvbb:manifest>

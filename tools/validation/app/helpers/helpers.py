@@ -20,6 +20,7 @@ def empty_directory(dir_path):
             shutil.rmtree(os.path.join(root, name))
 
 
+
 def resolve_schemas(modules: List[Module]) -> Dict[str, Schemas]:
     result: Dict[str, Schemas] = {}
 

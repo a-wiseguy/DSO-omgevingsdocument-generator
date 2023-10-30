@@ -1,0 +1,18 @@
+<BesluitMetadata xmlns="https://standaarden.overheid.nl/stop/imop/data/">
+    <eindverantwoordelijke>{{ besluit.bestuurs_document.eindverantwoordelijke }}</eindverantwoordelijke>
+    <maker>{{ besluit.bestuurs_document.maker }}</maker>
+    <soortBestuursorgaan>{{ besluit.bestuurs_document.soort_bestuursorgaan }}</soortBestuursorgaan>
+    <officieleTitel>{{ besluit.officiele_titel }}</officieleTitel>
+    <onderwerpen>
+        <onderwerp>{{ besluit.bestuurs_document.onderwerp }}</onderwerp>
+    </onderwerpen>
+    <rechtsgebieden>
+        <rechtsgebied>{{ besluit.bestuurs_document.rechtsgebied }}</rechtsgebied>
+    </rechtsgebieden>
+    <soortProcedure>{{ besluit.soort_procedure }}</soortProcedure>
+    <informatieobjectRefs>
+        {% for ref in besluit.informatieobject_refs %}
+            <informatieobjectRef>{{ ref }}</informatieobjectRef>
+        {% endfor %}
+    </informatieobjectRefs>
+</BesluitMetadata>

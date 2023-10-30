@@ -1,0 +1,12 @@
+<geo:Locatie>
+    <geo:naam>{{ locatie.naam }}</geo:naam>
+    <geo:geometrie>
+        <basisgeo:Geometrie gml:id="{{ locatie.gml_id }}-xx">
+            <basisgeo:id>{{ locatie.basis_id }}</basisgeo:id>
+            <basisgeo:geometrie>
+                {{ locatie.geometry_xml }}
+            </basisgeo:geometrie>
+        </basisgeo:Geometrie>
+    </geo:geometrie>
+    <geo:groepID>{{ locatie.groep_id }}</geo:groepID>
+</geo:Locatie>

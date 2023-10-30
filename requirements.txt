@@ -10,3 +10,5 @@ tomli==2.0.1
 typing_extensions==4.8.0
 pydantic==2.4.2
 lxml==4.9.3
+pyproj==3.6.1
+shapely==2.0.2

@@ -3,6 +3,7 @@ import os
 import re
 
 from xml.etree import ElementTree
+from utils.data import Publicatieinstructies
 
 from utils.waardelijsten import (
     Provincie,
@@ -48,7 +49,7 @@ def parse_gml_metadata(gml_paths):
             "maker": Provincie.Zuid_Holland.value,
             "naamInformatieObject": name,
             "officieleTitel": FRBRWork,
-            "publicatieinstructie": "TeConsolideren",
+            "publicatieinstructie": Publicatieinstructies.TeConsolideren,
             "formaatInformatieobject": InformatieObjectType.Geoinformatieobject.value,
         }
         dict_list.append(single_gml_dict)

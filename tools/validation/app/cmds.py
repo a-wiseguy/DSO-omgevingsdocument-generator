@@ -82,6 +82,7 @@ def schematron_all(path):
                 color = "red"
                 if not report_contains_errors(report_filename):
                     color = "green"
+                    os.remove(report_filename)
                 click.echo(f"Report generated for {file} with " + click.style(schematron.local, fg=color))
 
             else:

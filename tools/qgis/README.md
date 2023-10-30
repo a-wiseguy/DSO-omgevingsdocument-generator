@@ -3,5 +3,5 @@
 
 Example usage:
 ```
-make parse I=../somedir/locaties_Wonen-v1.gml O=./output/output.gml
+make I=../../output/locaties_maatwerkgebied-glastuinbouw.gml  O=parsed-1.gml parse
 ```
