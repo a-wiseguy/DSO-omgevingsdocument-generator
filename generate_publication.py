@@ -160,7 +160,7 @@ publicatie_opdracht = {
 # https://gitlab.com/koop/lvbb/bronhouderkoppelvlak/-/blob/1.2.0/waardelijsten/procedurestap_definitief.xml?ref_type=tags
 procedure: ProcedureVerloop = ProcedureVerloop(
     bekend_op=DATUM_BEKENDMAKING,
-    stappend = [
+    stappen=[
         ProcedureStap(
             soort_stap=ProcedureStappenDefinitief.Vaststelling.value,
             voltooid_op="2023-09-27",
