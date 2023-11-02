@@ -92,6 +92,7 @@ class WorkType(Enum):
     Kennisgeving = "/join/id/stop/work_023"
     Versieinformatie = "/join/id/stop/work_024"
 
+
 class InformatieObjectType(Enum):
     Geoinformatieobject = "/join/id/stop/informatieobject/gio_002"
     PDF_document = "/join/id/stop/informatieobject/doc_001"
@@ -99,7 +100,106 @@ class InformatieObjectType(Enum):
 
 # https://gitlab.com/koop/STOP/standaard/-/blob/1.3.0/waardelijsten/rechtsgebied.xml
 class RechtsgebiedType(Enum):
-    omgevingsrecht = "/tooi/def/concept/c_638d8062"
+    Agrarischrecht = "/tooi/def/concept/c_8054d6b3"
+    Arbeidsrechtensociaalzekerheidsrecht = "/tooi/def/concept/c_7cca4bd5"
+    Arbitrage = "/tooi/def/concept/c_825c930b"
+    Bankeneffectenrechtfinanciering = "/tooi/def/concept/c_f381106e"
+    Ambtenarenrecht = "/tooi/def/concept/c_b69dc535"
+    Arbeidsrecht = "/tooi/def/concept/c_50a06faa"
+    Militaireambtenarenrecht = "/tooi/def/concept/c_b24639c1"
+    Pensioenrecht = "/tooi/def/concept/c_e77951d0"
+    Sociaalzekerheidsrecht = "/tooi/def/concept/c_9a7dd375"
+    Bankrecht = "/tooi/def/concept/c_c05c1523"
+    Effectenrecht = "/tooi/def/concept/c_c7ca5138"
+    Financieringenzekerheden = "/tooi/def/concept/c_459e5366"
+    Toezichtbankenkredietwezen = "/tooi/def/concept/c_a93f5f66"
+    Belastingrecht = "/tooi/def/concept/c_ba9504e5"
+    BTWenaccijns = "/tooi/def/concept/c_47a56149"
+    Dividendbelasting = "/tooi/def/concept/c_771aa828"
+    Formeelbelastingrecht = "/tooi/def/concept/c_49a0d743"
+    Heffingenlokaleoverheden = "/tooi/def/concept/c_4921283c"
+    Inkomstenbelasting = "/tooi/def/concept/c_8173a6ff"
+    Internationaleregelingen = "/tooi/def/concept/c_149a4823"
+    Invoerendouane = "/tooi/def/concept/c_a1d2e8d4"
+    Invorderingsrecht = "/tooi/def/concept/c_4b09a861"
+    Loonbelastingenpremieheffing = "/tooi/def/concept/c_5090ae6f"
+    Milieubelasting = "/tooi/def/concept/c_e79db34a"
+    Successieenschenkingsrecht = "/tooi/def/concept/c_6e38f3bc"
+    Vennootschapsbelastingrecht = "/tooi/def/concept/c_c4534511"
+    Contractenschadeenaansprakelijkheid = "/tooi/def/concept/c_3405e4a1"
+    Aansprakelijkheidsrecht = "/tooi/def/concept/c_c531a512"
+    Consumentenrecht = "/tooi/def/concept/c_a11eaa90"
+    Internationaalcontractrecht = "/tooi/def/concept/c_cf521795"
+    Verbintenissenrecht = "/tooi/def/concept/c_69b82af6"
+    Verzekeringsrecht = "/tooi/def/concept/c_63c42465"
+    Cultureelrecht = "/tooi/def/concept/c_79f2c282"
+    Financieeleneconomischrecht = "/tooi/def/concept/c_5bbb3a9b"
+    Gezondheidsrechtenfarmaceutischrecht = "/tooi/def/concept/c_f4d3b2e1"
+    Goederenrecht = "/tooi/def/concept/c_e98c35be"
+    Eigendomsrecht = "/tooi/def/concept/c_8e783db5"
+    Erfpachtvruchtgebruik = "/tooi/def/concept/c_d14a17d5"
+    Hypotheekrechtenpandrecht = "/tooi/def/concept/c_c43a7334"
+    Informatierecht = "/tooi/def/concept/c_5092de31"
+    ICTrecht = "/tooi/def/concept/c_8fbe4664"
+    Telecomrecht = "/tooi/def/concept/c_4a3402ad"
+    Insolventierecht = "/tooi/def/concept/c_674c0ac7"
+    Faillissement = "/tooi/def/concept/c_3d087471"
+    Schuldsanering = "/tooi/def/concept/c_4361689d"
+    Surseance = "/tooi/def/concept/c_65b2367c"
+    Intellectueleeigendom = "/tooi/def/concept/c_a9160582"
+    Auteursrecht = "/tooi/def/concept/c_8b3782ea"
+    Intellectueeleigendomsrecht = "/tooi/def/concept/c_c220f66c"
+    Octrooirecht = "/tooi/def/concept/c_bc9292d4"
+    InternationaalprivaatrechtInclusiefinternationaalprocesrecht = "/tooi/def/concept/c_ef8758fb"
+    Internationaalpubliekrecht = "/tooi/def/concept/c_b26c78e3"
+    Mensenrechten = "/tooi/def/concept/c_ea564774"
+    Ontwikkelingssamenwerking = "/tooi/def/concept/c_003c1dd9"
+    Volkenrecht = "/tooi/def/concept/c_cc3cbecb"
+    Levensmiddelenrecht = "/tooi/def/concept/c_96ed7748"
+    Mededingingsrecht = "/tooi/def/concept/c_ee165cc3"
+    Migratierecht = "/tooi/def/concept/c_6755aa64"
+    Nationaliteitsrecht = "/tooi/def/concept/c_3c8b7fa0"
+    Vreemdelingenrecht = "/tooi/def/concept/c_0f0673b6"
+    Ondernemingspraktijk = "/tooi/def/concept/c_1dbae688"
+    Fusiesenovernames = "/tooi/def/concept/c_0c246a16"
+    Ondernemingsrecht = "/tooi/def/concept/c_e80b3672"
+    Stichtingenenverenigingen = "/tooi/def/concept/c_8285b37e"
+    Vennootschapsrecht = "/tooi/def/concept/c_f3405203"
+    Onderwijsrecht = "/tooi/def/concept/c_84d3929c"
+    Openbareordeenveiligheidsrecht = "/tooi/def/concept/c_c06fcca1"
+    Personenenfamilierecht = "/tooi/def/concept/c_5d8350bb"
+    Echtscheiding = "/tooi/def/concept/c_02a7f1c4"
+    Erfrecht = "/tooi/def/concept/c_6ac30ccf"
+    Familierecht = "/tooi/def/concept/c_e49bce03"
+    Jeugdrecht = "/tooi/def/concept/c_21e7f286"
+    Personenrecht = "/tooi/def/concept/c_d05d9921"
+    Privacy = "/tooi/def/concept/c_66ad74bd"
+    Procesrecht = "/tooi/def/concept/c_82b0ce3b"
+    Bestuursprocesrecht = "/tooi/def/concept/c_b52af7e9"
+    Burgerlijkprocesrecht = "/tooi/def/concept/c_c60b9092"
+    Strafprocesrecht = "/tooi/def/concept/c_093f785e"
+    Ruimtelijkeordeningenmilieu = "/tooi/def/concept/c_8ad05f6d"
+    Milieurecht = "/tooi/def/concept/c_0aa457e4"
+    Omgevingsrecht = "/tooi/def/concept/c_638d8062"
+    Waterrecht = "/tooi/def/concept/c_b47c724c"
+    Sportrecht = "/tooi/def/concept/c_f3d7c872"
+    Staatsenbestuursrecht = "/tooi/def/concept/c_da370768"
+    Bestuursrecht = "/tooi/def/concept/c_052899f0"
+    Militairrecht = "/tooi/def/concept/c_c2b43841"
+    Staatsrecht = "/tooi/def/concept/c_77eb3af8"
+    Strafrecht = "/tooi/def/concept/c_4641d131"
+    Financieeleconomischstrafrecht = "/tooi/def/concept/c_f0f885e5"
+    Internationaalstrafrecht = "/tooi/def/concept/c_dd17dae0"
+    Jeugdstrafrecht = "/tooi/def/concept/c_e1b8b455"
+    Milieustrafrecht = "/tooi/def/concept/c_b84f1591"
+    Penitentiairrecht = "/tooi/def/concept/c_8a460f2d"
+    Verkeersrecht = "/tooi/def/concept/c_03d15325"
+    Tuchtrecht = "/tooi/def/concept/c_ff938556"
+    Vervoersrecht = "/tooi/def/concept/c_7ed87355"
+    Wonenonroerendgoedbouwrecht = "/tooi/def/concept/c_3e6b35e2"
+    Bouwrecht = "/tooi/def/concept/c_8a8c5620"
+    Huurrecht = "/tooi/def/concept/c_3dbe5325"
+    Onroerendgoedrecht = "/tooi/def/concept/c_43c42162"
 
 
 # https://gitlab.com/koop/STOP/standaard/-/blob/1.3.0/waardelijsten/onderwerp.xml
@@ -203,3 +303,18 @@ class OnderwerpType(Enum):
     speciaal_onderwijs = "/tooi/def/concept/c_1f781691"
     zorginstellingen = "/tooi/def/concept/c_7a0f87d5"
     klimaatverandering = "/tooi/def/concept/c_79010191"
+
+
+class BestuursorgaanSoort(Enum):
+    Burgemeester = '/tooi/def/thes/kern/c_2c4e7407'
+    College_van_burgemeester_en_wethouders = '/tooi/def/thes/kern/c_28ecfd6d'
+    gemeenteraad = '/tooi/def/thes/kern/c_2a7d8663'
+    Commissaris_van_de_koning = '/tooi/def/thes/kern/c_e24d39f6'
+    Gedeputeerde_staten = '/tooi/def/thes/kern/c_61676cbc'
+    Provinciale_staten = '/tooi/def/thes/kern/c_411b4e4a'
+    Minister = '/tooi/def/thes/kern/c_bcfb7b4e'
+    Regering = '/tooi/def/thes/kern/c_91fb5e42'
+    Staatssecretaris = '/tooi/def/thes/kern/c_3aaa4d12'
+    Algemeen_bestuur = '/tooi/def/thes/kern/c_70c87e3d'
+    Dagelijks_bestuur = '/tooi/def/thes/kern/c_5cc92c89'
+    Dijkgraaf = '/tooi/def/thes/kern/c_f70a6113'

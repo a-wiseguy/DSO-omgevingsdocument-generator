@@ -1,0 +1,48 @@
+<BesluitCompact xmlns="https://standaarden.overheid.nl/stop/imop/tekst/">
+    <RegelingOpschrift eId="longTitle" wId="longTitle">
+        <Al>{{ besluit.compact.RegelingOpschrift }}</Al>
+    </RegelingOpschrift>
+    <Aanhef eId="formula_1" wId="formula_1">
+        <Al>{{ besluit.compact.Aanhef }}</Al>
+    </Aanhef>
+    <Lichaam eId="body" wId="body">
+        <WijzigArtikel eId="art_I" wId="pv28_1__art_I">
+            <Kop>
+                <Label>{{ besluit.compact.WijzigArtikel.Label }}</Label>
+                <Nummer>{{ besluit.compact.WijzigArtikel.Nummer }}</Nummer>
+            </Kop>
+            <Wat>
+                {{ besluit.compact.WijzigArtikel.Wat }}
+            </Wat>
+        </WijzigArtikel>
+        {% for artikel in besluit.compact.Artikelen %}
+        <Artikel eId="art_2" wId="pv28_1__art_2">
+            <Kop>
+                <Label>{{ artikel.Label }}</Label>
+                <Nummer>{{ artikel.Nummer }}</Nummer>
+            </Kop>
+            {% if artikel.Inhoud %}
+            <Inhoud>
+                <Al>{{ artikel.Inhoud }}</Al>
+            </Inhoud>
+            {% else %}
+            <Gereserveerd />
+            {% endif %}
+        </Artikel>
+        {% endfor %}
+    </Lichaam>
+    <Sluiting eId="formula_2" wId="formula_2">
+        <Al>{{ besluit.compact.Sluiting }}</Al>
+        <Ondertekening>
+            <Al>{{ besluit.compact.Ondertekening }}</Al>
+        </Ondertekening>
+    </Sluiting>
+    <WijzigBijlage eId="cmp_A" wId="pv28_1__cmp_A">
+        <Kop>
+            <Label>{{ besluit.compact.WijzigingBijlage.Label }}</Label>
+            <Nummer>{{ besluit.compact.WijzigingBijlage.Nummer }}</Nummer>
+            <Opschrift>{{ besluit.compact.WijzigingBijlage.Opschrift }}</Opschrift>
+        </Kop>
+        {% include omgevingsdocument_template|default('templates/base/regeling/RegelingVrijetekst.xml') %}
+    </WijzigBijlage>
+</BesluitCompact>
