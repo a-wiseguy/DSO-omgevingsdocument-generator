@@ -1,5 +1,5 @@
 <RegelingVrijetekst componentnaam="nieuweregeling"
-	wordt="{{ akn['FRBRWork_Act'] }}">
+	wordt="{{ akn['act']['work'] }}">
 	<RegelingOpschrift eId="longTitle" wId="longTitle">
 		<Al>{{ besluit.compact.RegelingOpschrift }}</Al>
 	</RegelingOpschrift>

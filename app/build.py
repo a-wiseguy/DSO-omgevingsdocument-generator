@@ -14,14 +14,15 @@ from app.models import (
     DocumentType,
     PublicationSettings,
     PublicatieOpdracht,
-    Bestand
+    Bestand,
 )
 from utils.waardelijsten import OnderwerpType, RechtsgebiedType, ProcedureType
 from utils.helpers import load_template_and_write_file, load_json_data
 
 
 class PublicationDocument(BaseModel):
-    template: Optional[str] = None
+    template: Optional[str]
+    input_data: Optional[str]
     bill: Optional[Besluit]
     act: Optional[Regeling]
     procedure: Optional[ProcedureVerloop]
@@ -29,11 +30,13 @@ class PublicationDocument(BaseModel):
 
 class OmgevingsVisie(PublicationDocument):
     template: Optional[str] = "templates/omgevingsvisie/child_of_RegelingVrijetekst.xml"
+    input_data: Optional[str] = "input/publication/omgevingsvisie.json"
     # ambities: Optional[List[str]] = None # TODO
 
 
 class OmgevingsProgramma(PublicationDocument):
     template: Optional[str] = "templates/omgevingsprogramma/child_of_RegelingVrijetekst.xml"
+    input_data: Optional[str] = "input/publication/omgevingsprogramma.json"
     # maatregelen: Optional[List[str]] = None # TODO
 
 
@@ -46,21 +49,27 @@ class LVBBPublication(BaseModel):
 class PublicationService:
     DEFAULT_OUTPUT_PATH = "output/"
 
-    def __init__(
-        self,
-        settings: PublicationSettings,
-    ):
+    def __init__(self, settings: PublicationSettings, akn: Optional[AKN], input_file: str):
         self._settings: PublicationSettings = settings
+        self._input_file = input_file
         self._document: PublicationDocument
         self._files: List[Bestand] = []
-        self._akn = AKN(
-            province_id=settings.provincie_id,
-            previous_act=settings.previous_akn_act,
-            previous_bill=settings.previous_akn_bill,
-        )
 
-    def _setup_publication_document(self, input_data_file: str) -> PublicationDocument:
+        if akn:
+            self._akn = akn
+        else:
+            self._akn = AKN(
+                province_id=settings.provincie_id,
+                previous_act=settings.previous_akn_act,
+                previous_bill=settings.previous_akn_bill,
+            )
+
+    def setup_publication_document(self, input_data_file=None) -> PublicationDocument:
+        if input_data_file is None:
+            input_data_file = self._input_file
+
         loaded_from_file = load_json_data(input_data_file)
+
         bestuurs_document = BestuursDocument(
             eindverantwoordelijke=self._settings.provincie_id,
             maker=self._settings.provincie_ref,
@@ -94,7 +103,9 @@ class PublicationService:
         self._document = initial_document
         return initial_document
 
-    def create_publication_document(self, document: PublicationDocument, output_path=DEFAULT_OUTPUT_PATH):
+    def create_publication_document(
+        self, document: PublicationDocument, output_path=DEFAULT_OUTPUT_PATH
+    ):
         # TODO build policy objects based on type
         # json_data = load_json_data("input/policy-objects/mock-data.json")
         # ambities = json_data["ambities"]
@@ -104,7 +115,7 @@ class PublicationService:
             load_template_and_write_file(
                 template_name="templates/base/AanleveringBesluit.xml",
                 output_file=write_path,
-                omgevingsdocument_template="templates/omgevingsvisie/child_of_RegelingVrijetekst.xml",
+                omgevingsdocument_template=document.template,
                 akn=self._akn.as_dict(),
                 regeling=document.act,
                 besluit=document.bill,
@@ -135,8 +146,7 @@ class PublicationService:
 
     def create_opdracht(self, output_path=DEFAULT_OUTPUT_PATH):
         publicatieopdracht = PublicatieOpdracht(
-            publicatie=self._akn.as_filename(),
-            datum_bekendmaking=self._settings.publicatie_datum
+            publicatie=self._akn.as_filename(), datum_bekendmaking=self._settings.publicatie_datum
         )
         try:
             write_path = output_path + "opdracht.xml"
@@ -152,12 +162,21 @@ class PublicationService:
         except Exception as e:
             raise PublicationServiceError(message=e)
 
-    def build_geo_files(self):
-        #TODO
-        pass
+    def add_geo_files(self, gio_files: List[Bestand], gml_refs: List[str]):
+        # merge in the geo service files/references
+        if self._document is None:
+            raise PublicationServiceError("PublicationDocument not initialized. cannot add geo files.")
+        self._files = self._files + gio_files
+        self._document.bill.informatieobject_refs = (
+            self._document.bill.informatieobject_refs + gml_refs
+        )
 
     def build_publication_files(self):
+        if self._document is None:
+            if self._input_file is None:
+                raise PublicationServiceError("Missing expected input data from publication document.")
+            self.setup_publication_document(self._input_file)
+
+        self.create_publication_document(document=self._document)
         self.create_lvbb_manifest()
         self.create_opdracht()
-        self._setup_publication_document("input/publication/omgevingsvisie.json")
-        self.create_publication_document(document=self._document)
