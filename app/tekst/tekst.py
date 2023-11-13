@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
-from typing import Any, List, Optional, Type, Union
+from math import e
+from typing import Any, List, Optional, Type, TypeAlias, Union
 
 from bs4 import BeautifulSoup, CData, Comment, Declaration, Doctype, NavigableString, ProcessingInstruction, Tag
 
@@ -9,6 +10,16 @@ from app.tekst.lijst import LijstType, LijstTypeOrdered, LijstTypeUnordered, Num
 class AsXmlTrait(metaclass=ABCMeta):
     @abstractmethod
     def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
+        pass
+
+
+
+LeftoverTag: TypeAlias = Optional[Tag]
+
+
+class IsEmptyTrait(metaclass=ABCMeta):
+    @abstractmethod
+    def is_empty(self) -> bool:
         pass
 
 
@@ -35,7 +46,7 @@ class Element(AsXmlTrait, metaclass=ABCMeta):
                 raise Exception("Unknown type", element)
 
     @abstractmethod
-    def consume_tag(self, tag: Tag):
+    def consume_tag(self, tag: Tag) -> LeftoverTag:
         pass
 
     @abstractmethod
@@ -58,7 +69,7 @@ class SimpleElement(Element, metaclass=ABCMeta):
         self.contents: List[Union[Element, str]] = []
         self.xml_tag_name: str = xml_tag_name
 
-    def consume_tag(self, tag: Tag):
+    def consume_tag(self, tag: Tag) -> LeftoverTag:
         for element_generator in self.element_generators:
             if not element_generator.can_consume_tag(tag):
                 continue
@@ -68,8 +79,8 @@ class SimpleElement(Element, metaclass=ABCMeta):
             )
             content.consume_children(tag.children)
             self.contents.append(content)
-            return
-        raise RuntimeError("Can not consume tag")
+            return None
+        return tag
 
     def consume_string(self, string: NavigableString):
         self.contents.append(str(string))
@@ -289,20 +300,21 @@ class Divisietekst(Element):
         self.kop: Optional[Kop] = None
         self.inhoud: Optional[Inhoud] = None
 
-    def consume_tag(self, tag: Tag):
+    def consume_tag(self, tag: Tag) -> LeftoverTag:
         # Headings will be send to the Kop
         if tag.name in ["h1", "h2", "h3", "h4", "h5", "h6"]:
             if self.kop is not None:
-                # @todo: shall return new divisie-tekst and the title set
-                raise RuntimeError("Double titles are not implemented yet")
-            kop = Kop()
+                return tag
+            kop = Kop(tag=None)
             kop.consume_children(tag.children)
             self.kop = kop
-            return
+            return None
 
         # Any other tags will just be send in a Inhoud
         inhoud: Inhoud = self._get_inhoud()
-        inhoud.consume_tag(tag)
+        leftoverTag: LeftoverTag = inhoud.consume_tag(tag)
+
+        return leftoverTag
     
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()
@@ -335,29 +347,57 @@ class Divisie(Element):
         self.kop: Optional[Kop] = None
         self.contents: List[Union["Divisie", Divisietekst]] = []
     
-    def consume_tag(self, tag: Tag): 
+    def consume_tag(self, tag: Tag) -> LeftoverTag:
+        leftoverTag: LeftoverTag = self._try_consume_tag(tag)
+        if leftoverTag is None :
+            return None
+        
+        return self._try_consume_tag(tag)
+
+    def _try_consume_tag(self, tag: Tag) -> LeftoverTag:
         # Headings will be send to the Kop
         if tag.name in ["h1", "h2", "h3", "h4", "h5", "h6"]:
             if self.kop is not None:
-                # @todo: shall return new divisie-tekst and the title set
-                raise RuntimeError("Double titles are not implemented yet")
+                # If we already have a title and we need a title
+                # Then we create a new Divisie or Divisietekst based on the title level
+                # and then let that new component consume the title
+                if tag.name in ["h1", "h2"]:
+                    content: Divisie = Divisie()
+                    self.contents.append(content)
+                    leftover = content.consume_tag(tag)
+                    return leftover
+                else:
+                    content: Divisietekst = Divisietekst()
+                    self.contents.append(content)
+                    leftover = content.consume_tag(tag)
+                    return leftover
+
+            if self.contents:
+                # We cant set the heading if we already have content.
+                # That would render the text out of order
+                # In this case we just pass allong to the divisie tekst
+                content: Divisietekst = self._get_active_divisietekst()
+                leftover = content.consume_tag(tag)
+                return leftover
+
             kop = Kop(tag=None)
             kop.consume_children(tag.children)
             self.kop = kop
-            return
+            return None
         
         # If the tag is a div then we will create a new Divisietekst
         elif tag.name == "div":
             content: Divisietekst = Divisietekst()
-            content.consume_tag(tag)
             self.contents.append(content)
-            return
+            leftover = content.consume_tag(tag)
+            return leftover
 
         # Else we will let the last Divisietekst consume the tag
         else:
             # If we do not have an "active Divisietekst" then we will create one
             content: Divisietekst = self._get_active_divisietekst()
-            content.consume_tag(tag)
+            leftover = content.consume_tag(tag)
+            return leftover
 
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()
