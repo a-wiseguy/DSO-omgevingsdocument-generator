@@ -4,8 +4,8 @@
         <FRBRExpression>{{ besluit.frbr.expression }}</FRBRExpression>
         <soortWork>/join/id/stop/work_003</soortWork>
     </ExpressionIdentificatie>
-    {% include 'templates/besluit/BesluitMetadata.xml' %}
-    {% include 'templates/besluit/Procedureverloop.xml' %}
-    {% include 'templates/besluit/ConsolidatieInformatie.xml' %}
-    {% include 'templates/besluit/besluitcompact.xml' %}
+    {% include 'templates/base/besluit/BesluitMetadata.xml' %}
+    {% include 'templates/base/besluit/Procedureverloop.xml' %}
+    {% include 'templates/base/besluit/ConsolidatieInformatie.xml' %}
+    {% include 'templates/base/besluit/BesluitCompact.xml' %}
 </BesluitVersie>

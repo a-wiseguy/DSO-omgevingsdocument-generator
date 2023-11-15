@@ -6,7 +6,7 @@ from shapely import wkt
 
 from app.gio.models import Werkingsgebied
 from app.helpers import compute_sha512
-from app.models import Bestand, ContentType, Regeling
+from app.models import Bestand, ContentType, FRBR, Regeling, PublicationSettings, DocumentType, AKN
 from utils.helpers import load_template, load_template_and_write_file
 
 
@@ -14,7 +14,7 @@ class GMLGeometryGenerator:
     def __init__(self, gml_id: str, geometry: str):
         self._gml_id: str = gml_id
         self._geom = wkt.loads(geometry)
-    
+
     def generate_xml(self):
         if self._geom.geom_type == "Polygon":
             return self._polygon_to_xml()
@@ -30,7 +30,9 @@ class GMLGeometryGenerator:
         return xml_string
 
     def _multipolygon_to_xml(self):
-        xml_string = f'<gml:MultiSurface srsName="urn:ogc:def:crs:EPSG::28992" gml:id="{self._gml_id}-0">'
+        xml_string = (
+            f'<gml:MultiSurface srsName="urn:ogc:def:crs:EPSG::28992" gml:id="{self._gml_id}-0">'
+        )
         for idx, polygon in enumerate(self._geom.geoms):
             xml_string += "<gml:surfaceMember>"
             xml_string += self._polygon_gml(polygon, f"{self._gml_id}-{idx}")
@@ -39,7 +41,7 @@ class GMLGeometryGenerator:
         return xml_string
 
     def _polygon_gml(self, polygon, gml_id):
-        xml_string = f'<gml:Polygon>'
+        xml_string = f"<gml:Polygon>"
         xml_string += self._ring_gml(polygon.exterior, "exterior")
         for interior in polygon.interiors:
             xml_string += self._ring_gml(interior, "interior")
@@ -47,14 +49,15 @@ class GMLGeometryGenerator:
         return xml_string
 
     def _ring_gml(self, ring, type):
-        coords = ' '.join([f"{coord[0]} {coord[1]}" for coord in ring.coords])
-        xml_string = f'<gml:{type}><gml:LinearRing><gml:posList>{coords}</gml:posList></gml:LinearRing></gml:{type}>'
+        coords = " ".join([f"{coord[0]} {coord[1]}" for coord in ring.coords])
+        xml_string = f"<gml:{type}><gml:LinearRing><gml:posList>{coords}</gml:posList></gml:LinearRing></gml:{type}>"
         return xml_string
 
 
 class GioService:
-    def __init__(self, regeling: Regeling, pretty_print: bool = True):
-        self._regeling: Regeling = regeling
+    def __init__(self, act_akn, publication_settings, pretty_print: bool = True):
+        self._act_akn: FRBR = act_akn
+        self._publication_settings: PublicationSettings = publication_settings
         self._pretty_print: bool = pretty_print
         self._werkingsgebieden: List[Werkingsgebied] = []
 
@@ -62,10 +65,7 @@ class GioService:
         self._werkingsgebieden.append(werkingsgebied)
 
     def get_refs(self) -> List[str]:
-        refs: List[str] = [
-            w.get_FRBR().expression
-            for w in self._werkingsgebieden
-        ]
+        refs: List[str] = [w.get_FRBR().expression for w in self._werkingsgebieden]
         return refs
 
     def generate_files(self) -> List[Bestand]:
@@ -75,7 +75,7 @@ class GioService:
             files.append(self._generate_gio_for(werkingsgebied))
 
         return files
-    
+
     def _generate_glm_for(self, werkingsgebied: Werkingsgebied) -> Bestand:
         locaties: List[dict] = []
         for location in werkingsgebied.Locaties:
@@ -85,13 +85,15 @@ class GioService:
                 location.Geometry,
             )
             geometry_xml = generator.generate_xml()
-            locaties.append({
-                "gml_id": gml_id,
-                "groep_id": f"groep-{str(location.UUID)}",
-                "basis_id": f"basis-{str(location.UUID)}",
-                "naam": location.Title,
-                "geometry_xml": geometry_xml,
-            })
+            locaties.append(
+                {
+                    "gml_id": gml_id,
+                    "groep_id": f"groep-{str(location.UUID)}",
+                    "basis_id": f"basis-{str(location.UUID)}",
+                    "naam": location.Title,
+                    "geometry_xml": geometry_xml,
+                }
+            )
 
         output_file: str = werkingsgebied.get_gml_filepath()
         load_template_and_write_file(
@@ -108,7 +110,7 @@ class GioService:
             bestandsnaam=werkingsgebied.get_gml_filename(),
             content_type=ContentType.GML,
         )
-    
+
     def _generate_gio_for(self, werkingsgebied: Werkingsgebied) -> Bestand:
         gml_file: str = werkingsgebied.get_gml_filepath()
         gio_file: str = werkingsgebied.get_gio_filepath()
@@ -122,7 +124,9 @@ class GioService:
             werkingsgebied_frbr=werkingsgebied.get_FRBR(),
             bestandsnaam=werkingsgebied.get_gml_filename(),
             gml_hash=gml_hash,
-            regeling=self._regeling,
+            regeling_akn=self._act_akn,
+            eindverantwoordelijke=self._publication_settings.provincie_id,
+            maker=self._publication_settings.provincie_ref,
             naamInformatie_object=werkingsgebied.Title,
         )
 
