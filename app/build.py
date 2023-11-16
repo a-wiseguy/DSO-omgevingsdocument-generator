@@ -16,6 +16,7 @@ from app.models import (
     PublicatieOpdracht,
     Bestand,
 )
+from app.policy_objects import PolicyObjects
 from utils.waardelijsten import OnderwerpType, RechtsgebiedType, ProcedureType
 from utils.helpers import load_template_and_write_file, load_json_data
 
@@ -32,6 +33,9 @@ class OmgevingsVisie(PublicationDocument):
     template: Optional[str] = "templates/omgevingsvisie/child_of_RegelingVrijetekst.xml"
     input_data: Optional[str] = "input/publication/omgevingsvisie.json"
     # ambities: Optional[List[str]] = None # TODO
+
+    def generate_regeling_vrijetekst(self, objects: PolicyObjects):
+        pass
 
 
 class OmgevingsProgramma(PublicationDocument):
@@ -104,12 +108,11 @@ class PublicationService:
         return initial_document
 
     def create_publication_document(
-        self, document: PublicationDocument, output_path=DEFAULT_OUTPUT_PATH
+        self,
+        objects: PolicyObjects,
+        document: PublicationDocument,
+        output_path=DEFAULT_OUTPUT_PATH,
     ):
-        # TODO build policy objects based on type
-        # json_data = load_json_data("input/policy-objects/mock-data.json")
-        # ambities = json_data["ambities"]
-        # beleidskeuzes = json_data["beleidskeuzes"]
         try:
             write_path = output_path + self._akn.as_filename()
             load_template_and_write_file(
@@ -171,12 +174,12 @@ class PublicationService:
             self._document.bill.informatieobject_refs + gml_refs
         )
 
-    def build_publication_files(self):
+    def build_publication_files(self, objects: PolicyObjects):
         if self._document is None:
             if self._input_file is None:
                 raise PublicationServiceError("Missing expected input data from publication document.")
             self.setup_publication_document(self._input_file)
 
-        self.create_publication_document(document=self._document)
+        self.create_publication_document(objects=objects, document=self._document)
         self.create_lvbb_manifest()
         self.create_opdracht()

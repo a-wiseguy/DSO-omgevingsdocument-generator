@@ -4,11 +4,13 @@ from app.build import OmgevingsVisie, OmgevingsProgramma, PublicationService
 from app.models import PublicationSettings, DocumentType, AKN
 from app.gio.gio_service import GioService
 from app.gio.models import Werkingsgebied
+from app.policy_objects import PolicyObjects
 
 from utils.helpers import load_template_and_write_file, load_json_data
 
 INPUT_FILE_VISIE = "input/publication/omgevingsvisie.json"
 INPUT_FILE_PROGRAMMA = "input/publication/omgevingsprogramma.json"
+
 
 # Example visie
 settings = PublicationSettings(
@@ -24,6 +26,9 @@ new_akn = AKN(
     previous_bill=settings.previous_akn_bill,
 )
 
+objects_data = load_json_data("input/policy-objects/mock-data.json")
+policy_objects: PolicyObjects = PolicyObjects(objects_data)
+
 service = PublicationService(settings=settings, akn=new_akn, input_file=INPUT_FILE_PROGRAMMA)
 service.setup_publication_document()
 
@@ -37,5 +42,6 @@ for werkingsgebieden_json in werkingsgebieden_jsons:
     data = load_json_data(werkingsgebieden_json)
     gio_service.add_werkingsgebied(Werkingsgebied(**data))
 
+
 service.add_geo_files(gio_service.generate_files(), gio_service.get_refs())
-service.build_publication_files()
+service.build_publication_files(policy_objects)
