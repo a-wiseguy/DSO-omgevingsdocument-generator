@@ -1,7 +1,5 @@
 from typing import Optional, List
-from enum import Enum
 
-from pydantic import BaseModel
 from jinja2.exceptions import TemplateNotFound
 
 from app.exceptions import PublicationServiceError
@@ -15,39 +13,11 @@ from app.models import (
     PublicationSettings,
     PublicatieOpdracht,
     Bestand,
+    PolicyObjects,
 )
-from app.policy_objects import PolicyObjects
+from app.publication_document.models import OmgevingsProgramma, OmgevingsVisie, PublicationDocument
 from utils.waardelijsten import OnderwerpType, RechtsgebiedType, ProcedureType
 from utils.helpers import load_template_and_write_file, load_json_data
-
-
-class PublicationDocument(BaseModel):
-    template: Optional[str]
-    input_data: Optional[str]
-    bill: Optional[Besluit]
-    act: Optional[Regeling]
-    procedure: Optional[ProcedureVerloop]
-
-
-class OmgevingsVisie(PublicationDocument):
-    template: Optional[str] = "templates/omgevingsvisie/child_of_RegelingVrijetekst.xml"
-    input_data: Optional[str] = "input/publication/omgevingsvisie.json"
-    # ambities: Optional[List[str]] = None # TODO
-
-    def generate_regeling_vrijetekst(self, objects: PolicyObjects):
-        pass
-
-
-class OmgevingsProgramma(PublicationDocument):
-    template: Optional[str] = "templates/omgevingsprogramma/child_of_RegelingVrijetekst.xml"
-    input_data: Optional[str] = "input/publication/omgevingsprogramma.json"
-    # maatregelen: Optional[List[str]] = None # TODO
-
-
-class LVBBPublication(BaseModel):
-    akn: Optional[AKN]
-    opdracht: Optional[PublicatieOpdracht]
-    document: Optional[PublicationDocument]
 
 
 class PublicationService:
@@ -114,6 +84,7 @@ class PublicationService:
         output_path=DEFAULT_OUTPUT_PATH,
     ):
         try:
+            lichaam: str = document.generate_regeling_vrijetekst_lichaam(objects)
             write_path = output_path + self._akn.as_filename()
             load_template_and_write_file(
                 template_name="templates/base/AanleveringBesluit.xml",

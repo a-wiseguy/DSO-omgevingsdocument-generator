@@ -1,10 +1,9 @@
 import glob
 
-from app.build import OmgevingsVisie, OmgevingsProgramma, PublicationService
-from app.models import PublicationSettings, DocumentType, AKN
+from app.build import PublicationService
+from app.models import PublicationSettings, DocumentType, AKN, PolicyObjects
 from app.gio.gio_service import GioService
 from app.gio.models import Werkingsgebied
-from app.policy_objects import PolicyObjects
 
 from utils.helpers import load_template_and_write_file, load_json_data
 
@@ -14,7 +13,7 @@ INPUT_FILE_PROGRAMMA = "input/publication/omgevingsprogramma.json"
 
 # Example visie
 settings = PublicationSettings(
-    document_type=DocumentType.PROGRAMMA,
+    document_type=DocumentType.VISIE,
     previous_akn_act=44,
     previous_akn_bill=2096,
     publicatie_datum="2023-12-15"
@@ -29,7 +28,7 @@ new_akn = AKN(
 objects_data = load_json_data("input/policy-objects/mock-data.json")
 policy_objects: PolicyObjects = PolicyObjects(objects_data)
 
-service = PublicationService(settings=settings, akn=new_akn, input_file=INPUT_FILE_PROGRAMMA)
+service = PublicationService(settings=settings, akn=new_akn, input_file=INPUT_FILE_VISIE)
 service.setup_publication_document()
 
 gio_service = GioService(

@@ -158,37 +158,37 @@ class LiGenerator(ElementGenerator):
 
 
 class I(SimpleElement):
-    def __init__(self, tag: Optional[Tag]):
+    def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="i")
 
 
 class B(SimpleElement):
-    def __init__(self, tag: Optional[Tag]):
+    def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="b")
 
 
 class U(SimpleElement):
-    def __init__(self, tag: Optional[Tag]):
+    def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="u")
 
 
 class Sub(SimpleElement):
-    def __init__(self, tag: Optional[Tag]):
+    def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="sub")
 
 
 class Sup(SimpleElement):
-    def __init__(self, tag: Optional[Tag]):
+    def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="sup")
 
 
 class Strong(SimpleElement):
-    def __init__(self, tag: Optional[Tag]):
+    def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="strong")
 
 
 class Al(SimpleElement):
-    def __init__(self, tag: Optional[Tag]):
+    def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="Al")
 
     def as_xml(self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None) -> Union[Tag, str]:
@@ -199,23 +199,34 @@ class Al(SimpleElement):
 
 
 class Br(SimpleElement):
-    def __init__(self, tag: Optional[Tag]):
+    def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="br")
 
 
 class Kop(SimpleElement):
-    def __init__(self, tag: Optional[Tag]):
+    def __init__(self, tag: Optional[Tag] = None):
         super().__init__()
-    
+        self.nummer: Optional[str] = None
+
+        if tag is not None:
+            self.nummer = tag.get("data-nummer", None)
+
     def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
-        opschrift = SimpleElement.as_xml(self, soup=soup, tag_name_overwrite="Opschrift")
         kop: Tag = soup.new_tag("Kop")
+
+        if self.nummer is not None:
+            nummer: Tag = soup.new_tag("Nummer")
+            nummer.append(str(self.nummer))
+            kop.append(nummer)
+
+        opschrift = SimpleElement.as_xml(self, soup=soup, tag_name_overwrite="Opschrift")
         kop.append(opschrift)
+
         return kop
 
 
 class Inhoud(SimpleElement):
-    def __init__(self, tag: Optional[Tag]):
+    def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="Inhoud")
 
 
@@ -234,7 +245,7 @@ class Li(SimpleElement):
         al.consume_string(string)
         self.contents.append(al)
 
-    def as_xml(self, soup: BeautifulSoup) -> Tag:
+    def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
         tag_li: Tag = soup.new_tag("Li")
         if self.lijst_type.has_number():
             nummer: str = self.lijst_type.get_number(self.idx)
@@ -272,7 +283,7 @@ class Lijst(SimpleElement):
         if len(raw) != 0:
             raise RuntimeError(f"Can not write plain text to Lijst. Trying to write: {raw}")
 
-    def as_xml(self, soup: BeautifulSoup) -> Tag:
+    def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
         attributes: dict = {
             "type": self.lijst_type.get_type()
         }
@@ -296,16 +307,20 @@ class Lijst(SimpleElement):
 
 
 class Divisietekst(Element):
-    def __init__(self):
+    def __init__(self, tag: Optional[Tag] = None):
         self.kop: Optional[Kop] = None
         self.inhoud: Optional[Inhoud] = None
 
     def consume_tag(self, tag: Tag) -> LeftoverTag:
+        # A div requires a new Divisie which a Divisietekst can not create
+        if tag.name == "div":
+            return tag
+
         # Headings will be send to the Kop
         if tag.name in ["h1", "h2", "h3", "h4", "h5", "h6"]:
             if self.kop is not None:
                 return tag
-            kop = Kop(tag=None)
+            kop = Kop(tag)
             kop.consume_children(tag.children)
             self.kop = kop
             return None
@@ -328,7 +343,7 @@ class Divisietekst(Element):
         
         return self.inhoud
 
-    def as_xml(self, soup: BeautifulSoup) -> Tag:
+    def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
         tag_divisietekst: Tag = soup.new_tag("Divisietekst")
 
         if self.kop is not None:
@@ -343,16 +358,15 @@ class Divisietekst(Element):
 
 
 class Divisie(Element):
-    def __init__(self):
+    def __init__(self, tag: Optional[Tag] = None):
         self.kop: Optional[Kop] = None
         self.contents: List[Union["Divisie", Divisietekst]] = []
     
     def consume_tag(self, tag: Tag) -> LeftoverTag:
-        leftoverTag: LeftoverTag = self._try_consume_tag(tag)
-        if leftoverTag is None :
-            return None
-        
-        return self._try_consume_tag(tag)
+        while True:
+            leftoverTag = self._try_consume_tag(tag)
+            if leftoverTag is None:
+                return None
 
     def _try_consume_tag(self, tag: Tag) -> LeftoverTag:
         # Headings will be send to the Kop
@@ -361,36 +375,40 @@ class Divisie(Element):
                 # If we already have a title and we need a title
                 # Then we create a new Divisie or Divisietekst based on the title level
                 # and then let that new component consume the title
-                if tag.name in ["h1", "h2"]:
-                    content: Divisie = Divisie()
-                    self.contents.append(content)
-                    leftover = content.consume_tag(tag)
-                    return leftover
-                else:
-                    content: Divisietekst = Divisietekst()
-                    self.contents.append(content)
-                    leftover = content.consume_tag(tag)
-                    return leftover
+                # if tag.name in ["h1", "h2"]:
+                #     content: Divisie = Divisie()
+                #     self.contents.append(content)
+                #     leftover = content.consume_tag(tag)
+                #     return leftover
+                # else:
+                content: Divisietekst = Divisietekst()
+                self.contents.append(content)
+                leftover = content.consume_tag(tag)
+                return leftover
 
             if self.contents:
                 # We cant set the heading if we already have content.
                 # That would render the text out of order
                 # In this case we just pass allong to the divisie tekst
-                content: Divisietekst = self._get_active_divisietekst()
+                # content: Divisietekst = self._get_active_divisietekst()
+                # leftover = content.consume_tag(tag)
+                # @note: scrapped above, i think we should create a new divisietekst in this case
+                content: Divisietekst = Divisietekst()
+                self.contents.append(content)
                 leftover = content.consume_tag(tag)
                 return leftover
 
-            kop = Kop(tag=None)
+            kop = Kop(tag)
             kop.consume_children(tag.children)
             self.kop = kop
             return None
         
-        # If the tag is a div then we will create a new Divisietekst
+        # If the tag is a div then we will create a new Divisie
         elif tag.name == "div":
-            content: Divisietekst = Divisietekst()
+            content: Divisie = Divisie(tag)
             self.contents.append(content)
-            leftover = content.consume_tag(tag)
-            return leftover
+            content.consume_children(tag.children)
+            return None
 
         # Else we will let the last Divisietekst consume the tag
         else:
@@ -420,7 +438,7 @@ class Divisie(Element):
         # Return the last which is now forced to be a Divisietekst
         return self.contents[-1]
     
-    def as_xml(self, soup: BeautifulSoup) -> Tag:
+    def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
         tag_divisie: Tag = soup.new_tag("Divisie")
 
         if self.kop is not None:
@@ -439,6 +457,16 @@ class Divisie(Element):
         return tag_divisie
 
 
+class Lichaam(SimpleElement):
+    def __init__(self, tag: Optional[Tag] = None):
+        super().__init__(xml_tag_name="Lichaam")
+
+    def consume_string(self, string: NavigableString):
+        raw: str = str(string).strip()
+        if len(raw) != 0:
+            raise RuntimeError(f"Can not write plain text to Lijst. Trying to write: {raw}")
+
+
 element_i_handler = SimpleGenerator("i", I)
 element_em_handler = SimpleGenerator("em", I)
 element_b_handler = SimpleGenerator("b", B)
@@ -451,6 +479,7 @@ element_ul_handler = UnorderedLijstGenerator()
 element_ol_handler = OrderedLijstGenerator()
 element_li_handler = LiGenerator()
 element_br_handler = SimpleGenerator("br", Br)
+element_div_handler = SimpleGenerator("div", Divisie)
 
 
 I.element_generators = [
@@ -523,4 +552,7 @@ Li.element_generators = [
 ]
 Lijst.element_generators = [
     element_li_handler,
+]
+Lichaam.element_generators = [
+    element_div_handler,
 ]

@@ -1,7 +1,9 @@
+from abc import abstractmethod
 from uuid import UUID, uuid4
 from datetime import datetime
 from enum import Enum
 from typing import List, Optional
+from app.policy_objects import PolicyObjects
 from utils.waardelijsten import ProcedureStappenDefinitief, ProcedureType, Provincie
 
 from pydantic import BaseModel, Field, root_validator
