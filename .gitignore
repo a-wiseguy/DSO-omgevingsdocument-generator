@@ -17,4 +17,5 @@ output/*
 !output/.gitkeep
 .vscode
 notes.md
+*.hidden*
 .python-version

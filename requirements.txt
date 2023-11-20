@@ -12,3 +12,5 @@ pydantic==2.4.2
 lxml==4.9.3
 pyproj==3.6.1
 shapely==2.0.2
+beautifulsoup4==4.12.2
+roman==4.1
