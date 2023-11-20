@@ -1,26 +1,5 @@
 {% extends 'templates/base/regeling/RegelingVrijetekst.xml' %}
 
 {% block body %}
-<Lichaam eId="body" wId="body" xmlns="https://standaarden.overheid.nl/stop/imop/tekst/">
-	<Divisie eId="div_1" wId="pv28_1067__div_1">
-		<Kop>
-			<Nummer>1.</Nummer>
-			<Opschrift>Visie content</Opschrift>
-		</Kop>
-		<Divisietekst eId="div_1__content_1" wId="pv28_1067__div_1__content_1">
-			<Kop>
-				<Opschrift>VISIE DOCUMENT</Opschrift>
-			</Kop>
-			<Inhoud>
-				<Al>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam pretium
-					consectetur ex. Suspendisse vel neque luctus, faucibus risus ut, vulputate
-					ante. Nam molestie a enim a aliquam. Proin luctus facilisis velit, id
-					consequat ante malesuada ac. Nulla rutrum, felis ut congue scelerisque, eros
-					turpis tincidunt metus, eu porttitor turpis elit sed odio.
-				</Al>
-			</Inhoud>
-		</Divisietekst>
-	</Divisie>
-</Lichaam>
+{{ vrijetekst_lichaam }}
 {% endblock %}

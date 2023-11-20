@@ -13,8 +13,8 @@ from app.models import (
     PublicationSettings,
     PublicatieOpdracht,
     Bestand,
-    PolicyObjects,
 )
+from app.policy_objects import PolicyObjects
 from app.publication_document.models import OmgevingsProgramma, OmgevingsVisie, PublicationDocument
 from utils.waardelijsten import OnderwerpType, RechtsgebiedType, ProcedureType
 from utils.helpers import load_template_and_write_file, load_json_data
@@ -85,6 +85,9 @@ class PublicationService:
     ):
         try:
             lichaam: str = document.generate_regeling_vrijetekst_lichaam(objects)
+            # lichaam = asset_handler(lichaam)
+            # lichaam = wid_edit_generator(lichaam)
+
             write_path = output_path + self._akn.as_filename()
             load_template_and_write_file(
                 template_name="templates/base/AanleveringBesluit.xml",
@@ -94,6 +97,7 @@ class PublicationService:
                 regeling=document.act,
                 besluit=document.bill,
                 procedure=document.procedure,
+                vrijetekst_lichaam=lichaam,
                 pretty_print=True,
             )
             print(f"Created {self._akn} - path: {output_path}")

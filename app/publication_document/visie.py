@@ -1,8 +1,5 @@
 from typing import List
-from app.models import PolicyObjects
-from app.policy_objects import PolicyObject, html_to_xml_lichaam, visie_algemeen_as_html
-from app.tekst import divisie_to_xml, html_to_divisie
-from app.tekst.tekst import Divisie
+from app.policy_objects import PolicyObject, PolicyObjects, html_to_xml_lichaam
 
 #
 # @note:
@@ -25,7 +22,7 @@ def generate_regeling_vrijetekst_lichaam_visie(objects: PolicyObjects) -> str:
         <div>
             {objects.get("visie_algemeen", 4).html({"heading_number": 4})}
 
-            {" ".join([f"<div>{ambitie.html()}</div>" for ambitie in ambities])}
+            {" ".join([f'<div data-hint-object-code="{ambitie.get("Code")}">{ambitie.html()}</div>' for ambitie in ambities])}
 
             <div>{objects.get("visie_algemeen", 5).html()}</div>
         </div>

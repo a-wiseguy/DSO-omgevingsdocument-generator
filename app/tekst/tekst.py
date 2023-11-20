@@ -1,6 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from math import e
-from typing import Any, List, Optional, Type, TypeAlias, Union
+from typing import Any, List, Optional, Type, TypeAlias, Union, Dict
 
 from bs4 import BeautifulSoup, CData, Comment, Declaration, Doctype, NavigableString, ProcessingInstruction, Tag
 
@@ -27,10 +26,8 @@ class Element(AsXmlTrait, metaclass=ABCMeta):
     def consume_children(self, children: List[Any]):
         for element in children:
             if isinstance(element, Tag):
-                print(f"Tag: {element.name}")
                 self.consume_tag(element)
             elif isinstance(element, NavigableString):
-                print(f"String: {element}")
                 self.consume_string(element)
             elif isinstance(element, Comment):
                 raise NotImplementedError("Comment", element)
@@ -65,9 +62,10 @@ class ElementGenerator(metaclass=ABCMeta):
 class SimpleElement(Element, metaclass=ABCMeta):
     element_generators: List[ElementGenerator] = []
 
-    def __init__(self, xml_tag_name: str = ""):
+    def __init__(self, xml_tag_name: str = "", xml_tag_attrs: Dict[str, str] = {}):
         self.contents: List[Union[Element, str]] = []
         self.xml_tag_name: str = xml_tag_name
+        self.xml_tag_attrs: Dict[str, str] = xml_tag_attrs
 
     def consume_tag(self, tag: Tag) -> LeftoverTag:
         for element_generator in self.element_generators:
@@ -85,9 +83,16 @@ class SimpleElement(Element, metaclass=ABCMeta):
     def consume_string(self, string: NavigableString):
         self.contents.append(str(string))
 
-    def as_xml(self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None) -> Union[Tag, str]:
+    def as_xml(
+        self,
+        soup: BeautifulSoup,
+        tag_name_overwrite: Optional[str] = None,
+        tag_attrs_overwrite: Optional[Dict[str, str]] = None,
+    ) -> Union[Tag, str]:
         tag_name: str = tag_name_overwrite if tag_name_overwrite is not None else self.xml_tag_name
         tag: Tag = soup.new_tag(tag_name)
+        tag.attrs = tag_attrs_overwrite if tag_attrs_overwrite is not None else self.xml_tag_attrs
+
         for content in self.contents:
             if hasattr(content, 'as_xml'):
                 child = content.as_xml(soup)
@@ -459,7 +464,10 @@ class Divisie(Element):
 
 class Lichaam(SimpleElement):
     def __init__(self, tag: Optional[Tag] = None):
-        super().__init__(xml_tag_name="Lichaam")
+        super().__init__(xml_tag_name="Lichaam", xml_tag_attrs={
+            # @todo: this could also be done by a middleware...
+            # "xmlns": "https://standaarden.overheid.nl/stop/imop/tekst/",
+        })
 
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()

@@ -1,11 +1,12 @@
 import glob
 
 from app.build import PublicationService
-from app.models import PublicationSettings, DocumentType, AKN, PolicyObjects
+from app.models import PublicationSettings, DocumentType, AKN
 from app.gio.gio_service import GioService
 from app.gio.models import Werkingsgebied
+from app.policy_objects import PolicyObjects
 
-from utils.helpers import load_template_and_write_file, load_json_data
+from utils.helpers import load_json_data
 
 INPUT_FILE_VISIE = "input/publication/omgevingsvisie.json"
 INPUT_FILE_PROGRAMMA = "input/publication/omgevingsprogramma.json"

@@ -27,6 +27,14 @@ class PolicyObject:
                     {self._html_title(context)}
                     {self._data['Description']}
                     """
+            case "beleidskeuze":
+                return f"""
+                    {self._html_title(context)}
+                    <h2>Omschrijving</h2>
+                    {self._data['Description']}
+                    <h2>Redenering</h2>
+                    {self._data['Cause']}
+                    """
         raise NotImplementedError()
 
     def _html_title(self, context: dict = {}) -> str:
@@ -87,7 +95,7 @@ def is_html_valid(html_content) -> bool:
 def html_to_xml_lichaam(html: str) -> str:
     if not is_html_valid(html):
         raise RuntimeError("Invalid html")
-    
+
     input_soup = BeautifulSoup(html, "html.parser")
     lichaam = Lichaam()
     lichaam.consume_children(input_soup.children)
