@@ -1,4 +1,6 @@
 import glob
+from app import assets
+from app.assets.assets_service import AssetsService
 
 from app.build import PublicationService
 from app.models import PublicationSettings, DocumentType, AKN
@@ -29,7 +31,16 @@ new_akn = AKN(
 objects_data = load_json_data("input/policy-objects/mock-data.json")
 policy_objects: PolicyObjects = PolicyObjects(objects_data)
 
-service = PublicationService(settings=settings, akn=new_akn, input_file=INPUT_FILE_VISIE)
+assets_jsons = glob.glob("./input/assets/*.json")
+assets_data = [load_json_data(json_file) for json_file in assets_jsons]
+assets_service = AssetsService(assets_data)
+
+service = PublicationService(
+    settings=settings,
+    akn=new_akn,
+    input_file=INPUT_FILE_VISIE,
+    assets_service=assets_service,
+)
 service.setup_publication_document()
 
 gio_service = GioService(
@@ -54,10 +65,13 @@ geo_refs = gio_service.get_refs()
 
 # Setup publication document
 publication_service = PublicationService(
-    settings=settings, akn=new_akn, input_file=INPUT_FILE_VISIE
+    settings=settings,
+    akn=new_akn,
+    input_file=INPUT_FILE_VISIE, 
+    assets_service=assets_service,
 )
 document = publication_service.setup_publication_document()
-document.template = "templates/omgevingsvisie/example_visie_no_ids.xml"
+# document.template = "templates/omgevingsvisie/example_visie_no_ids.xml"
 publication_service._document = document
 publication_service.add_geo_files(geo_files, geo_refs)
 output_file = publication_service.build_publication_files(policy_objects)

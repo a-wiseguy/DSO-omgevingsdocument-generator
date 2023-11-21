@@ -102,4 +102,5 @@ def html_to_xml_lichaam(html: str) -> str:
 
     output_soup = BeautifulSoup(features='xml')
     output = lichaam.as_xml(output_soup)
-    return output
+    output_xml = str(output)
+    return output_xml

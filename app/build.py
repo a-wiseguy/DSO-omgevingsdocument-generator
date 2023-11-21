@@ -1,6 +1,9 @@
 from uuid import uuid4
 from typing import Optional, List
 from jinja2.exceptions import TemplateNotFound
+from app.assets.create_image import create_image
+from app.assets.assets_service import AssetsService
+from app.assets.enrich_illustratie import middleware_enrich_illustratie
 
 from app.exceptions import PublicationServiceError
 from app.models import (
@@ -23,11 +26,18 @@ from utils.helpers import load_template_and_write_file, load_json_data
 class PublicationService:
     DEFAULT_OUTPUT_PATH = "output/"
 
-    def __init__(self, settings: PublicationSettings, akn: Optional[AKN], input_file: str):
+    def __init__(
+        self, 
+        settings: PublicationSettings, 
+        akn: Optional[AKN], 
+        input_file: str,
+        assets_service: AssetsService,
+    ):
         self._settings: PublicationSettings = settings
         self._input_file = input_file
         self._document: PublicationDocument
         self._files: List[Bestand] = []
+        self._assets_service: AssetsService = assets_service
 
         self._created_files: List[str] = []
 
@@ -87,7 +97,7 @@ class PublicationService:
     ):
         try:
             lichaam: str = document.generate_regeling_vrijetekst_lichaam(objects)
-            # lichaam = asset_handler(lichaam)
+            lichaam = middleware_enrich_illustratie(self._assets_service, lichaam)
             # lichaam = wid_edit_generator(lichaam)
 
             write_path = output_path + self._akn.as_filename()
@@ -154,12 +164,23 @@ class PublicationService:
             self._document.bill.informatieobject_refs + gml_refs
         )
 
+    def create_images(self):
+        for asset in self._assets_service.all():
+            path: str = f"output/{asset.get_filename()}"
+            create_image(asset, path)
+            self._files.append(Bestand(
+                bestandsnaam=asset.get_filename(),
+                content_type=asset.Meta.Formaat,
+            ))
+            self._created_files.append(path)
+
     def build_publication_files(self, objects: PolicyObjects):
         if self._document is None:
             if self._input_file is None:
                 raise PublicationServiceError("Missing expected input data from publication document.")
             self.setup_publication_document(self._input_file)
 
+        self.create_images()
         publication_file_output = self.create_publication_document(objects=objects, document=self._document)
         self.create_lvbb_manifest()
         self.create_opdracht(opdracht=PublicatieOpdracht(
