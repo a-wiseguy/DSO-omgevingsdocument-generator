@@ -1,5 +1,5 @@
+from uuid import uuid4
 from typing import Optional, List
-
 from jinja2.exceptions import TemplateNotFound
 
 from app.exceptions import PublicationServiceError
@@ -28,6 +28,8 @@ class PublicationService:
         self._input_file = input_file
         self._document: PublicationDocument
         self._files: List[Bestand] = []
+
+        self._created_files: List[str] = []
 
         if akn:
             self._akn = akn
@@ -101,6 +103,8 @@ class PublicationService:
                 pretty_print=True,
             )
             print(f"Created {self._akn} - path: {output_path}")
+            self._created_files.append(write_path)
+            return write_path
         except TemplateNotFound as e:
             raise PublicationServiceError(message=f"child template not while writing xml: {e}")
         except Exception as e:
@@ -117,24 +121,25 @@ class PublicationService:
                 pretty_print=True,
             )
             print(f"Created manifest.xml in: {output_path}")
+            self._created_files.append(write_path)
+            return write_path
         except TemplateNotFound as e:
             raise PublicationServiceError(message=f"Manifest file Template missing: {e}")
         except Exception as e:
             raise PublicationServiceError(message=e)
 
-    def create_opdracht(self, output_path=DEFAULT_OUTPUT_PATH):
-        publicatieopdracht = PublicatieOpdracht(
-            publicatie=self._akn.as_filename(), datum_bekendmaking=self._settings.publicatie_datum
-        )
+    def create_opdracht(self, opdracht: PublicatieOpdracht, output_path=DEFAULT_OUTPUT_PATH):
         try:
             write_path = output_path + "opdracht.xml"
             load_template_and_write_file(
                 template_name="templates/lvbb/opdracht.xml",
                 output_file=write_path,
-                publicatieopdracht=publicatieopdracht,
+                publicatieopdracht=opdracht,
                 pretty_print=True,
             )
             print(f"Created opdracht.xml in: {output_path}")
+            self._created_files.append(write_path)
+            return write_path
         except TemplateNotFound as e:
             raise PublicationServiceError(message=f"Opdracht file Template missing: {e}")
         except Exception as e:
@@ -155,6 +160,12 @@ class PublicationService:
                 raise PublicationServiceError("Missing expected input data from publication document.")
             self.setup_publication_document(self._input_file)
 
-        self.create_publication_document(objects=objects, document=self._document)
+        publication_file_output = self.create_publication_document(objects=objects, document=self._document)
         self.create_lvbb_manifest()
-        self.create_opdracht()
+        self.create_opdracht(opdracht=PublicatieOpdracht(
+            id_levering=uuid4(),
+            publicatie=self._akn.as_filename(),
+            datum_bekendmaking=self._settings.publicatie_datum
+        ))
+
+        return publication_file_output
