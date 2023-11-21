@@ -1,52 +1,52 @@
 {
-    "besluit": {
-        "officiele_titel": "Opschrift besluit - Dossier naam Hello World Programma",
-        "compact": {
-            "RegelingOpschrift": "regeling dossier naam Hello World Programma",
-            "Aanhef": "dossier naam Hello World Programma",
-            "WijzigArtikel": {
-                "Label": "Artikel",
-                "Nummer": "I",
-                "Wat": "zoals is aangegeven in Bijlage A bij Artikel I"
-            },
-            "Artikelen": [
-                {
-                    "Label": "Artikel",
-                    "Nummer": "II",
-                    "Inhoud": null
-                },
-                {
-                    "Label": "Artikel",
-                    "Nummer": "III",
-                    "Inhoud": "Dit besluit treedt in werking op de dag waarop dit bekend wordt gemaakt."
-                }
-            ],
-            "WijzigingBijlage": {
-                "Label": "Bijlage",
-                "Nummer": "A",
-                "Opschrift": "Bijlage bij Artikel I"
-            },
-            "Sluiting": "Gegeven te 's-Gravenhage, 27 september 2023",
-            "Ondertekening": "Arvin en Jordy"
+  "besluit": {
+    "officiele_titel": "Opschrift besluit - Dossier naam Hello World Programma",
+    "compact": {
+      "RegelingOpschrift": "regeling dossier naam Hello World Programma",
+      "Aanhef": "dossier naam Hello World Programma",
+      "WijzigArtikel": {
+        "Label": "Artikel",
+        "Nummer": "I",
+        "Wat": "zoals is aangegeven in Bijlage A bij Artikel I"
+      },
+      "Artikelen": [
+        {
+          "Label": "Artikel",
+          "Nummer": "II",
+          "Inhoud": null
+        },
+        {
+          "Label": "Artikel",
+          "Nummer": "III",
+          "Inhoud": "Dit besluit treedt in werking op de dag waarop dit bekend wordt gemaakt."
         }
-    },
-    "regeling": {
-        "versienummer": "v1",
-        "officiele_titel": "Dossier naam Hello World OmgevingsVisie",
-        "citeertitel": "citeertitel omgevingsprogramma hello World",
-        "is_officieel": "true"
-    },
-    "procedure": {
-        "bekend_op": "2023-12-15",
-        "stappen": [
-            {
-                "soort_stap": "/join/id/stop/procedure/stap_002",
-                "voltooid_op": "2023-09-27"
-            },
-            {
-                "soort_stap": "/join/id/stop/procedure/stap_003",
-                "voltooid_op": "2023-09-27"
-            }
-        ]
+      ],
+      "WijzigingBijlage": {
+        "Label": "Bijlage",
+        "Nummer": "A",
+        "Opschrift": "Bijlage bij Artikel I"
+      },
+      "Sluiting": "Gegeven te 's-Gravenhage, 27 september 2023",
+      "Ondertekening": "Arvin en Jordy"
     }
+  },
+  "regeling": {
+    "versienummer": "v1",
+    "officiele_titel": "Dossier naam Hello World OmgevingsVisie",
+    "citeertitel": "citeertitel omgevingsprogramma hello World",
+    "is_officieel": "true"
+  },
+  "procedure": {
+    "bekend_op": "2023-12-15",
+    "stappen": [
+      {
+        "soort_stap": "/join/id/stop/procedure/stap_002",
+        "voltooid_op": "2023-09-27"
+      },
+      {
+        "soort_stap": "/join/id/stop/procedure/stap_003",
+        "voltooid_op": "2023-09-27"
+      }
+    ]
+  }
 }

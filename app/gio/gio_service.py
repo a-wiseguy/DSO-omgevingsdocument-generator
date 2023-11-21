@@ -55,11 +55,17 @@ class GMLGeometryGenerator:
 
 
 class GioService:
-    def __init__(self, act_akn, publication_settings, pretty_print: bool = True):
+    def __init__(
+        self,
+        act_akn,
+        publication_settings,
+        werkingsgebieden: List[Werkingsgebied] = [],
+        pretty_print: bool = True,
+    ):
         self._act_akn: FRBR = act_akn
         self._publication_settings: PublicationSettings = publication_settings
         self._pretty_print: bool = pretty_print
-        self._werkingsgebieden: List[Werkingsgebied] = []
+        self._werkingsgebieden: List[Werkingsgebied] = werkingsgebieden
 
     def add_werkingsgebied(self, werkingsgebied: Werkingsgebied):
         self._werkingsgebieden.append(werkingsgebied)
