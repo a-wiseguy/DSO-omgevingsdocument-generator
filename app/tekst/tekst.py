@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+import re
 from typing import Any, List, Optional, Type, TypeAlias, Union, Dict
 
 from bs4 import BeautifulSoup, CData, Comment, Declaration, Doctype, NavigableString, ProcessingInstruction, Tag
@@ -206,6 +207,32 @@ class Al(SimpleElement):
 class Br(SimpleElement):
     def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="br")
+
+
+class Figuur(SimpleElement):
+    src_pattern = r"^\[ASSET:(.{36})\]$"
+
+    def __init__(self, tag: Optional[Tag] = None):
+        super().__init__()
+        self._asset_uuid: str = ""
+
+        src: str = tag.attrs.get("src", "")
+        if not src:
+            raise RuntimeError("Missing required attribute src for image")
+        src_match = re.match(self.src_pattern, src)
+        if not src_match:
+            raise RuntimeError("Wrong format for image src")
+        self._asset_uuid = src_match.group(1)
+
+    def as_xml(self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None) -> Union[Tag, str]:
+        figuur: Tag = soup.new_tag("Figuur")
+        illustratie: Tag = soup.new_tag("Illustratie")
+        illustratie.attrs = {
+            "data-info-asset-uuid": self._asset_uuid,
+        }
+
+        figuur.append(illustratie)
+        return figuur
 
 
 class Kop(SimpleElement):
@@ -488,6 +515,7 @@ element_ol_handler = OrderedLijstGenerator()
 element_li_handler = LiGenerator()
 element_br_handler = SimpleGenerator("br", Br)
 element_div_handler = SimpleGenerator("div", Divisie)
+element_img_handler = SimpleGenerator("img", Figuur)
 
 
 I.element_generators = [
@@ -552,11 +580,13 @@ Inhoud.element_generators = [
     element_p_handler,
     element_ul_handler,
     element_ol_handler,
+    element_img_handler,
 ]
 Li.element_generators = [
     element_p_handler,
     element_ul_handler,
     element_ol_handler,
+    element_img_handler,
 ]
 Lijst.element_generators = [
     element_li_handler,
