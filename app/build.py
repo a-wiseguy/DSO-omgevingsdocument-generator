@@ -5,6 +5,7 @@ from app.assets.create_image import create_image
 from app.assets.assets_service import AssetsService
 from app.assets.enrich_illustratie import middleware_enrich_illustratie
 
+from app.ewid.ewid_service import EWIDService
 from app.exceptions import PublicationServiceError
 from app.models import (
     AKN,
@@ -27,9 +28,9 @@ class PublicationService:
     DEFAULT_OUTPUT_PATH = "output/"
 
     def __init__(
-        self, 
-        settings: PublicationSettings, 
-        akn: Optional[AKN], 
+        self,
+        settings: PublicationSettings,
+        akn: Optional[AKN],
         input_file: str,
         assets_service: AssetsService,
     ):
@@ -95,11 +96,14 @@ class PublicationService:
         document: PublicationDocument,
         output_path=DEFAULT_OUTPUT_PATH,
     ):
-        try:
-            lichaam: str = document.generate_regeling_vrijetekst_lichaam(objects)
-            lichaam = middleware_enrich_illustratie(self._assets_service, lichaam)
-            # lichaam = wid_edit_generator(lichaam)
+        lichaam = document.generate_regeling_vrijetekst_lichaam(objects)
+        lichaam = middleware_enrich_illustratie(self._assets_service, lichaam)
+        # Fill in ewIDs
+        wid_prefix = f"pv28_{self._settings.previous_akn_bill}"
+        ewid_service = EWIDService(soup=lichaam, wid_prefix=wid_prefix)
+        lichaam = ewid_service.fill_ewid_in_bs4()
 
+        try:
             write_path = output_path + self._akn.as_filename()
             load_template_and_write_file(
                 template_name="templates/base/AanleveringBesluit.xml",
@@ -158,7 +162,9 @@ class PublicationService:
     def add_geo_files(self, gio_files: List[Bestand], gml_refs: List[str]):
         # merge in the geo service files/references
         if self._document is None:
-            raise PublicationServiceError("PublicationDocument not initialized. cannot add geo files.")
+            raise PublicationServiceError(
+                "PublicationDocument not initialized. cannot add geo files."
+            )
         self._files = self._files + gio_files
         self._document.bill.informatieobject_refs = (
             self._document.bill.informatieobject_refs + gml_refs
@@ -168,25 +174,33 @@ class PublicationService:
         for asset in self._assets_service.all():
             path: str = f"output/{asset.get_filename()}"
             create_image(asset, path)
-            self._files.append(Bestand(
-                bestandsnaam=asset.get_filename(),
-                content_type=asset.Meta.Formaat,
-            ))
+            self._files.append(
+                Bestand(
+                    bestandsnaam=asset.get_filename(),
+                    content_type=asset.Meta.Formaat,
+                )
+            )
             self._created_files.append(path)
 
     def build_publication_files(self, objects: PolicyObjects):
         if self._document is None:
             if self._input_file is None:
-                raise PublicationServiceError("Missing expected input data from publication document.")
+                raise PublicationServiceError(
+                    "Missing expected input data from publication document."
+                )
             self.setup_publication_document(self._input_file)
 
         self.create_images()
-        publication_file_output = self.create_publication_document(objects=objects, document=self._document)
+        publication_file_output = self.create_publication_document(
+            objects=objects, document=self._document
+        )
         self.create_lvbb_manifest()
-        self.create_opdracht(opdracht=PublicatieOpdracht(
-            id_levering=uuid4(),
-            publicatie=self._akn.as_filename(),
-            datum_bekendmaking=self._settings.publicatie_datum
-        ))
+        self.create_opdracht(
+            opdracht=PublicatieOpdracht(
+                id_levering=uuid4(),
+                publicatie=self._akn.as_filename(),
+                datum_bekendmaking=self._settings.publicatie_datum,
+            )
+        )
 
         return publication_file_output
