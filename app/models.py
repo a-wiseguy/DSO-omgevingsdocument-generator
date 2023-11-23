@@ -121,6 +121,7 @@ class AKN(BaseModel):
     previous_act: int
     previous_bill: int
     year: int = Field(default_factory=lambda: datetime.now().year)
+    doel_id: str = None
 
     current_act: int = Field(init=False)
     current_bill: int = Field(init=False)
@@ -140,6 +141,16 @@ class AKN(BaseModel):
         date = datetime.now().strftime("%Y-%m-%d")
         postfix = f"/nld@{date};{self.current_bill if akn_type == 'bill' else self.current_act}"
         return FRBR(work=work, expression=work + postfix)
+
+    def as_doel(self):
+        if self.doel_id:
+            return self.doel_id
+        base_format = f"/join/id/proces/{self.province_id}/{self.year}"
+        unique_code = uuid4().hex
+        # TODO unique code store in DB
+        doel_id = f"{base_format}/{self.current_bill}_{unique_code}"
+        self.doel_id = doel_id
+        return doel_id
 
     def __str__(self):
         return f"akn_nl_bill_{self.province_id}-2-{self.current_bill}"

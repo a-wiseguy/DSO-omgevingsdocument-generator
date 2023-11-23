@@ -2,8 +2,8 @@
 <Aanleveringen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.geostandaarden.nl/bestanden-ow/manifest-ow" xsi:schemaLocation="http://www.geostandaarden.nl/bestanden-ow/manifest-ow https://register.geostandaarden.nl/xmlschema/tpod/v2.0.0/bestanden-ow/generiek/manifest-ow.xsd">
 	<domein>omgevingswet</domein>
 	<Aanlevering>
-		<WorkIDRegeling>/akn/nl/act/pv28/2023/2_41</WorkIDRegeling>
-		<DoelID>/join/id/proces/pv28/2023/2_2093_nieuweregeling</DoelID>
+		<WorkIDRegeling>{{ data.act_akn }}</WorkIDRegeling>
+		<DoelID>{{ data.doel_id }}</DoelID>
 		<Bestand>
 			<naam>owDivisie.xml</naam>
 			<objecttype>Divisie</objecttype>

@@ -17,7 +17,7 @@
 		<sl:dataset>provincie Zuid-holland</sl:dataset>
 		<sl:inhoud>
 			<sl:gebied>provincie Zuid-holland</sl:gebied>
-			<sl:leveringsId>00000000-0000-0000-0000-000000000000</sl:leveringsId>
+			<sl:leveringsId>{{ data.leveringsId }}</sl:leveringsId>
 			<sl:objectTypen>
 				<sl:objectType>Regelingsgebied</sl:objectType>
 			</sl:objectTypen>

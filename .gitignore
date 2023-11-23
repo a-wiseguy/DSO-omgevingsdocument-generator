@@ -19,3 +19,5 @@ output/*
 notes.md
 *.hidden*
 .python-version
+tmp/
+*.pyc

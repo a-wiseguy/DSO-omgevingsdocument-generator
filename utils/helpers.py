@@ -1,8 +1,12 @@
 import os
 import json
+import glob
+
 from jinja2 import Environment, FileSystemLoader
 from lxml import etree
+from typing import List
 
+from app.gio.models import Werkingsgebied
 from app.exceptions import TemplateError, FileWriteError
 
 env = Environment(loader=FileSystemLoader("."))
@@ -53,3 +57,10 @@ def get_file_entries(folder_path, content_type_map):
 def load_json_data(file_path):
     with open(file_path, "r") as f:
         return json.load(f)
+
+
+def load_werkingsgebieden(path="./input/werkingsgebieden/*.json") -> List[Werkingsgebied]:
+    return [
+        Werkingsgebied(**load_json_data(wg_json))
+        for wg_json in glob.glob(path)
+    ]

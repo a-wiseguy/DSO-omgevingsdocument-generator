@@ -5,6 +5,7 @@ from app.assets.create_image import create_image
 from app.assets.assets_service import AssetsService
 from app.assets.enrich_illustratie import middleware_enrich_illustratie
 
+from app.ewid.ewid_service import EWIDService
 from app.exceptions import PublicationServiceError
 from app.models import (
     AKN,
@@ -18,7 +19,11 @@ from app.models import (
     Bestand,
 )
 from app.policy_objects import PolicyObjects
-from app.publication_document.models import OmgevingsProgramma, OmgevingsVisie, PublicationDocument
+from app.publication_document.models import (
+    OmgevingsProgramma,
+    OmgevingsVisie,
+    PublicationDocument,
+)
 from utils.waardelijsten import OnderwerpType, RechtsgebiedType, ProcedureType
 from utils.helpers import load_template_and_write_file, load_json_data
 
@@ -27,9 +32,9 @@ class PublicationService:
     DEFAULT_OUTPUT_PATH = "output/"
 
     def __init__(
-        self, 
-        settings: PublicationSettings, 
-        akn: Optional[AKN], 
+        self,
+        settings: PublicationSettings,
+        akn: Optional[AKN],
         input_file: str,
         assets_service: AssetsService,
     ):
@@ -38,8 +43,6 @@ class PublicationService:
         self._document: PublicationDocument
         self._files: List[Bestand] = []
         self._assets_service: AssetsService = assets_service
-
-        self._created_files: List[str] = []
 
         if akn:
             self._akn = akn
@@ -80,11 +83,17 @@ class PublicationService:
         procedure = ProcedureVerloop(**loaded_from_file["procedure"])
 
         if self._settings.document_type is DocumentType.VISIE:
-            initial_document = OmgevingsVisie(bill=besluit, act=regeling, procedure=procedure)
+            initial_document = OmgevingsVisie(
+                bill=besluit, act=regeling, procedure=procedure
+            )
         elif self._settings.document_type is DocumentType.PROGRAMMA:
-            initial_document = OmgevingsProgramma(bill=besluit, act=regeling, procedure=procedure)
+            initial_document = OmgevingsProgramma(
+                bill=besluit, act=regeling, procedure=procedure
+            )
         else:
-            raise PublicationServiceError(message="Expected DocumentType Visie or Programma")
+            raise PublicationServiceError(
+                message="Expected DocumentType Visie or Programma"
+            )
 
         self._document = initial_document
         return initial_document
@@ -95,11 +104,12 @@ class PublicationService:
         document: PublicationDocument,
         output_path=DEFAULT_OUTPUT_PATH,
     ):
+        lichaam = document.generate_regeling_vrijetekst_lichaam(objects)
+        lichaam = middleware_enrich_illustratie(self._assets_service, lichaam)
+        wid_prefix = f"{self._settings.provincie_id}_{self._settings.previous_akn_bill}"
+        ewid_service = EWIDService(xml=lichaam, wid_prefix=wid_prefix)
+        lichaam = ewid_service.fill_ewid_in_str()
         try:
-            lichaam: str = document.generate_regeling_vrijetekst_lichaam(objects)
-            lichaam = middleware_enrich_illustratie(self._assets_service, lichaam)
-            # lichaam = wid_edit_generator(lichaam)
-
             write_path = output_path + self._akn.as_filename()
             load_template_and_write_file(
                 template_name="templates/base/AanleveringBesluit.xml",
@@ -112,11 +122,12 @@ class PublicationService:
                 vrijetekst_lichaam=lichaam,
                 pretty_print=True,
             )
-            print(f"Created {self._akn} - path: {output_path}")
-            self._created_files.append(write_path)
+            print(f"Created {self._akn} - path: {write_path}")
             return write_path
         except TemplateNotFound as e:
-            raise PublicationServiceError(message=f"child template not while writing xml: {e}")
+            raise PublicationServiceError(
+                message=f"child template not while writing xml: {e}"
+            )
         except Exception as e:
             raise PublicationServiceError(message=e)
 
@@ -131,14 +142,23 @@ class PublicationService:
                 pretty_print=True,
             )
             print(f"Created manifest.xml in: {output_path}")
-            self._created_files.append(write_path)
             return write_path
         except TemplateNotFound as e:
-            raise PublicationServiceError(message=f"Manifest file Template missing: {e}")
+            raise PublicationServiceError(
+                message=f"Manifest file Template missing: {e}"
+            )
         except Exception as e:
             raise PublicationServiceError(message=e)
 
-    def create_opdracht(self, opdracht: PublicatieOpdracht, output_path=DEFAULT_OUTPUT_PATH):
+    def create_opdracht(
+        self, opdracht: PublicatieOpdracht = None, output_path=DEFAULT_OUTPUT_PATH
+    ):
+        if not opdracht:
+            opdracht = PublicatieOpdracht(
+                id_levering=uuid4(),
+                publicatie=self._akn.as_filename(),
+                datum_bekendmaking=self._settings.publicatie_datum,
+            )
         try:
             write_path = output_path + "opdracht.xml"
             load_template_and_write_file(
@@ -147,18 +167,21 @@ class PublicationService:
                 publicatieopdracht=opdracht,
                 pretty_print=True,
             )
-            print(f"Created opdracht.xml in: {output_path}")
-            self._created_files.append(write_path)
-            return write_path
+            print(f"Created opdracht.xml in: {write_path}")
+            return opdracht
         except TemplateNotFound as e:
-            raise PublicationServiceError(message=f"Opdracht file Template missing: {e}")
+            raise PublicationServiceError(
+                message=f"Opdracht file Template missing: {e}"
+            )
         except Exception as e:
             raise PublicationServiceError(message=e)
 
     def add_geo_files(self, gio_files: List[Bestand], gml_refs: List[str]):
         # merge in the geo service files/references
         if self._document is None:
-            raise PublicationServiceError("PublicationDocument not initialized. cannot add geo files.")
+            raise PublicationServiceError(
+                "PublicationDocument not initialized. cannot add geo files."
+            )
         self._files = self._files + gio_files
         self._document.bill.informatieobject_refs = (
             self._document.bill.informatieobject_refs + gml_refs
@@ -168,25 +191,25 @@ class PublicationService:
         for asset in self._assets_service.all():
             path: str = f"output/{asset.get_filename()}"
             create_image(asset, path)
-            self._files.append(Bestand(
-                bestandsnaam=asset.get_filename(),
-                content_type=asset.Meta.Formaat,
-            ))
-            self._created_files.append(path)
+            self._files.append(
+                Bestand(
+                    bestandsnaam=asset.get_filename(),
+                    content_type=asset.Meta.Formaat,
+                )
+            )
 
     def build_publication_files(self, objects: PolicyObjects):
         if self._document is None:
             if self._input_file is None:
-                raise PublicationServiceError("Missing expected input data from publication document.")
+                raise PublicationServiceError(
+                    "Missing expected input data from publication document."
+                )
             self.setup_publication_document(self._input_file)
 
         self.create_images()
-        publication_file_output = self.create_publication_document(objects=objects, document=self._document)
+        publication_file_output = self.create_publication_document(
+            objects=objects, document=self._document
+        )
         self.create_lvbb_manifest()
-        self.create_opdracht(opdracht=PublicatieOpdracht(
-            id_levering=uuid4(),
-            publicatie=self._akn.as_filename(),
-            datum_bekendmaking=self._settings.publicatie_datum
-        ))
-
-        return publication_file_output
+        opdracht = self.create_opdracht()
+        return opdracht
