@@ -82,6 +82,8 @@ class OWService:
         location_template = "templates/ow/owLocaties.xml"
         manifest_output_path = "output/manifest-ow.xml"
         manifest_template = "templates/ow/manifest-ow.xml"
+        regelingsgebied_output_path = "output/owRegelingsgebied.xml"
+        regelingsgebied_template = "templates/ow/owRegelingsgebied.xml"
 
         # owLocation
         werkingsgebieden = load_werkingsgebieden()
@@ -114,6 +116,13 @@ class OWService:
             ow_data=divisie_data,
             ow_template=divisie_template,
             output_path=divisie_output_path,
+        )
+
+        # owRegelingsgebied
+        self.create_ow_file(
+            ow_data={"leveringsId": self.id_levering},
+            ow_template=regelingsgebied_template,
+            output_path=regelingsgebied_output_path,
         )
 
         # Manifest
