@@ -107,8 +107,8 @@ class PublicationService:
         lichaam = document.generate_regeling_vrijetekst_lichaam(objects)
         lichaam = middleware_enrich_illustratie(self._assets_service, lichaam)
         wid_prefix = f"{self._settings.provincie_id}_{self._settings.previous_akn_bill}"
-        ewid_service = EWIDService(soup=lichaam, wid_prefix=wid_prefix)
-        lichaam = ewid_service.fill_ewid_in_bs4()
+        ewid_service = EWIDService(xml=lichaam, wid_prefix=wid_prefix)
+        lichaam = ewid_service.fill_ewid_in_str()
         try:
             write_path = output_path + self._akn.as_filename()
             load_template_and_write_file(
@@ -197,7 +197,6 @@ class PublicationService:
                     content_type=asset.Meta.Formaat,
                 )
             )
-            self._created_files.append(path)
 
     def build_publication_files(self, objects: PolicyObjects):
         if self._document is None:
