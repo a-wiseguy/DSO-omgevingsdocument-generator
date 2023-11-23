@@ -4,14 +4,14 @@
 		<sl:dataset>provincie Zuid-holland</sl:dataset>
         <sl:inhoud>
             <sl:gebied>provincie Zuid-holland</sl:gebied>
-            <sl:leveringsId>{{ divisies.leveringsId }}</sl:leveringsId>
+            <sl:leveringsId>{{ data.leveringsId }}</sl:leveringsId>
             <sl:objectTypen>
-                {% for objectType in divisies.objectTypen %}
+                {% for objectType in data.objectTypen %}
                 <sl:objectType>{{ objectType }}</sl:objectType>
                 {% endfor %}
             </sl:objectTypen>
         </sl:inhoud>
-        {% for annotatie in divisies.annotaties %}
+        {% for annotatie in data.annotaties %}
 		<sl:stand>
 			<ow-dc:owObject>
 				<vt:Divisietekst wId="{{ annotatie.divisie.wid }}">
