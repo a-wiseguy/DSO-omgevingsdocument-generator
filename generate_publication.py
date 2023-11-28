@@ -12,13 +12,11 @@ from utils.helpers import load_json_data, load_werkingsgebieden
 INPUT_FILE_VISIE = "input/publication/omgevingsvisie.json"
 INPUT_FILE_PROGRAMMA = "input/publication/omgevingsprogramma.json"
 
+# Select mock document type
+input_data_publication = load_json_data(INPUT_FILE_VISIE)
+
 # Example visie / programma
-settings = PublicationSettings(
-    document_type=DocumentType.VISIE,
-    previous_akn_act=88,
-    previous_akn_bill=3020,
-    publicatie_datum="2023-12-15",
-)
+settings = PublicationSettings.from_json(input_data_publication["settings"])
 
 new_akn = AKN(
     province_id=settings.provincie_id,
@@ -52,7 +50,7 @@ geo_refs = gio_service.get_refs()
 publication_service = PublicationService(
     settings=settings,
     akn=new_akn,
-    input_file=INPUT_FILE_VISIE, 
+    input_data=input_data_publication,
     assets_service=assets_service,
 )
 publication_service.setup_publication_document()

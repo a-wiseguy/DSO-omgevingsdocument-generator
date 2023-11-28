@@ -18,6 +18,8 @@ class OWServiceError(Exception):
 
 class OWService:
     OW_REGEX = r"nl\.imow-(gm|pv|ws|mn|mnre)[0-9]{1,6}\.(regeltekst|gebied|...)"
+    DEFAULT_OUTPUT_DIR = "output/"
+    DEFAULT_TEMPLATE_DIR = "templates/ow/"
 
     def __init__(self, id_levering: UUID, akn: AKN):
         self.id_levering = id_levering
@@ -26,8 +28,8 @@ class OWService:
     def create_ow_file(self, ow_data, ow_template, output_path: str):
         try:
             load_template_and_write_file(
-                template_name=ow_template,
-                output_file=output_path,
+                template_name=f"{self.DEFAULT_TEMPLATE_DIR}{ow_template}",
+                output_file=f"{self.DEFAULT_OUTPUT_DIR}{output_path}",
                 data=ow_data,
                 pretty_print=True,
             )
@@ -48,10 +50,13 @@ class OWService:
         # Create new OW Locations
         for werkingsgebied in werkingsgebieden:
             ow_locations = [
-                OWGebied(geo_uuid=loc.UUID) for loc in werkingsgebied.Locaties
+                OWGebied(geo_uuid=loc.UUID, noemer=loc.Title)
+                for loc in werkingsgebied.Locaties
             ]
             ow_group = OWGebiedenGroep(
-                geo_uuid=werkingsgebied.UUID, locations=ow_locations
+                geo_uuid=werkingsgebied.UUID,
+                noemer=werkingsgebied.Title,
+                locations=ow_locations,
             )
             xml_data["gebieden"].extend(ow_locations)
             xml_data["gebiedengroepen"].append(ow_group)
@@ -76,37 +81,22 @@ class OWService:
         return xml_data
 
     def create_all_ow_files(self):
-        divisie_output_path = "output/owDivisie.xml"
-        divisie_template = "templates/ow/owDivisie.xml"
-        location_output_path = "output/owLocaties.xml"
-        location_template = "templates/ow/owLocaties.xml"
-        manifest_output_path = "output/manifest-ow.xml"
-        manifest_template = "templates/ow/manifest-ow.xml"
-        regelingsgebied_output_path = "output/owRegelingsgebied.xml"
-        regelingsgebied_template = "templates/ow/owRegelingsgebied.xml"
-
         # owLocation
         werkingsgebieden = load_werkingsgebieden()
         locaties_data = self.build_ow_locaties(werkingsgebieden)
         self.create_ow_file(
             ow_data=locaties_data,
-            ow_template=location_template,
-            output_path=location_output_path,
+            ow_template="owLocaties.xml",
+            output_path="owLocaties.xml",
         )
 
         # owDivisie
         annotations = [
             {
-                "wid": "pv28_2093__content_1",
+                "wid": "pv28_3020__div_o_1_inst4__div_inst3__content",
                 "locations": [
                     "nl.imow-pv28.gebiedengroep.002000000000000000000036",
                     "nl.imow-pv28.gebiedengroep.002000000000000000000038",
-                ],
-            },
-            {
-                "wid": "pv28_2093__content_2",
-                "locations": [
-                    "nl.imow-pv28.ambtsgebied.002000000000000000009928",
                 ],
             },
         ]
@@ -114,15 +104,15 @@ class OWService:
         divisie_data = self.build_ow_divisies(annotations)
         self.create_ow_file(
             ow_data=divisie_data,
-            ow_template=divisie_template,
-            output_path=divisie_output_path,
+            ow_template="owDivisie.xml",
+            output_path="owDivisie.xml",
         )
 
         # owRegelingsgebied
         self.create_ow_file(
             ow_data={"leveringsId": self.id_levering},
-            ow_template=regelingsgebied_template,
-            output_path=regelingsgebied_output_path,
+            ow_template="owRegelingsgebied.xml",
+            output_path="owRegelingsgebied.xml",
         )
 
         # Manifest
@@ -131,6 +121,6 @@ class OWService:
                 "act_akn": self.akn.as_FRBR().work,
                 "doel_id": self.akn.as_doel(),
             },
-            ow_template=manifest_template,
-            output_path=manifest_output_path,
+            ow_template="manifest-ow.xml",
+            output_path="manifest-ow.xml",
         )
