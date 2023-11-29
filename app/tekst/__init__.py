@@ -1,9 +1,11 @@
 from typing import Union
 from bs4 import BeautifulSoup, Tag
+from app.tekst.middleware import middleware_enrich_table
 from app.tekst.tekst import Divisie
 
 
 def html_to_divisie(html: str) -> Divisie:
+    html = middleware_enrich_table(html)
     soup = BeautifulSoup(html, "html.parser")
     divisie: Divisie = Divisie()
     divisie.consume_children(soup.children)
