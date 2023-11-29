@@ -12,6 +12,10 @@ MODULES: List[Module] = [
         file="data/schema/stop/1.3.0/versiescompleet.xml",
         nsmap={"ns": "https://standaarden.overheid.nl/stop/imop/schemata/"},
     ),
+    Module(
+        file="/home/jordy/workspace/zzp/lvbb-tpod-serializer/tools/validation/data/schema/geostandaarden/versie.xml",
+        nsmap={"ns": "https://standaarden.overheid.nl/stop/imop/schemata/"},
+    ),
 ]
 
 
@@ -22,6 +26,7 @@ SGML_CATALOG_FILES = " ".join([
     "./data/schema/extern/extern-catalog.xml",
     "./data/schema/stop/1.3.0/stop-catalog.xml",
     "./data/schema/lvbb/lvbb-catalog.xml",
+    "./data/schema/geostandaarden/catalog.xml",
 ])
 
 

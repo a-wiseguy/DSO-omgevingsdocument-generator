@@ -1,10 +1,10 @@
-from pprint import pprint
 import subprocess
 from typing import Dict, List
 import os
 
 import click
-from helpers.models import Schematron, Schemas, Module
+import helpers.geostandaarden as geostandaarden
+from helpers.models import Schematron, Schemas
 from helpers.helpers import compile_schematrons, empty_directory, generate_report_filename, list_files_recursive, report_contains_errors, resolve_namespace, resolve_namespaces, resolve_schemas, resolve_schematrons
 import config
 
@@ -89,8 +89,15 @@ def schematron_all(path):
                 click.echo(click.style(f"Could not generate report for {file} with {schematron.local}", fg="red"))
 
 
+@click.command()
+@click.argument("prefix")
+def geostandaarden_generate_files(prefix: str):
+    geostandaarden.generate_files(prefix)
+
+
 cli.add_command(xsd_all)
 cli.add_command(schematron_all)
+cli.add_command(geostandaarden_generate_files)
 
 
 if __name__ == '__main__':
