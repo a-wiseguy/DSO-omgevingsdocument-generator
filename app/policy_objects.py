@@ -6,6 +6,7 @@ from lxml import etree
 from io import StringIO
 
 from app.tekst import divisie_to_xml, html_to_divisie
+from app.tekst.middleware import middleware_enrich_table
 from app.tekst.tekst import Divisie, Lichaam
 
  
@@ -96,6 +97,7 @@ def html_to_xml_lichaam(html: str) -> str:
     if not is_html_valid(html):
         raise RuntimeError("Invalid html")
 
+    html = middleware_enrich_table(html)
     input_soup = BeautifulSoup(html, "html.parser")
     lichaam = Lichaam()
     lichaam.consume_children(input_soup.children)

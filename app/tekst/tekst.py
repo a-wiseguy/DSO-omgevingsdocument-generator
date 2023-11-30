@@ -193,6 +193,11 @@ class Strong(SimpleElement):
         super().__init__(xml_tag_name="strong")
 
 
+class TussenKop(SimpleElement):
+    def __init__(self, tag: Optional[Tag] = None):
+        super().__init__(xml_tag_name="TussenKop")
+
+
 class Al(SimpleElement):
     def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="Al")
@@ -260,6 +265,109 @@ class Kop(SimpleElement):
 class Inhoud(SimpleElement):
     def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="Inhoud")
+
+
+# td
+class Entry(SimpleElement):
+    def __init__(self, tag: Optional[Tag] = None):
+        super().__init__(xml_tag_name="entry", xml_tag_attrs={
+            "align": "left",
+            "valign": "top",
+        })
+
+    def consume_string(self, string: NavigableString):
+        raw: str = str(string).strip()
+        if len(raw) == 0:
+            return
+
+        al: Al = Al(tag=None)
+        al.consume_string(string)
+        self.contents.append(al)
+
+
+# tr
+class Row(SimpleElement):
+    def __init__(self, tag: Optional[Tag] = None):
+        super().__init__(xml_tag_name="row")
+
+    def consume_string(self, string: NavigableString):
+        raw: str = str(string).strip()
+        if len(raw) != 0:
+            raise RuntimeError(f"Can not write plain text to Row. Trying to write: {raw}")
+
+
+class Tbody(SimpleElement):
+    def __init__(self, tag: Optional[Tag] = None):
+        super().__init__(xml_tag_name="tbody", xml_tag_attrs={
+            "valign": "top",
+        })
+
+    def consume_string(self, string: NavigableString):
+        raw: str = str(string).strip()
+        if len(raw) != 0:
+            raise RuntimeError(f"Can not write plain text to Tbody. Trying to write: {raw}")
+
+
+class Thead(SimpleElement):
+    def __init__(self, tag: Optional[Tag] = None):
+        super().__init__(xml_tag_name="thead", xml_tag_attrs={
+            "valign": "top",
+        })
+
+    def consume_string(self, string: NavigableString):
+        raw: str = str(string).strip()
+        if len(raw) != 0:
+            raise RuntimeError(f"Can not write plain text to Thead. Trying to write: {raw}")
+
+
+class Table(Element):
+    def __init__(self, tag: Optional[Tag] = None):
+        self.columns: int = int(tag.attrs.get("data-columns"))
+        self.thead: Optional[Thead] = None
+        self.tbody: Optional[Tbody] = None
+
+    def consume_tag(self, tag: Tag) -> LeftoverTag:
+        if tag.name == "thead":
+            if self.thead is not None:
+                raise RuntimeError("Multiple thead are not supported")
+            self.thead = Thead(tag)
+            self.thead.consume_children(tag.children)
+            return None
+        if tag.name == "tbody":
+            if self.tbody is not None:
+                raise RuntimeError("Multiple tbody are not supported")
+            self.tbody = Tbody(tag)
+            self.tbody.consume_children(tag.children)
+            return None
+
+    def consume_string(self, string: NavigableString):
+        raw: str = str(string).strip()
+        if len(raw) == 0:
+            return
+        raise RuntimeError(f"Consume string not implemented for Table")
+
+    def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
+        table: Tag = soup.new_tag("table")
+        tgroup: Tag = soup.new_tag("tgroup")
+        tgroup["cols"] = self.columns
+        tgroup["align"] = "left"
+
+        for i in range(1, self.columns + 1):
+            colspec: Tag = soup.new_tag("colspec")
+            colspec["colname"] = f"col{i}"
+            colspec["colnum"] = f"{i}"
+            tgroup.append(colspec)
+
+        if self.thead is not None:
+            thead = self.thead.as_xml(soup)
+            tgroup.append(thead)
+        
+        if self.tbody is not None:
+            tbody = self.tbody.as_xml(soup)
+            tgroup.append(tbody)
+
+        table.append(tgroup)
+        return table
 
 
 class Li(SimpleElement):
@@ -516,6 +624,18 @@ element_li_handler = LiGenerator()
 element_br_handler = SimpleGenerator("br", Br)
 element_div_handler = SimpleGenerator("div", Divisie)
 element_img_handler = SimpleGenerator("img", Figuur)
+element_td_handler = SimpleGenerator("td", Entry)
+element_th_handler = SimpleGenerator("th", Entry)
+element_tr_handler = SimpleGenerator("tr", Row)
+element_tbody_handler = SimpleGenerator("tbody", Tbody)
+element_thead_handler = SimpleGenerator("thead", Thead)
+element_table_handler = SimpleGenerator("table", Table)
+element_h1_tussenkop_handler = SimpleGenerator("h1", TussenKop)
+element_h2_tussenkop_handler = SimpleGenerator("h2", TussenKop)
+element_h3_tussenkop_handler = SimpleGenerator("h3", TussenKop)
+element_h4_tussenkop_handler = SimpleGenerator("h4", TussenKop)
+element_h5_tussenkop_handler = SimpleGenerator("h5", TussenKop)
+element_h6_tussenkop_handler = SimpleGenerator("h6", TussenKop)
 
 
 I.element_generators = [
@@ -576,11 +696,21 @@ Kop.element_generators = [
     element_sup_handler,
     element_strong_handler,
 ]
+TussenKop.element_generators = [
+    element_i_handler,
+    element_em_handler,
+    element_b_handler,
+    element_u_handler,
+    element_sub_handler,
+    element_sup_handler,
+    element_strong_handler,
+]
 Inhoud.element_generators = [
     element_p_handler,
     element_ul_handler,
     element_ol_handler,
     element_img_handler,
+    element_table_handler,
 ]
 Li.element_generators = [
     element_p_handler,
@@ -593,4 +723,26 @@ Lijst.element_generators = [
 ]
 Lichaam.element_generators = [
     element_div_handler,
+]
+Entry.element_generators = [
+    element_p_handler,
+    element_ul_handler,
+    element_ol_handler,
+    element_img_handler,
+    element_h1_tussenkop_handler,
+    element_h2_tussenkop_handler,
+    element_h3_tussenkop_handler,
+    element_h4_tussenkop_handler,
+    element_h5_tussenkop_handler,
+    element_h6_tussenkop_handler,
+]
+Row.element_generators = [
+    element_th_handler,
+    element_td_handler
+]
+Tbody.element_generators = [
+    element_tr_handler,
+]
+Thead.element_generators = [
+    element_tr_handler,
 ]
