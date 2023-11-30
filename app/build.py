@@ -37,12 +37,14 @@ class PublicationService:
         akn: Optional[AKN],
         input_data: dict,
         assets_service: AssetsService,
+        ewid_service: EWIDService
     ):
         self._settings: PublicationSettings = settings
         self._input_data = input_data
         self._document: PublicationDocument
         self._files: List[Bestand] = []
         self._assets_service: AssetsService = assets_service
+        self._ewid_service: EWIDService = ewid_service
 
         if akn:
             self._akn = akn
@@ -102,11 +104,11 @@ class PublicationService:
         document: PublicationDocument,
         output_path=DEFAULT_OUTPUT_PATH,
     ):
-        lichaam = document.generate_regeling_vrijetekst_lichaam(objects)
-        lichaam = middleware_enrich_illustratie(self._assets_service, lichaam)
-        wid_prefix = f"{self._settings.provincie_id}_{self._settings.previous_akn_bill}"
-        ewid_service = EWIDService(xml=lichaam, wid_prefix=wid_prefix)
-        lichaam = ewid_service.fill_ewid_in_str()
+        lichaam_base = document.generate_regeling_vrijetekst_lichaam(objects)
+        lichaam_enriched: str = middleware_enrich_illustratie(self._assets_service, lichaam_base)
+        self._ewid_service.xml = lichaam_enriched
+        lichaam_ewid_tagged = self._ewid_service.fill_ewid_in_str()
+
         try:
             write_path = output_path + self._akn.as_filename()
             load_template_and_write_file(
@@ -117,7 +119,7 @@ class PublicationService:
                 regeling=document.act,
                 besluit=document.bill,
                 procedure=document.procedure,
-                vrijetekst_lichaam=lichaam,
+                vrijetekst_lichaam=lichaam_ewid_tagged,
                 pretty_print=True,
             )
             print(f"Created {self._akn} - path: {write_path}")

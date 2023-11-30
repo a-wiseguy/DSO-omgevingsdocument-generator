@@ -125,6 +125,14 @@ class PublicationSettings(BaseModel):
         }
         return cls(**data)
 
+    @property
+    def next_akn_id_bill(self):
+        return self.previous_akn_bill + 1
+
+    @property
+    def next_akn_id_act(self):
+        return self.previous_akn_bill + 1
+
 
 class AKN(BaseModel):
     province_id: str = "pv28"
