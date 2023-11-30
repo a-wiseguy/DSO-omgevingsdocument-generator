@@ -9,7 +9,7 @@ from app.tekst import divisie_to_xml, html_to_divisie
 from app.tekst.middleware import middleware_enrich_table
 from app.tekst.tekst import Divisie, Lichaam
 
- 
+
 class PolicyObject:
     def __init__(self, data: dict):
         self._data: dict = data
@@ -59,10 +59,10 @@ class PolicyObjects:
             object_type: [PolicyObject(o) for o in objects]
             for object_type, objects in data.items()
         }
-    
+
     def get_all(self, object_type: str) -> List[PolicyObject]:
         return deepcopy(self._data.get(object_type, []))
-    
+
     def get_optional(self, object_type: str, object_id: int) -> Optional[PolicyObject]:
         for o in self.get_all(object_type):
             if o.get("Object_ID", 0) == object_id:

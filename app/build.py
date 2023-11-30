@@ -1,5 +1,5 @@
 from uuid import uuid4
-from typing import Optional, List
+from typing import Optional, List, Dict
 from jinja2.exceptions import TemplateNotFound
 from app.assets.create_image import create_image
 from app.assets.assets_service import AssetsService
@@ -25,7 +25,7 @@ from app.publication_document.models import (
     PublicationDocument,
 )
 from utils.waardelijsten import OnderwerpType, RechtsgebiedType, ProcedureType
-from utils.helpers import load_template_and_write_file, load_json_data
+from utils.helpers import load_template_and_write_file
 
 
 class PublicationService:
@@ -35,14 +35,16 @@ class PublicationService:
         self,
         settings: PublicationSettings,
         akn: Optional[AKN],
-        input_file: str,
+        input_data: dict,
         assets_service: AssetsService,
+        ewid_service: EWIDService
     ):
         self._settings: PublicationSettings = settings
-        self._input_file = input_file
+        self._input_data = input_data
         self._document: PublicationDocument
         self._files: List[Bestand] = []
         self._assets_service: AssetsService = assets_service
+        self._ewid_service: EWIDService = ewid_service
 
         if akn:
             self._akn = akn
@@ -53,11 +55,9 @@ class PublicationService:
                 previous_bill=settings.previous_akn_bill,
             )
 
-    def setup_publication_document(self, input_data_file=None) -> PublicationDocument:
-        if input_data_file is None:
-            input_data_file = self._input_file
-
-        loaded_from_file = load_json_data(input_data_file)
+    def setup_publication_document(self, input_data=None) -> PublicationDocument:
+        if input_data is None:
+            input_data = self._input_data
 
         bestuurs_document = BestuursDocument(
             eindverantwoordelijke=self._settings.provincie_id,
@@ -68,19 +68,19 @@ class PublicationService:
         )
 
         besluit = Besluit(
-            **loaded_from_file["besluit"],
+            **input_data["besluit"],
             frbr=self._akn.as_FRBR(akn_type="bill"),
             bestuurs_document=bestuurs_document,
             soort_procedure=ProcedureType.Definitief_besluit,
         )
 
         regeling = Regeling(
-            **loaded_from_file["regeling"],
+            **input_data["regeling"],
             frbr=self._akn.as_FRBR(akn_type="act"),
             bestuurs_document=bestuurs_document,
         )
 
-        procedure = ProcedureVerloop(**loaded_from_file["procedure"])
+        procedure = ProcedureVerloop(**input_data["procedure"])
 
         if self._settings.document_type is DocumentType.VISIE:
             initial_document = OmgevingsVisie(
@@ -104,11 +104,11 @@ class PublicationService:
         document: PublicationDocument,
         output_path=DEFAULT_OUTPUT_PATH,
     ):
-        lichaam = document.generate_regeling_vrijetekst_lichaam(objects)
-        lichaam = middleware_enrich_illustratie(self._assets_service, lichaam)
-        wid_prefix = f"{self._settings.provincie_id}_{self._settings.previous_akn_bill}"
-        ewid_service = EWIDService(xml=lichaam, wid_prefix=wid_prefix)
-        lichaam = ewid_service.fill_ewid_in_str()
+        lichaam_base = document.generate_regeling_vrijetekst_lichaam(objects)
+        lichaam_enriched: str = middleware_enrich_illustratie(self._assets_service, lichaam_base)
+        self._ewid_service.xml = lichaam_enriched
+        lichaam_ewid_tagged = self._ewid_service.fill_ewid_in_str()
+
         try:
             write_path = output_path + self._akn.as_filename()
             load_template_and_write_file(
@@ -119,7 +119,7 @@ class PublicationService:
                 regeling=document.act,
                 besluit=document.bill,
                 procedure=document.procedure,
-                vrijetekst_lichaam=lichaam,
+                vrijetekst_lichaam=lichaam_ewid_tagged,
                 pretty_print=True,
             )
             print(f"Created {self._akn} - path: {write_path}")
@@ -157,7 +157,7 @@ class PublicationService:
             opdracht = PublicatieOpdracht(
                 id_levering=uuid4(),
                 publicatie=self._akn.as_filename(),
-                datum_bekendmaking=self._settings.publicatie_datum,
+                datum_bekendmaking=self._settings.public_release_date,
             )
         try:
             write_path = output_path + "opdracht.xml"
@@ -200,11 +200,11 @@ class PublicationService:
 
     def build_publication_files(self, objects: PolicyObjects):
         if self._document is None:
-            if self._input_file is None:
+            if self._input_data is None:
                 raise PublicationServiceError(
                     "Missing expected input data from publication document."
                 )
-            self.setup_publication_document(self._input_file)
+            self.setup_publication_document(self._input_data)
 
         self.create_images()
         publication_file_output = self.create_publication_document(

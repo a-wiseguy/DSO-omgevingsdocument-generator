@@ -110,10 +110,28 @@ class PublicationSettings(BaseModel):
     document_type: DocumentType
     previous_akn_act: int
     previous_akn_bill: int
-    publicatie_datum: str
+    public_release_date: str
     provincie_id: str = "pv28"
     provincie_ref: str = Provincie.Zuid_Holland.value  # "tooi/id/provincie/pv28"
     dso_versioning: DSOVersion = Field(default_factory=DSOVersion)
+
+    @classmethod
+    def from_json(cls, json_data):
+        data = {
+            "document_type": DocumentType[json_data["type"]],
+            "previous_akn_act": json_data["ID"]["ACT"],
+            "previous_akn_bill": json_data["ID"]["BILL"],
+            "public_release_date": json_data["public_release_date"],
+        }
+        return cls(**data)
+
+    @property
+    def next_akn_id_bill(self):
+        return self.previous_akn_bill + 1
+
+    @property
+    def next_akn_id_act(self):
+        return self.previous_akn_bill + 1
 
 
 class AKN(BaseModel):

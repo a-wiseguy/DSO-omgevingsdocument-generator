@@ -9,6 +9,7 @@ from app.policy_objects import PolicyObject, PolicyObjects, html_to_xml_lichaam
 def generate_regeling_vrijetekst_lichaam_visie(objects: PolicyObjects) -> str:
     ambities: List[PolicyObject] = objects.get_all("ambitie")
 
+
     html = f"""
         <div>
             {objects.get("visie_algemeen", 1).html({"heading_number": 1})}
@@ -22,7 +23,9 @@ def generate_regeling_vrijetekst_lichaam_visie(objects: PolicyObjects) -> str:
         <div>
             {objects.get("visie_algemeen", 4).html({"heading_number": 4})}
 
-            {" ".join([f'<div data-hint-object-code="{ambitie.get("Code")}">{ambitie.html()}</div>' for ambitie in ambities])}
+            {" ".join([f'<div data-hint-object-code="{ambitie.get("Code")}"' + 
+                       (f' data-hint-location="{ambitie.get("Gebied_UUID")}"' if ambitie.get("Gebied_UUID") else '') + 
+                       f'>{ambitie.html()}</div>' for ambitie in ambities])}
 
             <div>{objects.get("visie_algemeen", 5).html()}</div>
         </div>

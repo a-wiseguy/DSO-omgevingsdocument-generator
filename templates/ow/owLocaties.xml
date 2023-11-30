@@ -32,6 +32,7 @@
             <ow-dc:owObject>
                 <l:Gebied>
                     <l:identificatie>{{ owgebied.OW_ID }}</l:identificatie>
+                    <l:noemer>{{ owgebied.noemer }}</l:noemer>
                     <l:geometrie>
                         <l:GeometrieRef xlink:href="{{ owgebied.geo_uuid }}" />
                     </l:geometrie>
@@ -46,7 +47,7 @@
             <ow-dc:owObject>
                 <l:Gebiedengroep>
                     <l:identificatie>{{ group.OW_ID }}</l:identificatie>
-                    <!-- <l:noemer>optional_noemer</l:noemer> -->
+                    <l:noemer>{{ group.noemer }}</l:noemer>
                     <l:groepselement>
                         {% for location in group.locations %}
                         <l:GebiedRef xlink:href="{{ location.OW_ID }}"/>

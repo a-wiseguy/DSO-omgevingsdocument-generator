@@ -2,16 +2,30 @@ from abc import ABCMeta, abstractmethod
 import re
 from typing import Any, List, Optional, Type, TypeAlias, Union, Dict
 
-from bs4 import BeautifulSoup, CData, Comment, Declaration, Doctype, NavigableString, ProcessingInstruction, Tag
+from bs4 import (
+    BeautifulSoup,
+    CData,
+    Comment,
+    Declaration,
+    Doctype,
+    NavigableString,
+    ProcessingInstruction,
+    Tag,
+)
 
-from app.tekst.lijst import LijstType, LijstTypeOrdered, LijstTypeUnordered, NumberingStrategy, numbering_factory
+from app.tekst.lijst import (
+    LijstType,
+    LijstTypeOrdered,
+    LijstTypeUnordered,
+    NumberingStrategy,
+    numbering_factory,
+)
 
 
 class AsXmlTrait(metaclass=ABCMeta):
     @abstractmethod
     def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
         pass
-
 
 
 LeftoverTag: TypeAlias = Optional[Tag]
@@ -90,12 +104,18 @@ class SimpleElement(Element, metaclass=ABCMeta):
         tag_name_overwrite: Optional[str] = None,
         tag_attrs_overwrite: Optional[Dict[str, str]] = None,
     ) -> Union[Tag, str]:
-        tag_name: str = tag_name_overwrite if tag_name_overwrite is not None else self.xml_tag_name
+        tag_name: str = (
+            tag_name_overwrite if tag_name_overwrite is not None else self.xml_tag_name
+        )
         tag: Tag = soup.new_tag(tag_name)
-        tag.attrs = tag_attrs_overwrite if tag_attrs_overwrite is not None else self.xml_tag_attrs
+        tag.attrs = (
+            tag_attrs_overwrite
+            if tag_attrs_overwrite is not None
+            else self.xml_tag_attrs
+        )
 
         for content in self.contents:
-            if hasattr(content, 'as_xml'):
+            if hasattr(content, "as_xml"):
                 child = content.as_xml(soup)
                 tag.append(child)
             elif isinstance(content, str):
@@ -124,10 +144,12 @@ class SimpleGenerator(ElementGenerator):
 
 class OrderedLijstGenerator(ElementGenerator):
     def can_consume_tag(self, tag: Tag) -> bool:
-        return tag.name ==  "ol"
+        return tag.name == "ol"
 
     def generate(self, tag: Tag, context: dict = {}) -> Element:
-        current_strategy: Optional[NumberingStrategy] = context.get("current_strategy", None)
+        current_strategy: Optional[NumberingStrategy] = context.get(
+            "current_strategy", None
+        )
         next_strategy: NumberingStrategy = numbering_factory.get_next(current_strategy)
         element = Lijst(
             tag=tag,
@@ -138,7 +160,7 @@ class OrderedLijstGenerator(ElementGenerator):
 
 class UnorderedLijstGenerator(ElementGenerator):
     def can_consume_tag(self, tag: Tag) -> bool:
-        return tag.name ==  "ul"
+        return tag.name == "ul"
 
     def generate(self, tag: Tag, context: dict = {}) -> Element:
         element = Lijst(
@@ -150,7 +172,7 @@ class UnorderedLijstGenerator(ElementGenerator):
 
 class LiGenerator(ElementGenerator):
     def can_consume_tag(self, tag: Tag) -> bool:
-        return tag.name ==  "li"
+        return tag.name == "li"
 
     def generate(self, tag: Tag, context: dict = {}) -> Element:
         lijst_type: Optional[LijstType] = context.get("lijst_type", None)
@@ -202,11 +224,15 @@ class Al(SimpleElement):
     def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="Al")
 
-    def as_xml(self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None) -> Union[Tag, str]:
+    def as_xml(
+        self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None
+    ) -> Union[Tag, str]:
         if not self.contents:
             return ""
 
-        return SimpleElement.as_xml(self, soup=soup, tag_name_overwrite=tag_name_overwrite)
+        return SimpleElement.as_xml(
+            self, soup=soup, tag_name_overwrite=tag_name_overwrite
+        )
 
 
 class Br(SimpleElement):
@@ -229,7 +255,9 @@ class Figuur(SimpleElement):
             raise RuntimeError("Wrong format for image src")
         self._asset_uuid = src_match.group(1)
 
-    def as_xml(self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None) -> Union[Tag, str]:
+    def as_xml(
+        self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None
+    ) -> Union[Tag, str]:
         figuur: Tag = soup.new_tag("Figuur")
         illustratie: Tag = soup.new_tag("Illustratie")
         illustratie.attrs = {
@@ -256,7 +284,9 @@ class Kop(SimpleElement):
             nummer.append(str(self.nummer))
             kop.append(nummer)
 
-        opschrift = SimpleElement.as_xml(self, soup=soup, tag_name_overwrite="Opschrift")
+        opschrift = SimpleElement.as_xml(
+            self, soup=soup, tag_name_overwrite="Opschrift"
+        )
         kop.append(opschrift)
 
         return kop
@@ -396,7 +426,7 @@ class Li(SimpleElement):
             tag_li.append(tag_li_nummer)
 
         for content in self.contents:
-            if hasattr(content, 'as_xml'):
+            if hasattr(content, "as_xml"):
                 child = content.as_xml(soup)
                 tag_li.append(child)
             elif isinstance(content, str):
@@ -407,7 +437,9 @@ class Li(SimpleElement):
         return tag_li
 
     def _get_generate_context(self) -> dict:
-        current_strategy: Optional[NumberingStrategy] = self.lijst_type.get_numbering_strategy()
+        current_strategy: Optional[
+            NumberingStrategy
+        ] = self.lijst_type.get_numbering_strategy()
         return {
             "current_strategy": current_strategy,
         }
@@ -421,24 +453,24 @@ class Lijst(SimpleElement):
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()
         if len(raw) != 0:
-            raise RuntimeError(f"Can not write plain text to Lijst. Trying to write: {raw}")
+            raise RuntimeError(
+                f"Can not write plain text to Lijst. Trying to write: {raw}"
+            )
 
     def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
-        attributes: dict = {
-            "type": self.lijst_type.get_type()
-        }
+        attributes: dict = {"type": self.lijst_type.get_type()}
         tag: Tag = soup.new_tag("Lijst", **attributes)
         for content in self.contents:
-            if hasattr(content, 'as_xml'):
+            if hasattr(content, "as_xml"):
                 child = content.as_xml(soup)
                 tag.append(child)
             elif isinstance(content, str):
                 tag.append(content)
             else:
                 raise RuntimeError("Can not convert child to xml")
-        
+
         return tag
-    
+
     def _get_generate_context(self) -> dict:
         return {
             "lijst_type": self.lijst_type,
@@ -450,6 +482,9 @@ class Divisietekst(Element):
     def __init__(self, tag: Optional[Tag] = None):
         self.kop: Optional[Kop] = None
         self.inhoud: Optional[Inhoud] = None
+
+        if tag is not None:
+            self.test = tag.get("data-nummer", None)
 
     def consume_tag(self, tag: Tag) -> LeftoverTag:
         # A div requires a new Divisie which a Divisietekst can not create
@@ -470,7 +505,7 @@ class Divisietekst(Element):
         leftoverTag: LeftoverTag = inhoud.consume_tag(tag)
 
         return leftoverTag
-    
+
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()
         if len(raw) == 0:
@@ -480,7 +515,7 @@ class Divisietekst(Element):
     def _get_inhoud(self) -> Inhoud:
         if self.inhoud is None:
             self.inhoud = Inhoud(tag=None)
-        
+
         return self.inhoud
 
     def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
@@ -501,7 +536,10 @@ class Divisie(Element):
     def __init__(self, tag: Optional[Tag] = None):
         self.kop: Optional[Kop] = None
         self.contents: List[Union["Divisie", Divisietekst]] = []
-    
+        self.object_code = tag.get("data-hint-object-code", None)
+        self.location = tag.get("data-hint-location", None)
+
+
     def consume_tag(self, tag: Tag) -> LeftoverTag:
         while True:
             leftoverTag = self._try_consume_tag(tag)
@@ -542,7 +580,7 @@ class Divisie(Element):
             kop.consume_children(tag.children)
             self.kop = kop
             return None
-        
+
         # If the tag is a div then we will create a new Divisie
         elif tag.name == "div":
             content: Divisie = Divisie(tag)
@@ -568,25 +606,29 @@ class Divisie(Element):
         if not len(self.contents):
             content: Divisietekst = Divisietekst()
             self.contents.append(content)
-        
+
         # Last content is not a divisietekst
         last_content = self.contents[-1]
         if not isinstance(last_content, Divisietekst):
             content: Divisietekst = Divisietekst()
             self.contents.append(content)
-        
+
         # Return the last which is now forced to be a Divisietekst
         return self.contents[-1]
-    
+
     def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
         tag_divisie: Tag = soup.new_tag("Divisie")
+        tag_divisie.attrs = {
+            **({"data-hint-object-code": self.object_code} if self.object_code else {}),
+            **({"data-hint-location": self.location} if self.location else {})
+        }
 
         if self.kop is not None:
             tag_kop: Tag = self.kop.as_xml(soup)
             tag_divisie.append(tag_kop)
 
         for content in self.contents:
-            if hasattr(content, 'as_xml'):
+            if hasattr(content, "as_xml"):
                 child = content.as_xml(soup)
                 tag_divisie.append(child)
             elif isinstance(content, str):
@@ -599,15 +641,20 @@ class Divisie(Element):
 
 class Lichaam(SimpleElement):
     def __init__(self, tag: Optional[Tag] = None):
-        super().__init__(xml_tag_name="Lichaam", xml_tag_attrs={
-            # @todo: this could also be done by a middleware...
-            # "xmlns": "https://standaarden.overheid.nl/stop/imop/tekst/",
-        })
+        super().__init__(
+            xml_tag_name="Lichaam",
+            xml_tag_attrs={
+                # @todo: this could also be done by a middleware...
+                # "xmlns": "https://standaarden.overheid.nl/stop/imop/tekst/",
+            },
+        )
 
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()
         if len(raw) != 0:
-            raise RuntimeError(f"Can not write plain text to Lijst. Trying to write: {raw}")
+            raise RuntimeError(
+                f"Can not write plain text to Lijst. Trying to write: {raw}"
+            )
 
 
 element_i_handler = SimpleGenerator("i", I)
@@ -664,10 +711,8 @@ U.element_generators = [
     element_strong_handler,
     element_br_handler,
 ]
-Sub.element_generators = [
-]
-Sup.element_generators = [
-]
+Sub.element_generators = []
+Sup.element_generators = []
 Strong.element_generators = [
     element_i_handler,
     element_em_handler,

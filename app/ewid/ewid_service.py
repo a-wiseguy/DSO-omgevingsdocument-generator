@@ -1,68 +1,37 @@
 import re
 import xml.etree.ElementTree as ET
-from enum import Enum
 from bs4 import Tag
 
-
-class FIXED_ELEMENT_REF(Enum):
-    Aanhef = "formula_1"
-    AlgemeneToelichting = "genrecital"
-    ArtikelgewijzeToelichting = "artrecital"
-    Inhoudsopgave = "toc"
-    Lichaam = "body"
-    Motivering = "acc"
-    RegelingOpschrift = "longTitle"
-    Sluiting = "formula_2 or formula_2_inst"
-    Toelichting = "recital"
-
-
-class ELEMENT_REF(Enum):
-    Afdeling = "subchp"
-    Artikel = "art"
-    Begrip = "item"
-    Begrippenlijst = "list"
-    Bijlage = "cmp"
-    Boek = "book"
-    Citaat = "cit"
-    Deel = "part"
-    Divisie = "div"
-    Divisietekst = "content"
-    ExtIoRef = "ref"
-    Figuur = "img"
-    Formule = "math"
-    Hoofdstuk = "chp"
-    InleidendeTekst = "intro"
-    IntIoRef = "ref"
-    InwerkingtredingArtikel = "art"
-    Kadertekst = "recital"
-    Li = "item"
-    Lid = "para"
-    Lijst = "list"
-    Paragraaf = "subsec"
-    Rectificatietekst = "content"
-    Subparagraaf = "subsec"
-    Subsubparagraaf = "subsec"
-    table = "table"
-    Titel = "title"
-    WijzigArtikel = "art"
-    WijzigBijlage = "cmp"
-
-
-class EIDGenerationError(Exception):
-    def __init__(self, element, message="Error in generating eID"):
-        self.element = element
-        self.message = message
-        super().__init__(self.message)
+from app.ewid import (
+    FIXED_ELEMENT_REF,
+    ELEMENT_REF,
+    EIDGenerationError,
+    PolicyObjectReference,
+)
 
 
 class EWIDService:
     fixed_element_ref = {e.name: e.value for e in FIXED_ELEMENT_REF}
     element_ref = {e.name: e.value for e in ELEMENT_REF}
 
-    def __init__(self, xml, wid_prefix: str = "pv28_0000"):
+    def __init__(self, xml=None, wid_prefix="pv28_0000"):
         self.eId_counter = {}
-        self.xml = self._parse_xml_to_etree(xml)
         self.wid_prefix = wid_prefix
+        self._xml = None
+
+        self.object_references = []
+
+        if xml is not None:
+            self.xml = xml
+
+    @property
+    def xml(self):
+        return self._xml
+
+    @xml.setter
+    def xml(self, xml_string):
+        self._xml = xml_string
+        self.xml_tree = self._parse_xml_to_etree(xml_string)
 
     def _parse_xml_to_etree(self, xml_string):
         try:
@@ -74,15 +43,17 @@ class EWIDService:
             raise EIDGenerationError(xml_string, str(e))
 
     def fill_ewid_in_bs4(self):
-        self._process_ewid_element(self.xml, wid_prefix=self.wid_prefix)
+        self._process_ewid_element(self.xml_tree, wid_prefix=self.wid_prefix)
         return self.xml
 
     def fill_ewid_in_str(self):
-        self._process_ewid_element(self.xml, wid_prefix=self.wid_prefix)
-        output: str = ET.tostring(self.xml, encoding="utf-8").decode("utf-8")
+        self._process_ewid_element(self.xml_tree, wid_prefix=self.wid_prefix)
+        output: str = ET.tostring(self.xml_tree, encoding="utf-8").decode("utf-8")
         return output
 
-    def _process_ewid_element(self, element, wid_prefix: str, parent_eid=None, num_counter=None):
+    def _process_ewid_element(
+        self, element, wid_prefix: str, parent_eid=None, num_counter=None
+    ):
         """
         Recursively follow the child elements path and create a hierarchical eid
         using the tags prefix. Ensures wids are unique.
@@ -100,8 +71,21 @@ class EWIDService:
                 num_counter[eid] += 1
                 element.set("eId", f"{eid}_o_{num_counter[eid]}")
 
+        if (
+            "data-hint-object-code" in element.attrib
+            or "data-hint-location" in element.attrib
+        ):
+            object_code = element.get("data-hint-object-code", None)
+            location = element.get("data-hint-location", None)
+            reference = PolicyObjectReference(
+                object_code=object_code, location=location, wid=wid
+            )
+            self.object_references.append(reference)
+
         # Determine the parent eid for child elements
-        child_parent_eid = eid if not self.fixed_element_ref.get(element.tag) else parent_eid
+        child_parent_eid = (
+            eid if not self.fixed_element_ref.get(element.tag) else parent_eid
+        )
 
         for child in list(element):
             if isinstance(child.tag, str):
@@ -159,3 +143,7 @@ class EWIDService:
         text = re.sub(r"[^0-9a-zA-Z\.-]", ".", text)
         text = re.sub(r"\.+$", "", text)  # remove trailing dot
         return text
+
+    def store_object_references(self):
+        # TODO: Store created wid + object code in db?
+        raise NotImplementedError()
