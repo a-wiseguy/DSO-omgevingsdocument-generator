@@ -3,7 +3,7 @@ from typing import Optional, List, Dict
 from jinja2.exceptions import TemplateNotFound
 from app.assets.create_image import create_image
 from app.assets.assets_service import AssetsService
-from app.assets.enrich_illustratie import middleware_enrich_illustratie
+from app.assets.enrich_illustratie import middleware_clean_attributes, middleware_enrich_illustratie
 
 from app.ewid.ewid_service import EWIDService
 from app.exceptions import PublicationServiceError
@@ -108,6 +108,7 @@ class PublicationService:
         lichaam_enriched: str = middleware_enrich_illustratie(self._assets_service, lichaam_base)
         self._ewid_service.xml = lichaam_enriched
         lichaam_ewid_tagged = self._ewid_service.fill_ewid_in_str()
+        lichaam: str = middleware_clean_attributes(lichaam_ewid_tagged)
 
         try:
             write_path = output_path + self._akn.as_filename()
@@ -119,7 +120,7 @@ class PublicationService:
                 regeling=document.act,
                 besluit=document.bill,
                 procedure=document.procedure,
-                vrijetekst_lichaam=lichaam_ewid_tagged,
+                vrijetekst_lichaam=lichaam,
                 pretty_print=True,
             )
             print(f"Created {self._akn} - path: {write_path}")
