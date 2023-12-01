@@ -13,7 +13,7 @@ MODULES: List[Module] = [
         nsmap={"ns": "https://standaarden.overheid.nl/stop/imop/schemata/"},
     ),
     Module(
-        file="/home/jordy/workspace/zzp/lvbb-tpod-serializer/tools/validation/data/schema/geostandaarden/versie.xml",
+        file="data/schema/geostandaarden/versie.xml",
         nsmap={"ns": "https://standaarden.overheid.nl/stop/imop/schemata/"},
     ),
 ]
