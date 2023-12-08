@@ -12,8 +12,6 @@
 		<lvbb:bestandsnaam>opdracht.xml</lvbb:bestandsnaam>
 		<lvbb:contentType>application/xml</lvbb:contentType>
 	</lvbb:bestand>
-
-	<!-- OW files -->
 	<lvbb:bestand>
 		<lvbb:bestandsnaam>manifest-ow.xml</lvbb:bestandsnaam>
 		<lvbb:contentType>application/xml</lvbb:contentType>
@@ -30,8 +28,6 @@
 		<lvbb:bestandsnaam>owRegelingsgebied.xml</lvbb:bestandsnaam>
 		<lvbb:contentType>application/xml</lvbb:contentType>
 	</lvbb:bestand>
-
-	<!-- Attachment files -->
     {% for bestand in bestanden %}
 		<lvbb:bestand>
 			<lvbb:bestandsnaam>{{ bestand.bestandsnaam }}</lvbb:bestandsnaam>

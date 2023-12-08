@@ -3,7 +3,7 @@
     <procedurestappen> 
         {% for stap in procedure.stappen %} 
         <Procedurestap>
-            <soortStap>{{ stap.soort_stap }}</soortStap>
+            <soortStap>{{ stap.soort_stap.value }}</soortStap>
             <voltooidOp>{{ stap.voltooid_op }}</voltooidOp>
         </Procedurestap> 
         {% endfor %} 

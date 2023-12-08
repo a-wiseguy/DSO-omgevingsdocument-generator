@@ -1,34 +1,29 @@
 {
   "settings": {
-      "type": "PROGRAMMA",
-      "ID": {
-        "ACT": 88,
-        "BILL": 3020,
-      },
-      "public_release_date": "2023-12-15",
-      "id_bevoegdgezag": "00000001002306608000",
-      "id_aanleveraar": "00000003011411800000",
+    "type": "PROGRAMMA",
+    "ID": {
+      "ACT": 88,
+      "BILL": 3020,
+    },
+    "public_release_date": "2023-12-15",
+    "id_bevoegdgezag": "00000001002306608000",
+    "id_aanleveraar": "00000003011411800000",
   },
   "besluit": {
     "officiele_titel": "Opschrift besluit - Dossier naam Hello World Programma",
     "compact": {
-      "RegelingOpschrift": "regeling dossier naam Hello World Programma",
-      "Aanhef": "dossier naam Hello World Programma",
+      "RegelingOpschrift": "Omgevingsprogramma Provincie Zuid-Holland",
+      "Aanhef": "Om de Omgevingsvisie Provincie Zuid-Holland beschikbaar te maken in het Digitale Stelsel van de Omgevingswet is het noodzakelijk dat de reeds vastgestelde Omgevingsvisie Zuid-Holland opnieuw wordt gepubliceerd en bekend gemaakt.",
       "WijzigArtikel": {
         "Label": "Artikel",
         "Nummer": "I",
-        "Wat": "zoals is aangegeven in Bijlage A bij Artikel I"
+        "Wat": "Alles in <IntRef ref=\"cmp_A\" scope=\"WijzigBijlage\">Bijlage A</IntRef> wordt vastgesteld."
       },
       "Artikelen": [
         {
           "Label": "Artikel",
           "Nummer": "II",
-          "Inhoud": null
-        },
-        {
-          "Label": "Artikel",
-          "Nummer": "III",
-          "Inhoud": "Dit besluit treedt in werking op de dag waarop dit bekend wordt gemaakt."
+          "Inhoud": "Dit besluit treedt in werking per *insert date*."
         }
       ],
       "WijzigingBijlage": {
@@ -36,8 +31,8 @@
         "Nummer": "A",
         "Opschrift": "Bijlage bij Artikel I"
       },
-      "Sluiting": "Gegeven te 's-Gravenhage, 27 september 2023",
-      "Ondertekening": "Arvin en Jordy"
+      "Sluiting": "Gegeven te *Insert Place*, *Insert Date Signed*",
+      "Ondertekening": "Gedupeerde Staten"
     }
   },
   "regeling": {
