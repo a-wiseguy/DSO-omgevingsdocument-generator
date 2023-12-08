@@ -44,7 +44,7 @@ class OWService:
     def build_ow_locaties(self, werkingsgebieden: List[Werkingsgebied]):
         xml_data = {
             "leveringsId": self.id_levering,
-            "objectTypen": ["Divisie", "Divisietekst", "Tekstdeel"],
+            "objectTypen": ["Ambtsgebied"],
             "gebiedengroepen": [],
             "gebieden": [],
         }
@@ -62,12 +62,18 @@ class OWService:
             xml_data["gebieden"].extend(ow_locations)
             xml_data["gebiedengroepen"].append(ow_group)
 
+        # extend object types if needed
+        if len(xml_data["gebieden"]) > 0:
+            xml_data["objectTypen"].append("Gebied")
+        if len(xml_data["gebiedengroepen"]) > 0:
+            xml_data["objectTypen"].append("Gebiedengroep")
+
         return xml_data
 
     def build_ow_divisies(self, annotations: List[PolicyObjectReference]):
         xml_data = {
             "leveringsId": self.id_levering,
-            "objectTypen": ["Divisietekst", "Tekstdeel"],
+            "objectTypen": ["Divisietekst", "Tekstdeel"],  # TODO: make dynamic
             "annotaties": [],
         }
 
