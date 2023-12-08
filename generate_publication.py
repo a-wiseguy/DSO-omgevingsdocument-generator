@@ -8,7 +8,7 @@ from app.gio.gio_service import GioService
 from app.policy_objects import PolicyObjects
 from app.ow.ow_service import OWService
 
-from utils.helpers import load_json_data, load_werkingsgebieden
+from utils.helpers import load_json_data, load_werkingsgebieden, create_zip_from_dir, get_checksum_and_size
 
 INPUT_FILE_VISIE = "input/publication/omgevingsvisie.json"
 INPUT_FILE_PROGRAMMA = "input/publication/omgevingsprogramma.json"
@@ -67,4 +67,17 @@ opdracht = publication_service.build_publication_files(policy_objects)
 ow_service = OWService(id_levering=opdracht.id_levering, akn=new_akn)
 ow_service.create_all_ow_files(ewid_service.object_references)
 
-print("DONE")
+print("finished creating files")
+
+# Creating a ZIP file
+source_directory = "output/"
+output_zip_path = f"test-validatie.zip"
+create_zip_from_dir(source_directory, output_zip_path)
+
+
+print(f"ZIP result: {output_zip_path}")
+
+# Calculating checksum and size
+checksum, size = get_checksum_and_size(output_zip_path)
+print(f"Checksum: {checksum}")
+print(f"Size: {size}")

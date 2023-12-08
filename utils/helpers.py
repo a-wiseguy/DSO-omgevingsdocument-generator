@@ -1,6 +1,8 @@
 import os
 import json
 import glob
+import zipfile
+import hashlib
 
 from jinja2 import Environment, FileSystemLoader
 from lxml import etree
@@ -64,3 +66,20 @@ def load_werkingsgebieden(path="./input/werkingsgebieden/*.json") -> List[Werkin
         Werkingsgebied(**load_json_data(wg_json))
         for wg_json in glob.glob(path)
     ]
+
+
+def create_zip_from_dir(source_dir, output_zip):
+    with zipfile.ZipFile(output_zip, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, dirs, files in os.walk(source_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, source_dir)
+                zipf.write(file_path, arcname)
+
+
+def get_checksum_and_size(file_path):
+    with open(file_path, 'rb') as file:
+        file_content = file.read()
+    file_size = len(file_content)
+    checksum = hashlib.sha256(file_content).hexdigest()
+    return checksum, file_size
