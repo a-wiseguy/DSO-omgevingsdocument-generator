@@ -1,25 +1,10 @@
-from abc import ABCMeta, abstractmethod
 import re
-from typing import Any, List, Optional, Type, TypeAlias, Union, Dict
+from abc import ABCMeta, abstractmethod
+from typing import Any, Dict, List, Optional, Type, TypeAlias, Union
 
-from bs4 import (
-    BeautifulSoup,
-    CData,
-    Comment,
-    Declaration,
-    Doctype,
-    NavigableString,
-    ProcessingInstruction,
-    Tag,
-)
+from bs4 import BeautifulSoup, CData, Comment, Declaration, Doctype, NavigableString, ProcessingInstruction, Tag
 
-from app.tekst.lijst import (
-    LijstType,
-    LijstTypeOrdered,
-    LijstTypeUnordered,
-    NumberingStrategy,
-    numbering_factory,
-)
+from app.tekst.lijst import LijstType, LijstTypeOrdered, LijstTypeUnordered, NumberingStrategy, numbering_factory
 
 
 class AsXmlTrait(metaclass=ABCMeta):
@@ -104,15 +89,9 @@ class SimpleElement(Element, metaclass=ABCMeta):
         tag_name_overwrite: Optional[str] = None,
         tag_attrs_overwrite: Optional[Dict[str, str]] = None,
     ) -> Union[Tag, str]:
-        tag_name: str = (
-            tag_name_overwrite if tag_name_overwrite is not None else self.xml_tag_name
-        )
+        tag_name: str = tag_name_overwrite if tag_name_overwrite is not None else self.xml_tag_name
         tag: Tag = soup.new_tag(tag_name)
-        tag.attrs = (
-            tag_attrs_overwrite
-            if tag_attrs_overwrite is not None
-            else self.xml_tag_attrs
-        )
+        tag.attrs = tag_attrs_overwrite if tag_attrs_overwrite is not None else self.xml_tag_attrs
 
         for content in self.contents:
             if hasattr(content, "as_xml"):
@@ -147,9 +126,7 @@ class OrderedLijstGenerator(ElementGenerator):
         return tag.name == "ol"
 
     def generate(self, tag: Tag, context: dict = {}) -> Element:
-        current_strategy: Optional[NumberingStrategy] = context.get(
-            "current_strategy", None
-        )
+        current_strategy: Optional[NumberingStrategy] = context.get("current_strategy", None)
         next_strategy: NumberingStrategy = numbering_factory.get_next(current_strategy)
         element = Lijst(
             tag=tag,
@@ -224,15 +201,11 @@ class Al(SimpleElement):
     def __init__(self, tag: Optional[Tag] = None):
         super().__init__(xml_tag_name="Al")
 
-    def as_xml(
-        self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None
-    ) -> Union[Tag, str]:
+    def as_xml(self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None) -> Union[Tag, str]:
         if not self.contents:
             return ""
 
-        return SimpleElement.as_xml(
-            self, soup=soup, tag_name_overwrite=tag_name_overwrite
-        )
+        return SimpleElement.as_xml(self, soup=soup, tag_name_overwrite=tag_name_overwrite)
 
 
 class Br(SimpleElement):
@@ -255,9 +228,7 @@ class Figuur(SimpleElement):
             raise RuntimeError("Wrong format for image src")
         self._asset_uuid = src_match.group(1)
 
-    def as_xml(
-        self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None
-    ) -> Union[Tag, str]:
+    def as_xml(self, soup: BeautifulSoup, tag_name_overwrite: Optional[str] = None) -> Union[Tag, str]:
         figuur: Tag = soup.new_tag("Figuur")
         illustratie: Tag = soup.new_tag("Illustratie")
         illustratie.attrs = {
@@ -284,9 +255,7 @@ class Kop(SimpleElement):
             nummer.append(str(self.nummer))
             kop.append(nummer)
 
-        opschrift = SimpleElement.as_xml(
-            self, soup=soup, tag_name_overwrite="Opschrift"
-        )
+        opschrift = SimpleElement.as_xml(self, soup=soup, tag_name_overwrite="Opschrift")
         kop.append(opschrift)
 
         return kop
@@ -300,10 +269,13 @@ class Inhoud(SimpleElement):
 # td
 class Entry(SimpleElement):
     def __init__(self, tag: Optional[Tag] = None):
-        super().__init__(xml_tag_name="entry", xml_tag_attrs={
-            "align": "left",
-            "valign": "top",
-        })
+        super().__init__(
+            xml_tag_name="entry",
+            xml_tag_attrs={
+                "align": "left",
+                "valign": "top",
+            },
+        )
 
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()
@@ -328,9 +300,12 @@ class Row(SimpleElement):
 
 class Tbody(SimpleElement):
     def __init__(self, tag: Optional[Tag] = None):
-        super().__init__(xml_tag_name="tbody", xml_tag_attrs={
-            "valign": "top",
-        })
+        super().__init__(
+            xml_tag_name="tbody",
+            xml_tag_attrs={
+                "valign": "top",
+            },
+        )
 
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()
@@ -340,9 +315,12 @@ class Tbody(SimpleElement):
 
 class Thead(SimpleElement):
     def __init__(self, tag: Optional[Tag] = None):
-        super().__init__(xml_tag_name="thead", xml_tag_attrs={
-            "valign": "top",
-        })
+        super().__init__(
+            xml_tag_name="thead",
+            xml_tag_attrs={
+                "valign": "top",
+            },
+        )
 
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()
@@ -391,7 +369,7 @@ class Table(Element):
         if self.thead is not None:
             thead = self.thead.as_xml(soup)
             tgroup.append(thead)
-        
+
         if self.tbody is not None:
             tbody = self.tbody.as_xml(soup)
             tgroup.append(tbody)
@@ -437,9 +415,7 @@ class Li(SimpleElement):
         return tag_li
 
     def _get_generate_context(self) -> dict:
-        current_strategy: Optional[
-            NumberingStrategy
-        ] = self.lijst_type.get_numbering_strategy()
+        current_strategy: Optional[NumberingStrategy] = self.lijst_type.get_numbering_strategy()
         return {
             "current_strategy": current_strategy,
         }
@@ -453,9 +429,7 @@ class Lijst(SimpleElement):
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()
         if len(raw) != 0:
-            raise RuntimeError(
-                f"Can not write plain text to Lijst. Trying to write: {raw}"
-            )
+            raise RuntimeError(f"Can not write plain text to Lijst. Trying to write: {raw}")
 
     def as_xml(self, soup: BeautifulSoup) -> Union[Tag, str]:
         attributes: dict = {"type": self.lijst_type.get_type()}
@@ -539,7 +513,6 @@ class Divisie(Element):
         self.object_code = tag.get("data-hint-object-code", None)
         self.location = tag.get("data-hint-location", None)
 
-
     def consume_tag(self, tag: Tag) -> LeftoverTag:
         while True:
             leftoverTag = self._try_consume_tag(tag)
@@ -620,7 +593,7 @@ class Divisie(Element):
         tag_divisie: Tag = soup.new_tag("Divisie")
         tag_divisie.attrs = {
             **({"data-hint-object-code": self.object_code} if self.object_code else {}),
-            **({"data-hint-location": self.location} if self.location else {})
+            **({"data-hint-location": self.location} if self.location else {}),
         }
 
         if self.kop is not None:
@@ -652,9 +625,7 @@ class Lichaam(SimpleElement):
     def consume_string(self, string: NavigableString):
         raw: str = str(string).strip()
         if len(raw) != 0:
-            raise RuntimeError(
-                f"Can not write plain text to Lijst. Trying to write: {raw}"
-            )
+            raise RuntimeError(f"Can not write plain text to Lijst. Trying to write: {raw}")
 
 
 element_i_handler = SimpleGenerator("i", I)
@@ -781,10 +752,7 @@ Entry.element_generators = [
     element_h5_tussenkop_handler,
     element_h6_tussenkop_handler,
 ]
-Row.element_generators = [
-    element_th_handler,
-    element_td_handler
-]
+Row.element_generators = [element_th_handler, element_td_handler]
 Tbody.element_generators = [
     element_tr_handler,
 ]

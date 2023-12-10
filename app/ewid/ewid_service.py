@@ -1,13 +1,9 @@
 import re
 import xml.etree.ElementTree as ET
+
 from bs4 import Tag
 
-from app.ewid import (
-    FIXED_ELEMENT_REF,
-    ELEMENT_REF,
-    EIDGenerationError,
-    PolicyObjectReference,
-)
+from app.ewid import ELEMENT_REF, FIXED_ELEMENT_REF, EIDGenerationError, PolicyObjectReference
 
 
 class EWIDService:
@@ -51,9 +47,7 @@ class EWIDService:
         output: str = ET.tostring(self.xml_tree, encoding="utf-8").decode("utf-8")
         return output
 
-    def _process_ewid_element(
-        self, element, wid_prefix: str, parent_eid=None, num_counter=None
-    ):
+    def _process_ewid_element(self, element, wid_prefix: str, parent_eid=None, num_counter=None):
         """
         Recursively follow the child elements path and create a hierarchical eid
         using the tags prefix. Ensures wids are unique.
@@ -71,28 +65,19 @@ class EWIDService:
                 num_counter[eid] += 1
                 element.set("eId", f"{eid}_o_{num_counter[eid]}")
 
-        if (
-            "data-hint-object-code" in element.attrib
-            or "data-hint-location" in element.attrib
-        ):
+        if "data-hint-object-code" in element.attrib or "data-hint-location" in element.attrib:
             object_code = element.get("data-hint-object-code", None)
             location = element.get("data-hint-location", None)
-            reference = PolicyObjectReference(
-                object_code=object_code, location=location, wid=wid
-            )
+            reference = PolicyObjectReference(object_code=object_code, location=location, wid=wid)
             self.object_references.append(reference)
 
         # Determine the parent eid for child elements
-        child_parent_eid = (
-            eid if not self.fixed_element_ref.get(element.tag) else parent_eid
-        )
+        child_parent_eid = eid if not self.fixed_element_ref.get(element.tag) else parent_eid
 
         for child in list(element):
             if isinstance(child.tag, str):
                 child_num_counter = num_counter if num_counter is not None else {}
-                self._process_ewid_element(
-                    child, wid_prefix, child_parent_eid, child_num_counter
-                )
+                self._process_ewid_element(child, wid_prefix, child_parent_eid, child_num_counter)
 
     def _generate_eid(self, element, parent_eid=None):
         """

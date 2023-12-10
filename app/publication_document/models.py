@@ -1,8 +1,8 @@
-
 from abc import abstractmethod
 from typing import Optional
 
 from pydantic import BaseModel
+
 from app.models import AKN, Besluit, ProcedureVerloop, PublicatieOpdracht, Regeling
 from app.policy_objects import PolicyObjects
 from app.publication_document.visie import generate_regeling_vrijetekst_lichaam_visie
@@ -40,4 +40,3 @@ class LVBBPublication(BaseModel):
     akn: Optional[AKN]
     opdracht: Optional[PublicatieOpdracht]
     document: Optional[PublicationDocument]
-

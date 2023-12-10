@@ -1,8 +1,8 @@
-from datetime import datetime
 import re
 import uuid
-
+from datetime import datetime
 from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 from app.models import FRBR
@@ -45,12 +45,12 @@ class Werkingsgebied(BaseModel):
 
     def get_identifier(self) -> str:
         s: str = self.Title.lower()
-        s = re.sub(r'[^a-z0-9 ]+', '', s)
-        s = s.replace(' ', '-')
+        s = re.sub(r"[^a-z0-9 ]+", "", s)
+        s = s.replace(" ", "-")
         return s
 
     def get_version(self) -> str:
-        date_version: str = self.Modified_Date.strftime('%Y-%m-%d;%H%M')
+        date_version: str = self.Modified_Date.strftime("%Y-%m-%d;%H%M")
         version: str = f"nld@{date_version}"
         return version
 

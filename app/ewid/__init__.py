@@ -1,3 +1,3 @@
-from .enums import FIXED_ELEMENT_REF, ELEMENT_REF
-from .models import PolicyObjectReference
+from .enums import ELEMENT_REF, FIXED_ELEMENT_REF
 from .exceptions import EIDGenerationError
+from .models import PolicyObjectReference

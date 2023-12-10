@@ -1,10 +1,11 @@
-from uuid import UUID, uuid4
 from datetime import datetime
 from enum import Enum
 from typing import List, Optional
-from utils.waardelijsten import ProcedureStappenDefinitief, ProcedureType, Provincie
+from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, root_validator
+
+from utils.waardelijsten import ProcedureStappenDefinitief, ProcedureType, Provincie
 
 
 class FRBR(BaseModel):

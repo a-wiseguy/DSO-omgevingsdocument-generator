@@ -1,5 +1,6 @@
 class TemplateError(Exception):
     """Exception raised for errors in the template processing."""
+
     def __init__(self, template_name: str, message: str = "Error processing template"):
         self.template_name = template_name
         self.message = f"{message}: {template_name}"
@@ -8,6 +9,7 @@ class TemplateError(Exception):
 
 class FileWriteError(Exception):
     """Exception raised for errors during file writing."""
+
     def __init__(self, file_path: str, message: str = "Error writing to file"):
         self.file_path = file_path
         self.message = f"{message}: {file_path}"

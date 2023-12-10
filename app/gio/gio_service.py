@@ -6,7 +6,7 @@ from shapely import wkt
 
 from app.gio.models import Werkingsgebied
 from app.helpers import compute_sha512
-from app.models import Bestand, ContentType, FRBR, Regeling, PublicationSettings, DocumentType, AKN
+from app.models import AKN, FRBR, Bestand, ContentType, DocumentType, PublicationSettings, Regeling
 from utils.helpers import load_template, load_template_and_write_file
 
 
@@ -30,9 +30,7 @@ class GMLGeometryGenerator:
         return xml_string
 
     def _multipolygon_to_xml(self):
-        xml_string = (
-            f'<gml:MultiSurface srsName="urn:ogc:def:crs:EPSG::28992" gml:id="{self._gml_id}-0">'
-        )
+        xml_string = f'<gml:MultiSurface srsName="urn:ogc:def:crs:EPSG::28992" gml:id="{self._gml_id}-0">'
         for idx, polygon in enumerate(self._geom.geoms):
             xml_string += "<gml:surfaceMember>"
             xml_string += self._polygon_gml(polygon, f"{self._gml_id}-{idx}")

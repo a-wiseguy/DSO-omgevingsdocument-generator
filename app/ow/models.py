@@ -3,8 +3,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from .ow_id import generate_ow_id
 from .enums import IMOWTYPES
+from .ow_id import generate_ow_id
 
 
 class OWObject(BaseModel):

@@ -1,31 +1,28 @@
+from typing import Dict, List, Optional
 from uuid import uuid4
-from typing import Optional, List, Dict
-from jinja2.exceptions import TemplateNotFound
-from app.assets.create_image import create_image
-from app.assets.assets_service import AssetsService
-from app.assets.enrich_illustratie import middleware_clean_attributes, middleware_enrich_illustratie
 
+from jinja2.exceptions import TemplateNotFound
+
+from app.assets.assets_service import AssetsService
+from app.assets.create_image import create_image
+from app.assets.enrich_illustratie import middleware_clean_attributes, middleware_enrich_illustratie
 from app.ewid.ewid_service import EWIDService
 from app.exceptions import PublicationServiceError
 from app.models import (
     AKN,
     Besluit,
-    BestuursDocument,
-    ProcedureVerloop,
-    Regeling,
-    DocumentType,
-    PublicationSettings,
-    PublicatieOpdracht,
     Bestand,
+    BestuursDocument,
+    DocumentType,
+    ProcedureVerloop,
+    PublicatieOpdracht,
+    PublicationSettings,
+    Regeling,
 )
 from app.policy_objects import PolicyObjects
-from app.publication_document.models import (
-    OmgevingsProgramma,
-    OmgevingsVisie,
-    PublicationDocument,
-)
-from utils.waardelijsten import OnderwerpType, RechtsgebiedType, ProcedureType
+from app.publication_document.models import OmgevingsProgramma, OmgevingsVisie, PublicationDocument
 from utils.helpers import load_template_and_write_file
+from utils.waardelijsten import OnderwerpType, ProcedureType, RechtsgebiedType
 
 
 class PublicationService:
@@ -149,12 +146,12 @@ class PublicationService:
     ):
         if not opdracht:
             opdracht = PublicatieOpdracht(
-                is_validation=True,
+                is_validation=is_validation,
                 id_levering=uuid4(),
                 publicatie=self._akn.as_filename(),
                 datum_bekendmaking=self._settings.public_release_date,
             )
-        
+
         if opdracht.is_validatie:
             template = "templates/lvbb/opdracht.xml"
         else:
@@ -178,13 +175,9 @@ class PublicationService:
     def add_geo_files(self, gio_files: List[Bestand], gml_refs: List[str]):
         # merge in the geo service files/references
         if self._document is None:
-            raise PublicationServiceError(
-                "PublicationDocument not initialized. cannot add geo files."
-            )
+            raise PublicationServiceError("PublicationDocument not initialized. cannot add geo files.")
         self._files = self._files + gio_files
-        self._document.bill.informatieobject_refs = (
-            self._document.bill.informatieobject_refs + gml_refs
-        )
+        self._document.bill.informatieobject_refs = self._document.bill.informatieobject_refs + gml_refs
 
     def create_images(self):
         for asset in self._assets_service.all():
@@ -200,15 +193,11 @@ class PublicationService:
     def build_publication_files(self, objects: PolicyObjects):
         if self._document is None:
             if self._input_data is None:
-                raise PublicationServiceError(
-                    "Missing expected input data from publication document."
-                )
+                raise PublicationServiceError("Missing expected input data from publication document.")
             self.setup_publication_document(self._input_data)
 
         self.create_images()
-        publication_file_output = self.create_publication_document(
-            objects=objects, document=self._document
-        )
+        publication_file_output = self.create_publication_document(objects=objects, document=self._document)
         self.create_lvbb_manifest()
         opdracht = self.create_opdracht()
         return opdracht

@@ -1,14 +1,15 @@
 from typing import List
+
 from app.policy_objects import PolicyObject, PolicyObjects, html_to_xml_lichaam
 
 #
 # @note:
 #   this is pretty much the template. but the name template is confusion because we use Jinja2 templates
-#  
+#
+
 
 def generate_regeling_vrijetekst_lichaam_visie(objects: PolicyObjects) -> str:
     ambities: List[PolicyObject] = objects.get_all("ambitie")
-
 
     html = f"""
         <div>

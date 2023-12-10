@@ -1,9 +1,8 @@
+import uuid
 from enum import Enum
 from typing import Dict, List, Optional
-import uuid
 
 from pydantic import BaseModel, Field, root_validator, validator
-
 
 
 class IllustratieFormaat(str, Enum):
@@ -29,7 +28,7 @@ class Meta(BaseModel):
 
     @root_validator(pre=True)
     def generate_formaat(fields: dict):
-        fields["Formaat"] = IllustratieFormaat[fields['ext']]
+        fields["Formaat"] = IllustratieFormaat[fields["ext"]]
         return fields
 
 
@@ -45,15 +44,12 @@ class Asset(BaseModel):
 
 class AssetsService:
     def __init__(self, assets: List[dict]):
-        self._assets: Dict[str, Asset] = {
-            str(a["UUID"]): Asset.model_validate(a)
-            for a in assets
-        }
-    
+        self._assets: Dict[str, Asset] = {str(a["UUID"]): Asset.model_validate(a) for a in assets}
+
     def get_optional(self, idx: uuid.UUID) -> Optional[Asset]:
         asset: Optional[Asset] = self._assets.get(str(idx))
         return asset
-    
+
     def get(self, idx: uuid.UUID) -> Asset:
         asset: Optional[Asset] = self.get_optional(idx)
         if asset is None:

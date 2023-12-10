@@ -1,5 +1,7 @@
 from typing import Union
+
 from bs4 import BeautifulSoup, Tag
+
 from app.tekst.middleware import middleware_enrich_table
 from app.tekst.tekst import Divisie
 
@@ -13,6 +15,6 @@ def html_to_divisie(html: str) -> Divisie:
 
 
 def divisie_to_xml(divisie: Divisie) -> str:
-    soup = BeautifulSoup(features='xml')
+    soup = BeautifulSoup(features="xml")
     xml: Union[Tag, str] = divisie.as_xml(soup)
     return str(xml)

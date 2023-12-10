@@ -1,15 +1,14 @@
 from typing import List, Optional
 from uuid import UUID
-from jinja2.exceptions import TemplateNotFound
-from app.ewid import PolicyObjectReference
 
+from jinja2.exceptions import TemplateNotFound
+
+from app.ewid import PolicyObjectReference
 from app.gio.models import Werkingsgebied
 from app.models import AKN
-from .models import OWGebied, OWGebiedenGroep, OWDivisieTekst, OWTekstDeel, Annotation
-from utils.helpers import (
-    load_template_and_write_file,
-    load_werkingsgebieden,
-)
+from utils.helpers import load_template_and_write_file, load_werkingsgebieden
+
+from .models import Annotation, OWDivisieTekst, OWGebied, OWGebiedenGroep, OWTekstDeel
 
 
 class OWServiceError(Exception):
@@ -50,10 +49,7 @@ class OWService:
         }
         # Create new OW Locations
         for werkingsgebied in werkingsgebieden:
-            ow_locations = [
-                OWGebied(geo_uuid=loc.UUID, noemer=loc.Title)
-                for loc in werkingsgebied.Locaties
-            ]
+            ow_locations = [OWGebied(geo_uuid=loc.UUID, noemer=loc.Title) for loc in werkingsgebied.Locaties]
             ow_group = OWGebiedenGroep(
                 geo_uuid=werkingsgebied.UUID,
                 noemer=werkingsgebied.Title,
@@ -82,9 +78,7 @@ class OWService:
                 continue
 
             ow_div = OWDivisieTekst(wid=annotation.wid)
-            ow_text = OWTekstDeel(
-                divisie=ow_div.OW_ID, locations=[annotation.ow_location_id]
-            )
+            ow_text = OWTekstDeel(divisie=ow_div.OW_ID, locations=[annotation.ow_location_id])
             new_annotation = Annotation(divisie=ow_div, tekstdeel=ow_text)
             xml_data["annotaties"].append(new_annotation)
 
@@ -100,14 +94,9 @@ class OWService:
             output_path="owLocaties.xml",
         )
 
-        ow_gebied_mapping = {
-            gebied.geo_uuid: gebied.OW_ID for gebied in locaties_data["gebieden"]
-        }
+        ow_gebied_mapping = {gebied.geo_uuid: gebied.OW_ID for gebied in locaties_data["gebieden"]}
         ow_gebied_mapping.update(
-            {
-                gebiedengroep.geo_uuid: gebiedengroep.OW_ID
-                for gebiedengroep in locaties_data["gebiedengroepen"]
-            }
+            {gebiedengroep.geo_uuid: gebiedengroep.OW_ID for gebiedengroep in locaties_data["gebiedengroepen"]}
         )
 
         for annotation in annotations:

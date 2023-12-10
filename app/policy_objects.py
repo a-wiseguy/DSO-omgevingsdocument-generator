@@ -1,9 +1,9 @@
 from copy import deepcopy
-from typing import Any, Dict, List, Optional
-from bs4 import BeautifulSoup
-
-from lxml import etree
 from io import StringIO
+from typing import Any, Dict, List, Optional
+
+from bs4 import BeautifulSoup
+from lxml import etree
 
 from app.tekst import divisie_to_xml, html_to_divisie
 from app.tekst.middleware import middleware_enrich_table
@@ -17,7 +17,7 @@ class PolicyObject:
     # @todo: maybe we should just give the html as a property to this api
     # instead of the Description, Explanation fields etc etc
     def html(self, context: dict = {}) -> str:
-        match self._data['Object_Type']:
+        match self._data["Object_Type"]:
             case "visie_algemeen":
                 return f"""
                     {self._html_title(context)}
@@ -56,8 +56,7 @@ class PolicyObject:
 class PolicyObjects:
     def __init__(self, data: dict):
         self._data: Dict[str, List[PolicyObject]] = {
-            object_type: [PolicyObject(o) for o in objects]
-            for object_type, objects in data.items()
+            object_type: [PolicyObject(o) for o in objects] for object_type, objects in data.items()
         }
 
     def get_all(self, object_type: str) -> List[PolicyObject]:
@@ -102,7 +101,7 @@ def html_to_xml_lichaam(html: str) -> str:
     lichaam = Lichaam()
     lichaam.consume_children(input_soup.children)
 
-    output_soup = BeautifulSoup(features='xml')
+    output_soup = BeautifulSoup(features="xml")
     output = lichaam.as_xml(output_soup)
     output_xml = str(output)
     return output_xml

@@ -1,5 +1,6 @@
 import base64
 import re
+
 from app.assets.assets_service import Asset
 
 
@@ -10,5 +11,5 @@ def create_image(asset: Asset, path: str):
     _, base64_data = match.groups()
 
     image_data = base64.b64decode(base64_data)
-    with open(path, 'wb') as file:
+    with open(path, "wb") as file:
         file.write(image_data)
