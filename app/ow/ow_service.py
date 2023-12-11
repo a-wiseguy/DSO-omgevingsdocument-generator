@@ -1,12 +1,12 @@
-from typing import List, Optional
+from typing import List
 from uuid import UUID
 
 from jinja2.exceptions import TemplateNotFound
+from utils.helpers import load_template_and_write_file, load_werkingsgebieden
 
 from app.ewid import PolicyObjectReference
 from app.gio.models import Werkingsgebied
 from app.models import AKN
-from utils.helpers import load_template_and_write_file, load_werkingsgebieden
 
 from .models import Annotation, OWDivisieTekst, OWGebied, OWGebiedenGroep, OWTekstDeel
 

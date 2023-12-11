@@ -1,8 +1,6 @@
 import re
 import xml.etree.ElementTree as ET
 
-from bs4 import Tag
-
 from app.ewid import ELEMENT_REF, FIXED_ELEMENT_REF, EIDGenerationError, PolicyObjectReference
 
 

@@ -3,8 +3,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from app.input_data.resource.policy_object.policy_object_repository import PolicyObjects
 from app.models import AKN, Besluit, ProcedureVerloop, PublicatieOpdracht, Regeling
-from app.policy_objects import PolicyObjects
 from app.publication_document.visie import generate_regeling_vrijetekst_lichaam_visie
 
 

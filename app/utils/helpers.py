@@ -1,15 +1,12 @@
-import os
-import json
-import glob
-import zipfile
 import hashlib
+import json
+import os
+import zipfile
 
 from jinja2 import Environment, FileSystemLoader
 from lxml import etree
-from typing import List
 
-from app.gio.models import Werkingsgebied
-from app.exceptions import TemplateError, FileWriteError
+from app.exceptions import FileWriteError, TemplateError
 
 env = Environment(loader=FileSystemLoader("."))
 
@@ -29,9 +26,7 @@ def load_template(template_name: str, pretty_print: bool = False, **context) -> 
                 tree = etree.fromstring(output.encode("utf-8"), parser=parser)
             else:
                 tree = etree.fromstring(output)
-            output = etree.tostring(
-                tree, pretty_print=True, xml_declaration=True, encoding="utf-8"
-            ).decode("utf-8")
+            output = etree.tostring(tree, pretty_print=True, xml_declaration=True, encoding="utf-8").decode("utf-8")
         except Exception as e:
             raise TemplateError(template_name, f"Error pretty printing: {str(e)}")
 
@@ -61,15 +56,12 @@ def load_json_data(file_path):
         return json.load(f)
 
 
-def load_werkingsgebieden(path="./input/werkingsgebieden/*.json") -> List[Werkingsgebied]:
-    return [
-        Werkingsgebied(**load_json_data(wg_json))
-        for wg_json in glob.glob(path)
-    ]
+# def load_werkingsgebieden(path="./input/werkingsgebieden/*.json") -> List[Werkingsgebied]:
+#     return [Werkingsgebied(**load_json_data(wg_json)) for wg_json in glob.glob(path)]
 
 
 def create_zip_from_dir(source_dir, output_zip):
-    with zipfile.ZipFile(output_zip, 'w', zipfile.ZIP_DEFLATED) as zipf:
+    with zipfile.ZipFile(output_zip, "w", zipfile.ZIP_DEFLATED) as zipf:
         for root, dirs, files in os.walk(source_dir):
             for file in files:
                 file_path = os.path.join(root, file)
@@ -78,7 +70,7 @@ def create_zip_from_dir(source_dir, output_zip):
 
 
 def get_checksum_and_size(file_path):
-    with open(file_path, 'rb') as file:
+    with open(file_path, "rb") as file:
         file_content = file.read()
     file_size = len(file_content)
     checksum = hashlib.sha256(file_content).hexdigest()

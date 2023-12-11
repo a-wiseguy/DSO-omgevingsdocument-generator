@@ -306,15 +306,15 @@ class OnderwerpType(Enum):
 
 
 class BestuursorgaanSoort(Enum):
-    Burgemeester = '/tooi/def/thes/kern/c_2c4e7407'
-    College_van_burgemeester_en_wethouders = '/tooi/def/thes/kern/c_28ecfd6d'
-    gemeenteraad = '/tooi/def/thes/kern/c_2a7d8663'
-    Commissaris_van_de_koning = '/tooi/def/thes/kern/c_e24d39f6'
-    Gedeputeerde_staten = '/tooi/def/thes/kern/c_61676cbc'
-    Provinciale_staten = '/tooi/def/thes/kern/c_411b4e4a'
-    Minister = '/tooi/def/thes/kern/c_bcfb7b4e'
-    Regering = '/tooi/def/thes/kern/c_91fb5e42'
-    Staatssecretaris = '/tooi/def/thes/kern/c_3aaa4d12'
-    Algemeen_bestuur = '/tooi/def/thes/kern/c_70c87e3d'
-    Dagelijks_bestuur = '/tooi/def/thes/kern/c_5cc92c89'
-    Dijkgraaf = '/tooi/def/thes/kern/c_f70a6113'
+    Burgemeester = "/tooi/def/thes/kern/c_2c4e7407"
+    College_van_burgemeester_en_wethouders = "/tooi/def/thes/kern/c_28ecfd6d"
+    gemeenteraad = "/tooi/def/thes/kern/c_2a7d8663"
+    Commissaris_van_de_koning = "/tooi/def/thes/kern/c_e24d39f6"
+    Gedeputeerde_staten = "/tooi/def/thes/kern/c_61676cbc"
+    Provinciale_staten = "/tooi/def/thes/kern/c_411b4e4a"
+    Minister = "/tooi/def/thes/kern/c_bcfb7b4e"
+    Regering = "/tooi/def/thes/kern/c_91fb5e42"
+    Staatssecretaris = "/tooi/def/thes/kern/c_3aaa4d12"
+    Algemeen_bestuur = "/tooi/def/thes/kern/c_70c87e3d"
+    Dagelijks_bestuur = "/tooi/def/thes/kern/c_5cc92c89"
+    Dijkgraaf = "/tooi/def/thes/kern/c_f70a6113"

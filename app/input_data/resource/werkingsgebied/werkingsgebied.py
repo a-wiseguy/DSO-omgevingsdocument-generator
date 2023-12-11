@@ -31,11 +31,12 @@ class Werkingsgebied(BaseModel):
     Achtergrond_Actualiteit: str
     Locaties: List[Locatie] = Field(..., alias="Onderverdelingen")
 
-    def get_FRBR(self) -> FRBR:
+    def get_FRBR(self, provincie_id: str, expression_taal: str) -> FRBR:
         identifier: str = self.get_identifier()
-        work: str = f"/join/id/regdata/pv28/2023/{identifier}"
+        work_datum: str = f"{self.Created_Date.year}"
+        work: str = f"/join/id/regdata/{provincie_id}/{work_datum}/{identifier}"
 
-        version: str = self.get_version()
+        version: str = self.get_version(expression_taal)
         expression: str = f"{work}/{version}"
 
         return FRBR(
@@ -49,9 +50,9 @@ class Werkingsgebied(BaseModel):
         s = s.replace(" ", "-")
         return s
 
-    def get_version(self) -> str:
+    def get_version(self, expression_taal: str) -> str:
         date_version: str = self.Modified_Date.strftime("%Y-%m-%d;%H%M")
-        version: str = f"nld@{date_version}"
+        version: str = f"{self}@{date_version}"
         return version
 
     def get_gml_filename(self) -> str:

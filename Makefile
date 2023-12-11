@@ -5,9 +5,10 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 
-DIR ?= ../../output
+MAIN_FILE ?= ./01-hello-world/main.json
+OUTPUT_DIR ?= ./output/
 generate:
-	@python app/cmds.py xsd-all $(DIR)
+	@python app/cmds.py generate $(FILE) $(OUTPUT_DIR)
 
 pip-sync:
 	pip install -U pip pip-tools

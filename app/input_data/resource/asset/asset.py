@@ -1,8 +1,7 @@
 import uuid
 from enum import Enum
-from typing import Dict, List, Optional
 
-from pydantic import BaseModel, Field, root_validator, validator
+from pydantic import BaseModel, Field, root_validator
 
 
 class IllustratieFormaat(str, Enum):
@@ -40,21 +39,3 @@ class Asset(BaseModel):
     def get_filename(self) -> str:
         filename: str = f"img_{self.UUID}.{self.Meta.Ext}"
         return filename
-
-
-class AssetsService:
-    def __init__(self, assets: List[dict]):
-        self._assets: Dict[str, Asset] = {str(a["UUID"]): Asset.model_validate(a) for a in assets}
-
-    def get_optional(self, idx: uuid.UUID) -> Optional[Asset]:
-        asset: Optional[Asset] = self._assets.get(str(idx))
-        return asset
-
-    def get(self, idx: uuid.UUID) -> Asset:
-        asset: Optional[Asset] = self.get_optional(idx)
-        if asset is None:
-            raise RuntimeError(f"Can not find asset {idx}")
-        return asset
-
-    def all(self) -> List[Asset]:
-        return list(self._assets.values())

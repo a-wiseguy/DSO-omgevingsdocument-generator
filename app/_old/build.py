@@ -1,13 +1,16 @@
-from typing import Dict, List, Optional
+from typing import List, Optional
 from uuid import uuid4
 
 from jinja2.exceptions import TemplateNotFound
+from utils.helpers import load_template_and_write_file
+from utils.waardelijsten import OnderwerpType, ProcedureType, RechtsgebiedType
 
 from app.assets.assets_service import AssetsService
 from app.assets.create_image import create_image
 from app.assets.enrich_illustratie import middleware_clean_attributes, middleware_enrich_illustratie
 from app.ewid.ewid_service import EWIDService
 from app.exceptions import PublicationServiceError
+from app.input_data.resource.policy_object.policy_object_repository import PolicyObjects
 from app.models import (
     AKN,
     Besluit,
@@ -19,10 +22,7 @@ from app.models import (
     PublicationSettings,
     Regeling,
 )
-from app.policy_objects import PolicyObjects
 from app.publication_document.models import OmgevingsProgramma, OmgevingsVisie, PublicationDocument
-from utils.helpers import load_template_and_write_file
-from utils.waardelijsten import OnderwerpType, ProcedureType, RechtsgebiedType
 
 
 class PublicationService:

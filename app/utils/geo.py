@@ -1,21 +1,16 @@
 import hashlib
 import os
 import re
-
 from xml.etree import ElementTree
-from utils.data import Publicatieinstructies
 
-from utils.waardelijsten import (
-    Provincie,
-    WorkType,
-    InformatieObjectType,
-)
+from utils.data import Publicatieinstructies
+from utils.waardelijsten import InformatieObjectType, Provincie, WorkType
 
 
 def extract_name(filename):
     # Strip prefix "locaties"
     if filename.startswith("locaties"):
-        filename = filename[len("locaties_"):]
+        filename = filename[len("locaties_") :]
 
     # Strip postfix pattern "-vX.gml" where X can be any version number
     filename = re.sub(r"-v\d+\.gml$", "", filename)

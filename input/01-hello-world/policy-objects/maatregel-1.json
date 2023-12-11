@@ -1,0 +1,14 @@
+[
+    {
+        "Object_Type": "maatregel",
+        "Object_ID": 1,
+        "Code": "maatregel-1",
+        "UUID": "0b7ac66f-042a-40ad-98b8-f20105e78f8f",
+        "Adjust_On": "db33b70e-46db-420b-bca3-b2d5f0f51438",
+        "Created_Date": "2020-10-26T06:17:19.793000",
+        "Modified_Date": "2021-08-09T05:32:29.417000",
+        "Title": "Title of first maatregel",
+        "Description": "<p>Description of first maatregel</p>",
+        "Gebied_UUID": null
+    }
+]

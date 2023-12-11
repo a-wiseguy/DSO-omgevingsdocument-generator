@@ -1,0 +1,84 @@
+{
+  "resources": {
+    "policy-objects": [
+      "./policy-objects/maatregel-1.json"
+    ]
+  },
+  "settings": {
+    "document_type": "PROGRAMMA",
+    "provincie_id": "pv28",
+    "datum_bekendmaking": "2023-09-30",
+    "besluit_frbr": {
+      "__comment": "Dit is de /akn/bill",
+      "work_land": "nl",
+      "work_datum": "2023",
+      "work_overig": "2_2093",
+      "expression_taal": "nld",
+      "expression_datum": "2023-09-29",
+      "expression_versie": "2093",
+      "expression_overig": null
+    },
+    "regeling_frbr": {
+      "__comment": "Dit is de /akn/act",
+      "work_land": "nl",
+      "work_datum": "2023",
+      "work_overig": "2_41",
+      "expression_taal": "nld",
+      "expression_datum": "2093",
+      "expression_versie": null,
+      "expression_overig": null
+    },
+    "doel": {
+      "__comment": "Wordt gebruikt voor <doel> in <ConsolidatieInformatie>",
+      "jaar": "2023",
+      "naam": "2_2093_nieuweregeling"
+    },
+    "opdracht": {
+      "opdracht_type": "VALIDATIE",
+      "id_levering": "382fafad-8a0c-4d19-9b2e-12f1980ca310",
+      "id_bevoegdgezag": "00000001002306608000",
+      "id_aanleveraar": "00000001002306608000",
+      "publicatie_bestand": "akn_nl_bill_pv28-2-2093.xml",
+      "__comment_datum_bekendmaking": "This value should actually be in the future of ",
+      "datum_bekendmaking": "2023-09-30"
+    }
+  },
+  "besluit": {
+    "officiele_titel": "Opschrift besluit - Dossier naam Hello World Programma",
+    "regeling_opschrift": "Omgevingsprogramma Provincie Zuid-Holland",
+    "aanhef": "Om de Omgevingsvisie Provincie Zuid-Holland beschikbaar te maken in het Digitale Stelsel van de Omgevingswet is het noodzakelijk dat de reeds vastgestelde Omgevingsvisie Zuid-Holland opnieuw wordt gepubliceerd en bekend gemaakt.",
+    "wijzig_artikel": {
+      "label": "Artikel",
+      "nummer": "I",
+      "inhoud": "Alles in <IntRef ref=\"cmp_A\" scope=\"WijzigBijlage\">Bijlage A</IntRef> wordt vastgesteld."
+    },
+    "artikelen": [
+      {
+        "label": "Artikel",
+        "nummer": "II",
+        "inhoud": "Dit besluit treedt in werking per *insert date*."
+      }
+    ],
+    "sluiting": "Gegeven te *Insert Place*, *Insert Date Signed*",
+    "ondertekening": "Gedupeerde Staten"
+  },
+  "regeling": {
+    "versienummer": "1",
+    "officiele_titel": "Dossier naam Hello World Programma",
+    "citeertitel": "Citeertitel omgevingsprogramma hello World",
+    "is_officieel": "true"
+  },
+  "procedure": {
+    "bekend_op": "2023-12-15",
+    "stappen": [
+      {
+        "soort_stap": "/join/id/stop/procedure/stap_002",
+        "voltooid_op": "2023-09-27"
+      },
+      {
+        "soort_stap": "/join/id/stop/procedure/stap_003",
+        "voltooid_op": "2023-09-27"
+      }
+    ]
+  }
+}

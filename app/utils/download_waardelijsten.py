@@ -3,17 +3,18 @@
 
 import argparse
 import re
-from enum import Enum
-import requests
 import xml.etree.ElementTree as ET
+from enum import Enum
+
+import requests
 
 
 def sanitize_key(key):
     key = key[0].upper() + key[1:]
     # Remove words in parenthesis
-    key = re.sub(r'\([^)]*\)', '', key)
+    key = re.sub(r"\([^)]*\)", "", key)
     # Remove spaces and non-allowed characters
-    key = re.sub(r'\W+', '', key)
+    key = re.sub(r"\W+", "", key)
     return key
 
 
@@ -46,6 +47,6 @@ if __name__ == "__main__":
         class_definition = f"class {created_enum.__name__}(Enum):"
         print(class_definition)
         for name, member in created_enum.__members__.items():
-            print(f"{name} = \"{member.value}\"")
+            print(f'{name} = "{member.value}"')
     else:
         print("Failed to generate Enum. Check the URL or XML structure.")

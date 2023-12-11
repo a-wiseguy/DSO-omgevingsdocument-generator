@@ -1,6 +1,10 @@
 from typing import List
 
-from app.policy_objects import PolicyObject, PolicyObjects, html_to_xml_lichaam
+from app.input_data.resource.policy_object.policy_object_repository import (
+    PolicyObject,
+    PolicyObjects,
+    html_to_xml_lichaam,
+)
 
 #
 # @note:

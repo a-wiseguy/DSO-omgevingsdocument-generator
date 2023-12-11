@@ -1,13 +1,11 @@
-from hashlib import sha512
 from typing import List
-from uuid import UUID
 
 from shapely import wkt
+from utils.helpers import load_template_and_write_file
 
 from app.gio.models import Werkingsgebied
 from app.helpers import compute_sha512
-from app.models import AKN, FRBR, Bestand, ContentType, DocumentType, PublicationSettings, Regeling
-from utils.helpers import load_template, load_template_and_write_file
+from app.models import FRBR, Bestand, ContentType, PublicationSettings
 
 
 class GMLGeometryGenerator:
