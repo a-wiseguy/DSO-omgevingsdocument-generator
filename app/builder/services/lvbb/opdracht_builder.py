@@ -1,5 +1,5 @@
 from app.builder.services import BuilderService
-from app.builder.state_manager.models import OutputFile
+from app.builder.state_manager.models import OutputFile, StrContentData
 from app.builder.state_manager.state_manager import StateManager
 from app.models import ContentType, OpdrachtType, PublicatieOpdracht
 from app.utils.helpers import load_template
@@ -25,7 +25,7 @@ class OpdrachtBuilder(BuilderService):
         output_file = OutputFile(
             filename="opdracht.xml",
             content_type=ContentType.XML,
-            content=content,
+            content=StrContentData(content),
         )
         return output_file
 

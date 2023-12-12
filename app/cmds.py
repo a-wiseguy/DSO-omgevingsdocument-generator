@@ -18,6 +18,7 @@ def generate(main_file: str, output_dir: str):
 
     builder = Builder(data)
     builder.build_publication_files()
+    builder.save_files(output_dir)
 
     a = True
 

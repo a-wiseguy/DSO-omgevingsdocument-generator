@@ -1,27 +1,29 @@
+from typing import List
+
 from app.builder.services import BuilderService
 from app.builder.state_manager.models import OutputFile, StrContentData
 from app.builder.state_manager.state_manager import StateManager
-from app.models import ContentType, PublicatieOpdracht
+from app.models import ContentType
 from app.utils.helpers import load_template
 
 
-class OwRegelingsgebiedBuilder(BuilderService):
+class ManifestBuilder(BuilderService):
     def apply(self, state_manager: StateManager) -> StateManager:
-        opdracht_file = self._create_opdracht_file(
-            state_manager.input_data.publication_settings.opdracht,
+        manifest_file = self._create_manifest_file(
+            state_manager.get_output_files(),
         )
-        state_manager.add_output_file(opdracht_file)
+        state_manager.add_output_file(manifest_file)
 
         return state_manager
 
-    def _create_opdracht_file(self, opdracht: PublicatieOpdracht) -> OutputFile:
+    def _create_manifest_file(self, output_files: List[OutputFile]) -> OutputFile:
         content = load_template(
-            "templates/ow/owRegelingsgebied.xml",
+            "templates/lvbb/manifest.xml",
             pretty_print=True,
-            opdracht=opdracht,
+            output_files=output_files,
         )
         output_file = OutputFile(
-            filename="owRegelingsgebied.xml",
+            filename="manifest.xml",
             content_type=ContentType.XML,
             content=StrContentData(content),
         )

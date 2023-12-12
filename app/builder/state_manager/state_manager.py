@@ -11,3 +11,7 @@ class StateManager:
 
     def add_output_file(self, output_file: OutputFile):
         self._output_files.append(output_file)
+
+    def get_output_files(self) -> List[OutputFile]:
+        output_files = sorted(self._output_files, key=lambda o: o.filename)
+        return output_files

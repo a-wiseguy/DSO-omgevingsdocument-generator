@@ -42,6 +42,11 @@ def load_template_and_write_file(template_name, output_file, pretty_print=False,
         raise FileWriteError(output_file, str(e))
 
 
+def write_file(filename: str, content: str):
+    with open(filename, "w") as f:
+        f.write(content)
+
+
 def get_file_entries(folder_path, content_type_map):
     file_entries = []
     for filename in os.listdir(folder_path):
