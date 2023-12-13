@@ -21,3 +21,4 @@ notes.md
 .python-version
 tmp/
 *.pyc
+*.zip

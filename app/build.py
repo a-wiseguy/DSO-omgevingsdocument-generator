@@ -37,7 +37,7 @@ class PublicationService:
         akn: Optional[AKN],
         input_data: dict,
         assets_service: AssetsService,
-        ewid_service: EWIDService
+        ewid_service: EWIDService,
     ):
         self._settings: PublicationSettings = settings
         self._input_data = input_data
@@ -83,17 +83,11 @@ class PublicationService:
         procedure = ProcedureVerloop(**input_data["procedure"])
 
         if self._settings.document_type is DocumentType.VISIE:
-            initial_document = OmgevingsVisie(
-                bill=besluit, act=regeling, procedure=procedure
-            )
+            initial_document = OmgevingsVisie(bill=besluit, act=regeling, procedure=procedure)
         elif self._settings.document_type is DocumentType.PROGRAMMA:
-            initial_document = OmgevingsProgramma(
-                bill=besluit, act=regeling, procedure=procedure
-            )
+            initial_document = OmgevingsProgramma(bill=besluit, act=regeling, procedure=procedure)
         else:
-            raise PublicationServiceError(
-                message="Expected DocumentType Visie or Programma"
-            )
+            raise PublicationServiceError(message="Expected DocumentType Visie or Programma")
 
         self._document = initial_document
         return initial_document
@@ -126,9 +120,7 @@ class PublicationService:
             print(f"Created {self._akn} - path: {write_path}")
             return write_path
         except TemplateNotFound as e:
-            raise PublicationServiceError(
-                message=f"child template not while writing xml: {e}"
-            )
+            raise PublicationServiceError(message=f"child template not while writing xml: {e}")
         except Exception as e:
             raise PublicationServiceError(message=e)
 
@@ -145,25 +137,33 @@ class PublicationService:
             print(f"Created manifest.xml in: {output_path}")
             return write_path
         except TemplateNotFound as e:
-            raise PublicationServiceError(
-                message=f"Manifest file Template missing: {e}"
-            )
+            raise PublicationServiceError(message=f"Manifest file Template missing: {e}")
         except Exception as e:
             raise PublicationServiceError(message=e)
 
     def create_opdracht(
-        self, opdracht: PublicatieOpdracht = None, output_path=DEFAULT_OUTPUT_PATH
+        self,
+        opdracht: PublicatieOpdracht = None,
+        is_validation: bool = False,
+        output_path=DEFAULT_OUTPUT_PATH,
     ):
         if not opdracht:
             opdracht = PublicatieOpdracht(
+                is_validation=True,
                 id_levering=uuid4(),
                 publicatie=self._akn.as_filename(),
                 datum_bekendmaking=self._settings.public_release_date,
             )
+        
+        if opdracht.is_validatie:
+            template = "templates/lvbb/opdracht.xml"
+        else:
+            template = "templates/lvbb/validatieopdracht.xml"
+
         try:
             write_path = output_path + "opdracht.xml"
             load_template_and_write_file(
-                template_name="templates/lvbb/opdracht.xml",
+                template_name=template,
                 output_file=write_path,
                 publicatieopdracht=opdracht,
                 pretty_print=True,
@@ -171,9 +171,7 @@ class PublicationService:
             print(f"Created opdracht.xml in: {write_path}")
             return opdracht
         except TemplateNotFound as e:
-            raise PublicationServiceError(
-                message=f"Opdracht file Template missing: {e}"
-            )
+            raise PublicationServiceError(message=f"Opdracht file Template missing: {e}")
         except Exception as e:
             raise PublicationServiceError(message=e)
 

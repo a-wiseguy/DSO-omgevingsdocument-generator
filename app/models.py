@@ -94,6 +94,7 @@ class DSOVersion(BaseModel):
 
 
 class PublicatieOpdracht(BaseModel):
+    is_validatie: bool = False
     id_levering: UUID = Field(default_factory=uuid4)
     id_bevoegdgezag: str = "00000001002306608000"  # own ids?
     id_aanleveraar: str = "00000003011411800000"  # own ids?

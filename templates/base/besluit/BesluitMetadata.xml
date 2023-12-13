@@ -9,7 +9,7 @@
     <rechtsgebieden>
         <rechtsgebied>{{ besluit.bestuurs_document.rechtsgebied }}</rechtsgebied>
     </rechtsgebieden>
-    <soortProcedure>{{ besluit.soort_procedure }}</soortProcedure>
+    <soortProcedure>{{ besluit.soort_procedure.value }}</soortProcedure>
     <informatieobjectRefs>
         {% for ref in besluit.informatieobject_refs %}
             <informatieobjectRef>{{ ref }}</informatieobjectRef>
