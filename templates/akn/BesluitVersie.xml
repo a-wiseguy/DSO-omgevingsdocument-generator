@@ -1,0 +1,7 @@
+<BesluitVersie>
+    {{ expression_identificatie }}
+    {{ besluit_metadata }}
+    {{ procedureverloop }}
+    {{ consolidatie_informatie }}
+    {{ besluit_compact }}
+</BesluitVersie>

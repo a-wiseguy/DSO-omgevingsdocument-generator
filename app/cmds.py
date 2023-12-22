@@ -1,7 +1,7 @@
 import click
 
 from app.builder.builder import Builder
-from app.input_data.input_data_loader import InputData, InputDataLoader
+from app.builder.state_manager.input_data.input_data_loader import InputData, InputDataLoader
 
 
 @click.group()

@@ -2,7 +2,7 @@ from app.builder.services import BuilderService
 from app.builder.state_manager.models import OutputFile, StrContentData
 from app.builder.state_manager.state_manager import StateManager
 from app.models import ContentType, PublicatieOpdracht
-from app.utils.helpers import load_template
+from app.services.utils.helpers import load_template
 
 
 class OwRegelingsgebiedBuilder(BuilderService):

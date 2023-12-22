@@ -2,12 +2,23 @@
   "resources": {
     "policy-objects": [
       "./policy-objects/maatregel-1.json"
+    ],
+    "werkingsgebieden": [
+      "./werkingsgebieden/maatwerkgebied-glastuinbouw.json"
+    ],
+    "assets": [
+      "./assets/ab713eb8-80e0-4b88-9dba-bac65491bc38.json"
     ]
   },
   "settings": {
     "document_type": "PROGRAMMA",
     "provincie_id": "pv28",
+    "wId_suffix": "1",
+    "soort_bestuursorgaan": "/tooi/def/thes/kern/c_411b4e4a",
+    "expression_taal": "nld",
     "datum_bekendmaking": "2023-09-30",
+    "datum_juridisch_werkend_vanaf": "2023-03-15",
+    "regeling_componentnaam": "nieuweregeling",
     "besluit_frbr": {
       "__comment": "Dit is de /akn/bill",
       "work_land": "nl",
@@ -22,25 +33,25 @@
       "__comment": "Dit is de /akn/act",
       "work_land": "nl",
       "work_datum": "2023",
-      "work_overig": "2_41",
+      "work_overig": "2_89",
       "expression_taal": "nld",
-      "expression_datum": "2093",
-      "expression_versie": null,
+      "expression_datum": "2023-12-06",
+      "expression_versie": "89",
       "expression_overig": null
     },
     "doel": {
       "__comment": "Wordt gebruikt voor <doel> in <ConsolidatieInformatie>",
       "jaar": "2023",
-      "naam": "2_2093_nieuweregeling"
+      "naam": "InstellingOmgevingsvisie"
     },
     "opdracht": {
       "opdracht_type": "VALIDATIE",
       "id_levering": "382fafad-8a0c-4d19-9b2e-12f1980ca310",
       "id_bevoegdgezag": "00000001002306608000",
       "id_aanleveraar": "00000001002306608000",
-      "publicatie_bestand": "akn_nl_bill_pv28-2-2093.xml",
-      "__comment_datum_bekendmaking": "This value should actually be in the future of ",
-      "datum_bekendmaking": "2023-09-30"
+      "publicatie_bestand": "akn_nl_bill_pv28-2-89.xml",
+      "__comment_datum_bekendmaking": "This value should actually be in the future",
+      "datum_bekendmaking": "2024-01-01"
     }
   },
   "besluit": {
@@ -49,24 +60,41 @@
     "aanhef": "Om de Omgevingsvisie Provincie Zuid-Holland beschikbaar te maken in het Digitale Stelsel van de Omgevingswet is het noodzakelijk dat de reeds vastgestelde Omgevingsvisie Zuid-Holland opnieuw wordt gepubliceerd en bekend gemaakt.",
     "wijzig_artikel": {
       "label": "Artikel",
-      "nummer": "I",
-      "inhoud": "Alles in <IntRef ref=\"cmp_A\" scope=\"WijzigBijlage\">Bijlage A</IntRef> wordt vastgesteld."
+      "inhoud": "Zoals is aangegeven in <IntRef ref=\"cmp_A\">Bijlage A bij Artikel I</IntRef>"
     },
-    "artikelen": [
-      {
-        "label": "Artikel",
-        "nummer": "II",
-        "inhoud": "Dit besluit treedt in werking per *insert date*."
-      }
+    "__comment_tekst_artikelen": "All other Artikelen",
+    "tekst_artikelen": [],
+    "__comment_tijd_artikel": "Artikel used to in Tijdstempels",
+    "tijd_artikel": {
+      "label": "Artikel",
+      "inhoud": "Dit besluit treedt in werking op de dag waarop dit bekend wordt gemaakt."
+    },
+    "sluiting": "Gegeven te 's-Gravenhage, 15 december 2023",
+    "ondertekening": "Gedupeerde Staten",
+    "__comment_rechtsgebieden": "See: class RechtsgebiedType",
+    "rechtsgebieden": [
+      "Omgevingsrecht"
     ],
-    "sluiting": "Gegeven te *Insert Place*, *Insert Date Signed*",
-    "ondertekening": "Gedupeerde Staten"
+    "__comment_onderwerpen": "See: class OnderwerpType",
+    "onderwerpen": [
+      "ruimtelijke_ordening"
+    ],
+    "__comment_soort_procedure": "See: class ProcedureType",
+    "soort_procedure": "Definitief_besluit"
   },
   "regeling": {
     "versienummer": "1",
     "officiele_titel": "Dossier naam Hello World Programma",
     "citeertitel": "Citeertitel omgevingsprogramma hello World",
-    "is_officieel": "true"
+    "is_officieel": "true",
+    "__comment_rechtsgebieden": "See: class RechtsgebiedType",
+    "rechtsgebieden": [
+      "Omgevingsrecht"
+    ],
+    "__comment_onderwerpen": "See: class OnderwerpType",
+    "onderwerpen": [
+      "ruimtelijke_ordening"
+    ]
   },
   "procedure": {
     "bekend_op": "2023-12-15",
@@ -79,6 +107,21 @@
         "soort_stap": "/join/id/stop/procedure/stap_003",
         "voltooid_op": "2023-09-27"
       }
+    ]
+  },
+  "__comment_regeling_vrijetekst": "This can be a string of array, whatever makes it more readable for the user",
+  "regeling_vrijetekst": [
+    "<div>",
+    "<object code='maatregel-1' />",
+    "</div>"
+  ],
+  "object_templates": {
+    "maatregel": [
+      "<h1>{{ o.Title }}</h1>",
+      "<!--[OBJECT-CODE:{{o.Code}}]-->",
+      "<!--[GEBIED-UUID:{{o.Gebied_UUID}}]-->",
+      "<h2>Omschrijving</h2>",
+      "{{ o.Description }}"
     ]
   }
 }

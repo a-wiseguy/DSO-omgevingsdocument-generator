@@ -2,7 +2,8 @@ from enum import Enum
 from typing import List
 
 from pydantic import BaseModel, Field, root_validator, validator
-from utils.waardelijsten import ProcedureStappenDefinitief, Provincie
+
+from app.services.utils.waardelijsten import ProcedureStappenDefinitief, Provincie
 
 
 # <FRBRWork>/akn/nl/bill/pv28/2023/2_2093</FRBRWork>
@@ -95,15 +96,26 @@ class DocumentType(Enum):
     VISIE = "Omgevingsvisie"
 
 
+class Doel(BaseModel):
+    jaar: str
+    naam: str
+
+
 class PublicationSettings(BaseModel):
     document_type: DocumentType
     datum_bekendmaking: str
-    provincie_id: str = "pv28"
+    datum_juridisch_werkend_vanaf: str
+    provincie_id: str
+    wId_suffix: str
+    soort_bestuursorgaan: str
+    expression_taal: str
+    regeling_componentnaam: str
     provincie_ref: str = Provincie.Zuid_Holland.value
     dso_versioning: DSOVersion = Field(default_factory=DSOVersion)
     besluit_frbr: FRBR
     regeling_frbr: FRBR
     opdracht: PublicatieOpdracht
+    doel: Doel
 
     @validator("document_type", pre=True, always=True)
     def _format_document_type(cls, v):
@@ -138,98 +150,3 @@ class PublicationSettings(BaseModel):
     @classmethod
     def from_json(cls, json_data):
         return cls(**json_data)
-
-
-# class AKN(BaseModel):
-#     province_id: str = "pv28"
-#     act_id: int
-#     bill_id: int
-#     year: int
-#     doel_id: str = None
-
-#     def as_FRBR(self, akn_type: str = "bill") -> FRBR:
-#         if akn_type not in ["bill", "act"]:
-#             raise ValueError("Invalid AKN type. Must be 'bill' or 'act'.")
-
-#         base_akn = f"/akn/nl/{akn_type}/{self.province_id}/{self.year}"
-#         work = f"{base_akn}/2_{self.current_bill if akn_type == 'bill' else self.current_act}"
-#         date = datetime.now().strftime("%Y-%m-%d")
-#         postfix = f"/nld@{date};{self.current_bill if akn_type == 'bill' else self.current_act}"
-#         return FRBR(work=work, expression=work + postfix)
-
-#     def as_doel(self):
-#         if self.doel_id:
-#             return self.doel_id
-#         base_format = f"/join/id/proces/{self.province_id}/{self.year}"
-#         unique_code = uuid4().hex
-#         # TODO unique code store in DB
-#         doel_id = f"{base_format}/{self.current_bill}_{unique_code}"
-#         self.doel_id = doel_id
-#         return doel_id
-
-#     def __str__(self):
-#         return f"akn_nl_bill_{self.province_id}-2-{self.current_bill}"
-
-#     def as_filename(self):
-#         return self.__str__() + ".xml"
-
-#     def as_dict(self):
-#         return {
-#             "bill": self.as_FRBR(akn_type="bill"),
-#             "act": self.as_FRBR(akn_type="act"),
-#             "akn": self.__str__,
-#         }
-
-
-# class BestuursDocument(BaseModel):
-#     eindverantwoordelijke: str
-#     maker: str
-#     soort_bestuursorgaan: str
-#     onderwerp: str
-#     rechtsgebied: str
-
-
-# class Regeling(BaseModel):
-#     frbr: FRBR
-#     bestuurs_document: BestuursDocument
-#     versienummer: str
-#     officiele_titel: str
-#     citeertitel: str
-#     is_officieel: str
-
-
-# class WijzigArtikel(BaseModel):
-#     Label: str
-#     Nummer: str
-#     Wat: str
-
-
-# class Artikel(BaseModel):
-#     Label: str
-#     Nummer: str
-#     Inhoud: Optional[str]
-
-
-# class WijzigingBijlage(BaseModel):
-#     Label: str
-#     Nummer: str
-#     Opschrift: str
-
-
-# class BesluitCompact(BaseModel):
-#     RegelingOpschrift: str
-#     Aanhef: str
-#     WijzigArtikel: WijzigArtikel
-#     Artikelen: List[Artikel]
-#     WijzigingBijlage: WijzigingBijlage
-#     Sluiting: str
-#     Ondertekening: str
-
-
-# class Besluit(BaseModel):
-#     frbr: FRBR
-#     bestuurs_document: BestuursDocument
-#     officiele_titel: str
-#     soort_procedure: ProcedureType
-#     informatieobject_refs: List[str] = Field([])
-#     compact: BesluitCompact
