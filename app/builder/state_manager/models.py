@@ -1,6 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass, field
 
+from app.builder.state_manager.input_data.resource.asset.asset import Asset
 from app.models import ContentType
 
 
@@ -11,6 +12,11 @@ class ContentData(ABC):
 class StrContentData(ContentData):
     def __init__(self, content: str):
         self.content: str = content
+
+
+class AssetContentData(ContentData):
+    def __init__(self, asset: Asset):
+        self.asset: Asset = asset
 
 
 @dataclass

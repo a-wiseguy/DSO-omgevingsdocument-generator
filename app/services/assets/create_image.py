@@ -1,7 +1,7 @@
 import base64
 import re
 
-from app.assets.assets_service import Asset
+from app.builder.state_manager.input_data.resource.asset.asset import Asset
 
 
 def create_image(asset: Asset, path: str):

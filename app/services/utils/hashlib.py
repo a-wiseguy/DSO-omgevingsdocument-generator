@@ -1,6 +1,6 @@
 import hashlib
 
-from app.builder.state_manager.models import FileContentData, OutputFile, StrContentData
+from app.builder.state_manager.models import AssetContentData, FileContentData, OutputFile, StrContentData
 
 
 def compute_sha512(file_path):
@@ -16,3 +16,6 @@ def compute_sha512_of_output_file(output_file: OutputFile):
 
         case FileContentData():
             return compute_sha512(output_file.content.source_path)
+
+        case AssetContentData():
+            raise NotImplementedError()
