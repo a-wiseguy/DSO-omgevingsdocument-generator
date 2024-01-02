@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AanleveringBesluit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://standaarden.overheid.nl/lvbb/stop/aanlevering/" schemaversie="1.2.0"
+	xsi:schemaLocation="https://standaarden.overheid.nl/lvbb/stop/aanlevering https://standaarden.overheid.nl/lvbb/1.2.0/lvbb-stop-aanlevering.xsd">
+	{{ besluit_versie }}
+	{{ regeling_versie_informatie_content }}
+</AanleveringBesluit>

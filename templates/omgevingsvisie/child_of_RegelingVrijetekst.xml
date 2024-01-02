@@ -1,5 +1,0 @@
-{% extends 'templates/base/regeling/RegelingVrijetekst.xml' %}
-
-{% block body %}
-{{ vrijetekst_lichaam }}
-{% endblock %}

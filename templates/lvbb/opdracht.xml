@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<publicatieOpdracht xmlns="http://www.overheid.nl/2017/lvbb">
-  <idLevering>{{ publicatieopdracht.id_levering }}</idLevering>
-  <idBevoegdGezag>{{ publicatieopdracht.id_bevoegdgezag }}</idBevoegdGezag> 
-  <idAanleveraar>{{ publicatieopdracht.id_aanleveraar }}</idAanleveraar>
-  <publicatie>{{ publicatieopdracht.publicatie }}</publicatie>
-  <datumBekendmaking>{{ publicatieopdracht.datum_bekendmaking }}</datumBekendmaking>
-</publicatieOpdracht>

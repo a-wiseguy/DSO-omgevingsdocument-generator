@@ -1,0 +1,23 @@
+<Bijlage eId="cmp_A" wId="pv28_1__cmp_A">
+    <Kop>
+        <Label>Bijlage</Label>
+        <Nummer>A</Nummer>
+        <Opschrift>Overzicht informatieobjecten</Opschrift>
+    </Kop>
+    <Divisietekst>
+        <Inhoud>
+            <Begrippenlijst>
+                {% for werkingsgebied in werkingsgebieden %}
+                <Begrip>
+                    <Term>{{ werkingsgebied.Title }}</Term>
+                    <Definitie>
+                        <Al>
+                            <ExtIoRef data-info-werkingsgebied-uuid="{{ werkingsgebied.UUID }}" ref="{{ werkingsgebied.get_FRBR().expression }}">{{ werkingsgebied.get_FRBR().expression }}</ExtIoRef>
+                        </Al>
+                    </Definitie>
+                </Begrip>
+                {% endfor %}
+            </Begrippenlijst>
+        </Inhoud>
+    </Divisietekst>
+</Bijlage>

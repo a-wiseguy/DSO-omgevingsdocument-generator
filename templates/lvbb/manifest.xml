@@ -1,37 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lvbb:manifest xmlns:lvbb="http://www.overheid.nl/2017/lvbb">
 	<lvbb:bestand>
-		<lvbb:bestandsnaam>{{ akn }}.xml</lvbb:bestandsnaam>
-		<lvbb:contentType>application/xml</lvbb:contentType>
-	</lvbb:bestand>
-	<lvbb:bestand>
 		<lvbb:bestandsnaam>manifest.xml</lvbb:bestandsnaam>
 		<lvbb:contentType>application/xml</lvbb:contentType>
 	</lvbb:bestand>
-	<lvbb:bestand>
-		<lvbb:bestandsnaam>opdracht.xml</lvbb:bestandsnaam>
-		<lvbb:contentType>application/xml</lvbb:contentType>
-	</lvbb:bestand>
-	<lvbb:bestand>
-		<lvbb:bestandsnaam>manifest-ow.xml</lvbb:bestandsnaam>
-		<lvbb:contentType>application/xml</lvbb:contentType>
-	</lvbb:bestand>
-	<lvbb:bestand>
-		<lvbb:bestandsnaam>owDivisie.xml</lvbb:bestandsnaam>
-		<lvbb:contentType>application/xml</lvbb:contentType>
-	</lvbb:bestand>
-	<lvbb:bestand>
-		<lvbb:bestandsnaam>owLocaties.xml</lvbb:bestandsnaam>
-		<lvbb:contentType>application/xml</lvbb:contentType>
-	</lvbb:bestand>
-	<lvbb:bestand>
-		<lvbb:bestandsnaam>owRegelingsgebied.xml</lvbb:bestandsnaam>
-		<lvbb:contentType>application/xml</lvbb:contentType>
-	</lvbb:bestand>
-    {% for bestand in bestanden %}
+    {% for output_file in output_files %}
 		<lvbb:bestand>
-			<lvbb:bestandsnaam>{{ bestand.bestandsnaam }}</lvbb:bestandsnaam>
-			<lvbb:contentType>{{ bestand.content_type }}</lvbb:contentType>
+			<lvbb:bestandsnaam>{{ output_file.filename }}</lvbb:bestandsnaam>
+			<lvbb:contentType>{{ output_file.content_type.value }}</lvbb:contentType>
 		</lvbb:bestand>
     {% endfor %}
 </lvbb:manifest>
