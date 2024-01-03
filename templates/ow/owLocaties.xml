@@ -41,7 +41,6 @@
         </sl:stand>
         {% endfor %}
 
-        <!-- define gebiedengroep -->
         {% for group in data.gebiedengroepen %}
 		<sl:stand>
             <ow-dc:owObject>
@@ -58,7 +57,6 @@
         </sl:stand>
         {% endfor %}
 
-        <!-- hardcoded ambtsgebied -->
         <sl:stand>
             <ow-dc:owObject>
                 <l:Ambtsgebied>

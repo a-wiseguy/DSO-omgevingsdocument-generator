@@ -25,6 +25,11 @@ class OWGebiedenGroep(OWLocation):
     locations: List[OWGebied] = []
 
 
+class OWDivisie(OWObject):
+    OW_ID: str = Field(default_factory=lambda: generate_ow_id(IMOWTYPES.DIVISIE))
+    wid: str
+
+
 class OWDivisieTekst(OWObject):
     OW_ID: str = Field(default_factory=lambda: generate_ow_id(IMOWTYPES.DIVISIETEKST))
     wid: str
@@ -37,5 +42,5 @@ class OWTekstDeel(OWObject):
 
 
 class Annotation(BaseModel):
-    divisie: OWDivisieTekst
+    divisie: OWObject
     tekstdeel: OWTekstDeel
