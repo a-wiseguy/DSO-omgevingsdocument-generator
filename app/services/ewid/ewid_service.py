@@ -9,6 +9,7 @@ class EWIDService:
     """
     The EWIDService class is responsible for generating EWID for policy objects.
     """
+
     fixed_element_ref = {e.name: e.value for e in FIXED_ELEMENT_REF}
     element_ref = {e.name: e.value for e in ELEMENT_REF}
 

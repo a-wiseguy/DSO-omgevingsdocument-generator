@@ -3,10 +3,7 @@ from app.builder.services.ow.ow_divisie import OwDivisieContent
 from app.builder.services.ow.ow_locaties import OwLocatiesContent
 from app.builder.services.ow.ow_manifest import ManifestContent
 from app.builder.services.ow.ow_regelinggebied import OwRegelingsgebiedContent
-from app.builder.state_manager.models import OutputFile, StrContentData
 from app.builder.state_manager.state_manager import StateManager
-from app.models import ContentType
-from app.services.utils.helpers import load_template
 
 
 class OwBuilder(BuilderService):

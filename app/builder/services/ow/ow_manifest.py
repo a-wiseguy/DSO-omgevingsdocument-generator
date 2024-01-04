@@ -7,6 +7,7 @@ class ManifestContent:
     """
     Prepares the content for the Manifest OW file
     """
+
     def __init__(self, act_akn, doel):
         self.act_akn = act_akn
         self.doel = doel
@@ -18,18 +19,9 @@ class ManifestContent:
 
     def create_manifest(self, divisie_data, locaties_data, regelingsgebied_data):
         file_data = []
-        file_data.append({
-            "naam": divisie_data['filename'],
-            "objecttypes": divisie_data['objectTypen']
-        })
-        file_data.append({
-            "naam": regelingsgebied_data['filename'],
-            "objecttypes": regelingsgebied_data['objectTypen']
-        })
-        file_data.append({
-            "naam": locaties_data['filename'],
-            "objecttypes": locaties_data['objectTypen']
-        })
+        file_data.append({"naam": divisie_data["filename"], "objecttypes": divisie_data["objectTypen"]})
+        file_data.append({"naam": regelingsgebied_data["filename"], "objecttypes": regelingsgebied_data["objectTypen"]})
+        file_data.append({"naam": locaties_data["filename"], "objecttypes": locaties_data["objectTypen"]})
         self.xml_data["files"] = file_data
         self.file = self._create_manifest_file()
 

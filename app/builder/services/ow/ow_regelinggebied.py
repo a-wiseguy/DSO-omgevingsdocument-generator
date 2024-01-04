@@ -9,6 +9,7 @@ class OwRegelingsgebiedContent:
     """
     Prepares the content for the OWRegelingGebied
     """
+
     def __init__(self, levering_id):
         self.levering_id = levering_id
         self.xml_data = {
