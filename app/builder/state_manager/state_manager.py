@@ -3,6 +3,7 @@ from typing import List
 from app.builder.state_manager.input_data.input_data_loader import InputData
 from app.builder.state_manager.models import OutputFile
 from app.builder.state_manager.states.artikel_eid_repository import ArtikelEidRepository
+from app.builder.state_manager.states.ow_repository import OWStateRepository
 
 
 class StateManager:
@@ -11,6 +12,7 @@ class StateManager:
         self.werkingsgebied_eid_lookup: dict = {}
         self.object_tekst_lookup: dict = {}
         self.artikel_eid: ArtikelEidRepository = ArtikelEidRepository()
+        self.ow_repository: OWStateRepository = OWStateRepository()
         self._output_files: List[OutputFile] = []
 
     def add_output_file(self, output_file: OutputFile):

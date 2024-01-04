@@ -20,7 +20,6 @@ class RegelingVrijetekstTekstGenerator:
         tekst: str = self._html_to_xml_lichaam(html)
         tekst = self._enrich_illustratie(tekst)
         tekst = self._add_ewids(tekst)
-        self._store_object_wids(tekst)
         tekst = self._remove_hints(tekst)
 
         return tekst
@@ -63,27 +62,9 @@ class RegelingVrijetekstTekstGenerator:
 
     def _add_ewids(self, xml_data: str) -> str:
         # @todo set the pv28 and suffix from the state manager
-        ewid_service: EWIDService = EWIDService(xml_data)
+        ewid_service = EWIDService(state_manager=self._state_manager, xml_string=xml_data)
         result: str = ewid_service.fill_ewid()
         return result
-
-    def _store_object_wids(self, xml_data: str):
-        attribute_name: str = "data-hint-object-code"
-        root = etree.fromstring(xml_data)
-        elements = root.xpath(f"//*[@{attribute_name}]")
-
-        for element in elements:
-            object_code = element.get(attribute_name)
-            wid = element.get("wId")
-            gebied_uuid = element.get("data-hint-gebied-uuid")
-
-            self._state_manager.object_tekst_lookup[object_code] = {
-                "wid": wid,
-                "tag": element.tag,
-                "gebied_uuid": gebied_uuid,
-            }
-
-        return etree.tostring(root, encoding="unicode", pretty_print=True)
 
     def _remove_hints(self, xml_data: str) -> str:
         xml_data = self._clean_attribute(xml_data, "data-hint-gebied-uuid")

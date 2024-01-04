@@ -11,6 +11,22 @@ class OWObject(BaseModel):
     OW_ID: str
 
 
+class BestuurlijkeGrenzenVerwijzing(BaseModel):
+    bestuurlijke_grenzen_id: str
+    domein: str
+    geldig_op: str
+
+
+class OWAmbtsgebied(OWObject):
+    OW_ID: str = Field(default_factory=lambda: generate_ow_id(IMOWTYPES.REGELINGSGEBIED))
+    bestuurlijke_genzenverwijzing: BestuurlijkeGrenzenVerwijzing
+
+
+class OWRegelingsgebied(OWObject):
+    OW_ID: str = Field(default_factory=lambda: generate_ow_id(IMOWTYPES.REGELINGSGEBIED))
+    ambtsgebied: str  # locatieaanduiding ambtsgebied
+
+
 class OWLocation(OWObject):
     geo_uuid: UUID
     noemer: Optional[str] = None
@@ -25,6 +41,11 @@ class OWGebiedenGroep(OWLocation):
     locations: List[OWGebied] = []
 
 
+class OWDivisie(OWObject):
+    OW_ID: str = Field(default_factory=lambda: generate_ow_id(IMOWTYPES.DIVISIE))
+    wid: str
+
+
 class OWDivisieTekst(OWObject):
     OW_ID: str = Field(default_factory=lambda: generate_ow_id(IMOWTYPES.DIVISIETEKST))
     wid: str
@@ -37,5 +58,5 @@ class OWTekstDeel(OWObject):
 
 
 class Annotation(BaseModel):
-    divisie: OWDivisieTekst
+    divisie: OWObject
     tekstdeel: OWTekstDeel

@@ -25,3 +25,19 @@ class IMOWTYPES(Enum):
     REGELINGSGEBIED = "regelingsgebied"
     AMBTSGEBIED = "ambtsgebied"
     DIVISIETEKST = "divisietekst"
+
+
+class OwLocatieObjectType(Enum):
+    AMBTSGEBIED = "Ambtsgebied"
+    GEBIED = "Gebied"
+    GEBIEDENGROEP = "Gebiedengroep"
+
+
+class OwDivisieObjectType(Enum):
+    DIVISIE = "Divisie"
+    DIVISIETEKST = "Divisietekst"
+    TEKSTDEEL = "Tekstdeel"
+
+
+class OwRegelingsgebiedObjectType(Enum):
+    REGELINGSGEBIED = "Regelingsgebied"
