@@ -1,12 +1,8 @@
 import re
 import xml.etree.ElementTree as ET
-from app.builder.state_manager.state_manager import StateManager
 
-from app.services.ewid import (
-    ELEMENT_REF,
-    FIXED_ELEMENT_REF,
-    EIDGenerationError,
-)
+from app.builder.state_manager.state_manager import StateManager
+from app.services.ewid import ELEMENT_REF, FIXED_ELEMENT_REF, EIDGenerationError
 
 
 class EWIDService:

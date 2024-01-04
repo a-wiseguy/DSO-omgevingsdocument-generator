@@ -4,21 +4,13 @@
 	<Aanlevering>
 		<WorkIDRegeling>{{ data.act_akn }}</WorkIDRegeling>
 		<DoelID>{{ data.doel_id }}</DoelID>
-		<Bestand>
-			<naam>owDivisie.xml</naam>
-			<objecttype>Divisie</objecttype>
-			<objecttype>Divisietekst</objecttype>
-			<objecttype>Tekstdeel</objecttype>
-		</Bestand>
-		<Bestand>
-			<naam>owRegelingsgebied.xml</naam>
-			<objecttype>Regelingsgebied</objecttype>
-		</Bestand>
-		<Bestand>
-			<naam>owLocaties.xml</naam>
-			<objecttype>Ambtsgebied</objecttype>
-			<objecttype>Gebied</objecttype>
-			<objecttype>Gebiedengroep</objecttype>
-		</Bestand>
+        {% for file in data.files %}
+        <Bestand>
+            <naam>{{ file.naam }}</naam>
+            {% for objecttype in file.objecttypes %}
+            <objecttype>{{ objecttype }}</objecttype>
+            {% endfor %}
+        </Bestand>
+        {% endfor %}
 	</Aanlevering>
 </Aanleveringen>

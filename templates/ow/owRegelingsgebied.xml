@@ -17,20 +17,24 @@
 		<sl:dataset>provincie Zuid-holland</sl:dataset>
 		<sl:inhoud>
 			<sl:gebied>provincie Zuid-holland</sl:gebied>
-			<sl:leveringsId>{{ levering_id }}</sl:leveringsId>
+			<sl:leveringsId>{{ data.leveringsId }}</sl:leveringsId>
 			<sl:objectTypen>
-				<sl:objectType>Regelingsgebied</sl:objectType>
+				{% for type in data.objectTypen %}
+				<sl:objectType>{{ type }}</sl:objectType>
+				{% endfor %}
 			</sl:objectTypen>
 		</sl:inhoud>
+        {% for gebied in data.regelingsgebieden %}
 		<sl:stand>
 			<ow-dc:owObject>
 				<rg:Regelingsgebied>
-					<rg:identificatie>nl.imow-pv28.regelingsgebied.002000000000000000009928</rg:identificatie>
+					<rg:identificatie>{{ gebied.OW_ID }}</rg:identificatie>
 					<rg:locatieaanduiding>
-						<l:LocatieRef xlink:href="nl.imow-pv28.ambtsgebied.002000000000000000009928" />
+						<l:LocatieRef xlink:href="{{ gebied.ambtsgebied }}" />
 					</rg:locatieaanduiding>
 				</rg:Regelingsgebied>
 			</ow-dc:owObject>
 		</sl:stand>
+        {% endfor %}
 	</sl:standBestand>
 </ow-dc:owBestand>
