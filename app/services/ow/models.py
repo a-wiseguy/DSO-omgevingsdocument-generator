@@ -59,8 +59,9 @@ class OWTekstDeel(OWObject):
 
 class Annotation(BaseModel):
     """
-    XML data wrapper for OWDivisie and OWTekstDeel objects as annotation in OwDivisie. 
+    XML data wrapper for OWDivisie and OWTekstDeel objects as annotation in OwDivisie.
     """
+
     divisie_aanduiding: Optional[OWDivisie] = None
     divisietekst_aanduiding: Optional[OWDivisieTekst] = None
     tekstdeel: OWTekstDeel

@@ -49,20 +49,14 @@ class OwDivisieContent:
                 ow_div = OWDivisieTekst(wid=values["wid"])
                 object_type = OwDivisieObjectType.DIVISIETEKST.value
                 ow_text_mapping.divisie = ow_div.OW_ID
-                annotations.append(
-                    Annotation(divisietekst_aanduiding=ow_div, tekstdeel=ow_text_mapping)
-                )
+                annotations.append(Annotation(divisietekst_aanduiding=ow_div, tekstdeel=ow_text_mapping))
             elif values["tag"] == "Divisie":
                 ow_div = OWDivisie(wid=values["wid"])
                 object_type = OwDivisieObjectType.DIVISIE.value
                 ow_text_mapping.divisie = ow_div.OW_ID
-                annotations.append(
-                    Annotation(divisie_aanduiding=ow_div, tekstdeel=ow_text_mapping)
-                )
+                annotations.append(Annotation(divisie_aanduiding=ow_div, tekstdeel=ow_text_mapping))
             else:
-                raise OWObjectGenerationError(
-                    "Expected annotation text tag to be either Divisie or Divisietekst."
-                )
+                raise OWObjectGenerationError("Expected annotation text tag to be either Divisie or Divisietekst.")
 
             if object_type not in object_types:
                 object_types.append(object_type)
