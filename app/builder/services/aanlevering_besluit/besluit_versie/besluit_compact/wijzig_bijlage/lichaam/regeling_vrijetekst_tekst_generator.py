@@ -61,9 +61,16 @@ class RegelingVrijetekstTekstGenerator:
         return output
 
     def _add_ewids(self, xml_data: str) -> str:
-        # @todo set the pv28 and suffix from the state manager
-        ewid_service = EWIDService(state_manager=self._state_manager, xml_string=xml_data)
-        result: str = ewid_service.fill_ewid()
+        # TODO: add wid prefix in state
+        org_id = self._state_manager.input_data.publication_settings.provincie_id
+        expression = self._state_manager.input_data.publication_settings.besluit_frbr.expression
+        expression_version = expression.split(";")[-1].strip()
+
+        ewid_service = EWIDService(
+            state_manager=self._state_manager,
+            wid_prefix=f"{org_id}_{expression_version}",
+        )
+        result: str = ewid_service.modify_xml(xml_source=xml_data)
         return result
 
     def _remove_hints(self, xml_data: str) -> str:
