@@ -53,10 +53,14 @@ class OWDivisieTekst(OWObject):
 
 class OWTekstDeel(OWObject):
     OW_ID: str = Field(default_factory=lambda: generate_ow_id(IMOWTYPES.TEKSTDEEL))
-    divisie: str  # is divisie(tekst) OW_ID
+    divisie: Optional[str]  # is divisie(tekst) OW_ID
     locations: List[str]  # OWlocation OW_ID list
 
 
 class Annotation(BaseModel):
-    divisie: OWObject
+    """
+    XML data wrapper for OWDivisie and OWTekstDeel objects as annotation in OwDivisie. 
+    """
+    divisie_aanduiding: Optional[OWDivisie] = None
+    divisietekst_aanduiding: Optional[OWDivisieTekst] = None
     tekstdeel: OWTekstDeel
