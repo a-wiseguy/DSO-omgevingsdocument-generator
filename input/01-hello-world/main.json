@@ -16,42 +16,42 @@
     "wId_suffix": "1",
     "soort_bestuursorgaan": "/tooi/def/thes/kern/c_411b4e4a",
     "expression_taal": "nld",
-    "datum_bekendmaking": "2023-09-30",
-    "datum_juridisch_werkend_vanaf": "2023-03-15",
+    "datum_bekendmaking": "2024-02-14",
+    "datum_juridisch_werkend_vanaf": "2024-02-15",
     "regeling_componentnaam": "nieuweregeling",
     "besluit_frbr": {
       "__comment": "Dit is de /akn/bill",
       "work_land": "nl",
-      "work_datum": "2023",
+      "work_datum": "2024",
       "work_overig": "2_2093",
       "expression_taal": "nld",
-      "expression_datum": "2023-09-29",
+      "expression_datum": "2024-01-05",
       "expression_versie": "2093",
       "expression_overig": null
     },
     "regeling_frbr": {
       "__comment": "Dit is de /akn/act",
       "work_land": "nl",
-      "work_datum": "2023",
+      "work_datum": "2024",
       "work_overig": "2_89",
       "expression_taal": "nld",
-      "expression_datum": "2023-12-06",
+      "expression_datum": "2024-01-05",
       "expression_versie": "89",
       "expression_overig": null
     },
     "doel": {
       "__comment": "Wordt gebruikt voor <doel> in <ConsolidatieInformatie>",
-      "jaar": "2023",
+      "jaar": "2024",
       "naam": "InstellingOmgevingsvisie"
     },
     "opdracht": {
       "opdracht_type": "VALIDATIE",
-      "id_levering": "382fafad-8a0c-4d19-9b2e-12f1980ca310",
+      "id_levering": "c43e95c5-6d8d-4132-bfa7-9507f8fb9cd2",
       "id_bevoegdgezag": "00000001002306608000",
       "id_aanleveraar": "00000001002306608000",
       "publicatie_bestand": "akn_nl_bill_pv28-2-89.xml",
       "__comment_datum_bekendmaking": "This value should actually be in the future",
-      "datum_bekendmaking": "2024-01-01"
+      "datum_bekendmaking": "2024-02-14"
     }
   },
   "besluit": {
@@ -69,7 +69,7 @@
       "label": "Artikel",
       "inhoud": "Dit besluit treedt in werking op de dag waarop dit bekend wordt gemaakt."
     },
-    "sluiting": "Gegeven te 's-Gravenhage, 15 december 2023",
+    "sluiting": "Gegeven te 's-Gravenhage, 15 februari 2024",
     "ondertekening": "Gedupeerde Staten",
     "__comment_rechtsgebieden": "See: class RechtsgebiedType",
     "rechtsgebieden": [
@@ -97,15 +97,15 @@
     ]
   },
   "procedure": {
-    "bekend_op": "2023-12-15",
+    "bekend_op": "2024-02-14",
     "stappen": [
       {
         "soort_stap": "/join/id/stop/procedure/stap_002",
-        "voltooid_op": "2023-09-27"
+        "voltooid_op": "2024-01-05"
       },
       {
         "soort_stap": "/join/id/stop/procedure/stap_003",
-        "voltooid_op": "2023-09-27"
+        "voltooid_op": "2024-01-06"
       }
     ]
   },
