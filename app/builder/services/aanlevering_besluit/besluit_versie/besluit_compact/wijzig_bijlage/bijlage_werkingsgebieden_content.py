@@ -4,6 +4,7 @@ from lxml import etree
 
 from app.builder.state_manager.input_data.resource.werkingsgebied.werkingsgebied import Werkingsgebied
 from app.builder.state_manager.state_manager import StateManager
+from app.models import PublicationSettings
 from app.services.ewid.ewid_service import EWIDService
 from app.services.utils.helpers import load_template
 
@@ -22,10 +23,12 @@ class BijlageWerkingsgebiedenContent:
             werkingsgebieden=werkingsgebieden,
         )
 
-        # @TODO: De gegenereerde eid/wid zijn niet goed.
-        # Zie onderaan deze pagina
-        ewid_service = EWIDService(xml_string=content)
-        content = ewid_service.fill_ewid()
+        settings: PublicationSettings = self._state_manager.input_data.publication_settings
+        ewid_service = EWIDService(
+            state_manager=self._state_manager,
+            wid_prefix=f"{settings.provincie_id}_{settings.wId_suffix}",
+        )
+        content = ewid_service.modify_xml(xml_source=content)
 
         # Resolve the wid from the werkingsgebieden
         content = self._create_werkingsgebieden_wid_lookup(content)
@@ -44,70 +47,3 @@ class BijlageWerkingsgebiedenContent:
             del element.attrib["data-info-werkingsgebied-uuid"]
 
         return etree.tostring(root, encoding="unicode", pretty_print=True)
-
-
-"""
-
-Ik moet krijgen iets als dit:
-
-<Bijlage eId="cmp_A" wId="pv28_1__cmp_A">
-    <Kop>
-        <Label>Bijlage</Label>
-        <Nummer>A</Nummer>
-        <Opschrift>Overzicht informatieobjecten</Opschrift>
-    </Kop>
-    <Divisietekst eId="cmp_A__content_o_1"
-        wId="pv28_1__cmp_A__content_o_1">
-        <Inhoud>
-            <Begrippenlijst eId="cmp_A__content_o_1__list_1"
-                wId="pv28_1__cmp_A__content_o_1__list_1">
-                <Begrip eId="cmp_A__content_o_1__list_1__item_1"
-                    wId="pv28_1__cmp_A__content_o_1__list_1__item_1">
-                    <Term>Maatwerkgebied glastuinbouw</Term>
-                    <Definitie>
-                        <Al>
-                            <ExtIoRef
-                                eId="cmp_A__content_o_1__list_1__item_1__ref_o_1"
-                                ref="/join/id/regdata/pv28/2023/maatwerkgebied-glastuinbouw/nld@2023-03-15;0000"
-                                wId="pv28_1__cmp_A__content_o_1__list_1__item_1__ref_o_1">/join/id/regdata/pv28/2023/maatwerkgebied-glastuinbouw/nld@2023-03-15;0000</ExtIoRef>
-                        </Al>
-                    </Definitie>
-                </Begrip>
-            </Begrippenlijst>
-        </Inhoud>
-    </Divisietekst>
-</Bijlage>
-
-"""
-
-"""
-
-Maar ik krijg:
-
-<Bijlage eId="cmp_o_1" wId="pv28_0000__cmp_o_1">
-    <Kop>
-        <Label>Bijlage</Label>
-        <Nummer>A</Nummer>
-        <Opschrift>Overzicht informatieobjecten</Opschrift>
-    </Kop>
-    <Divisietekst eId="cmp_o_1__content_o_1" wId="pv28_0000__cmp_o_1__content">
-        <Inhoud>
-        <Begrippenlijst eId="list_o_1_o_1" wId="pv28_0000__list_o_1">
-            <Begrip eId="list_o_1__item_o_1" wId="pv28_0000__list_o_1__item">
-            <Term>Maatwerkgebied glastuinbouw</Term>
-            <Definitie>
-                <Al>
-                    <ExtIoRef ref="/join/id/regdata/pv28/2022/maatwerkgebied-glastuinbouw/nld@2022-03-15;0000" eId="ref_o_1_o_1" wId="pv28_0000__ref_o_1">/join/id/regdata/pv28/2022/maatwerkgebied-glastuinbouw/nld@2022-03-15;0000</ExtIoRef>
-                </Al>
-            </Definitie>
-            </Begrip>
-        </Begrippenlijst>
-        </Inhoud>
-    </Divisietekst>
-</Bijlage>
-
-Belangrijke punten zijn:
-- <Bijlage eId="cmp_o_1" wId="pv28_0000__cmp_o_1"> Dit moeten we kunnen prefixen als iets, hier als cmp_A bovenop de wid-prefix
-- Weten we zeker dat de eid/wid van de ExtIoRef goed genoeg is?
-
-"""

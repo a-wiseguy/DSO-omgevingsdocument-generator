@@ -12,22 +12,38 @@
             </sl:objectTypen>
         </sl:inhoud>
         {% for annotatie in data.annotaties %}
+		{% if annotatie.divisie_aanduiding %}
 		<sl:stand>
 			<ow-dc:owObject>
-				<vt:Divisietekst wId="{{ annotatie.divisie.wid }}">
-					<vt:identificatie>{{ annotatie.divisie.OW_ID }}</vt:identificatie>
+				<vt:Divisie wId="{{ annotatie.divisie_aanduiding.wid }}">
+					<vt:identificatie>{{ annotatie.divisie_aanduiding.OW_ID }}</vt:identificatie>
+				</vt:Divisie>
+			</ow-dc:owObject>
+		</sl:stand>
+		{% elif annotatie.divisietekst_aanduiding %}
+		<sl:stand>
+			<ow-dc:owObject>
+				<vt:Divisietekst wId="{{ annotatie.divisietekst_aanduiding.wid }}">
+					<vt:identificatie>{{ annotatie.divisietekst_aanduiding.OW_ID }}</vt:identificatie>
 				</vt:Divisietekst>
 			</ow-dc:owObject>
 		</sl:stand>
+		{% endif %}
 
 		<sl:stand>
 			<ow-dc:owObject>
 				<vt:Tekstdeel>
 					<vt:identificatie>{{ annotatie.tekstdeel.OW_ID }}</vt:identificatie>
 					<vt:idealisatie>http://standaarden.omgevingswet.overheid.nl/idealisatie/id/concept/Exact</vt:idealisatie>
+					{% if annotatie.divisie_aanduiding %}
+					<vt:divisieaanduiding>
+						<vt:DivisieRef xlink:href="{{ annotatie.tekstdeel.divisie }}"/>
+					</vt:divisieaanduiding>
+					{% elif annotatie.divisietekst_aanduiding %}
 					<vt:divisieaanduiding>
 						<vt:DivisietekstRef xlink:href="{{ annotatie.tekstdeel.divisie }}"/>
 					</vt:divisieaanduiding>
+					{% endif %}
 					<vt:locatieaanduiding>
 						{% for loc in annotatie.tekstdeel.locations %}
 						<l:LocatieRef xlink:href="{{ loc }}"/>

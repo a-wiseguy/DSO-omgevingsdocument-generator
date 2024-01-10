@@ -9,7 +9,7 @@ class FIXED_ELEMENT_REF(Enum):
     Lichaam = "body"
     Motivering = "acc"
     RegelingOpschrift = "longTitle"
-    Sluiting = "formula_2 or formula_2_inst"
+    Sluiting = "formula_2"
     Toelichting = "recital"
 
 

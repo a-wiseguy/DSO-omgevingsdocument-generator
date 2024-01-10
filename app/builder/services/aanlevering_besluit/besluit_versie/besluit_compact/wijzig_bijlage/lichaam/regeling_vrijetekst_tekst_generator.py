@@ -6,6 +6,7 @@ from lxml import etree
 from app.builder.state_manager.input_data.resource.asset.asset import Asset
 from app.builder.state_manager.input_data.resource.asset.asset_repository import AssetRepository
 from app.builder.state_manager.state_manager import StateManager
+from app.models import PublicationSettings
 from app.services.ewid.ewid_service import EWIDService
 from app.services.tekst.middleware import middleware_enrich_table
 from app.services.tekst.tekst import Lichaam
@@ -61,9 +62,13 @@ class RegelingVrijetekstTekstGenerator:
         return output
 
     def _add_ewids(self, xml_data: str) -> str:
-        # @todo set the pv28 and suffix from the state manager
-        ewid_service = EWIDService(state_manager=self._state_manager, xml_string=xml_data)
-        result: str = ewid_service.fill_ewid()
+        settings: PublicationSettings = self._state_manager.input_data.publication_settings
+
+        ewid_service = EWIDService(
+            state_manager=self._state_manager,
+            wid_prefix=f"{settings.provincie_id}_{settings.wId_suffix}",
+        )
+        result: str = ewid_service.modify_xml(xml_source=xml_data)
         return result
 
     def _remove_hints(self, xml_data: str) -> str:

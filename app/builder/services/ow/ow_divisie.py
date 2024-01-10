@@ -1,6 +1,7 @@
 from app.builder.state_manager.models import OutputFile, StrContentData
 from app.models import ContentType
 from app.services.ow.enums import OwDivisieObjectType
+from app.services.ow.exceptions import OWObjectGenerationError
 from app.services.ow.models import Annotation, OWDivisie, OWDivisieTekst, OWTekstDeel
 from app.services.utils.helpers import load_template
 
@@ -34,29 +35,34 @@ class OwDivisieContent:
         Create new OW Divisie annotations from locaties and
         policy objects using object_tekst_lookup.
         """
+        object_types = self.xml_data["objectTypen"]
+        annotations = self.xml_data["annotaties"]
+
         for object_code, values in self.object_tekst_lookup.items():
             if not values["gebied_uuid"]:
                 continue
 
+            ow_div = None
+            ow_text_mapping = OWTekstDeel(divisie=None, locations=[values["ow_location_id"]])
+
             if values["tag"] == "Divisietekst":
                 ow_div = OWDivisieTekst(wid=values["wid"])
-                ow_text = OWTekstDeel(divisie=ow_div.OW_ID, locations=[values["ow_location_id"]])
-
-                if OwDivisieObjectType.DIVISIETEKST.value not in self.xml_data["objectTypen"]:
-                    self.xml_data["objectTypen"].append(OwDivisieObjectType.DIVISIETEKST.value)
-
-            if values["tag"] == "Divisie":
+                object_type = OwDivisieObjectType.DIVISIETEKST.value
+                ow_text_mapping.divisie = ow_div.OW_ID
+                annotations.append(Annotation(divisietekst_aanduiding=ow_div, tekstdeel=ow_text_mapping))
+            elif values["tag"] == "Divisie":
                 ow_div = OWDivisie(wid=values["wid"])
-                ow_text = OWTekstDeel(divisie=ow_div.OW_ID, locations=[values["ow_location_id"]])
+                object_type = OwDivisieObjectType.DIVISIE.value
+                ow_text_mapping.divisie = ow_div.OW_ID
+                annotations.append(Annotation(divisie_aanduiding=ow_div, tekstdeel=ow_text_mapping))
+            else:
+                raise OWObjectGenerationError("Expected annotation text tag to be either Divisie or Divisietekst.")
 
-                if OwDivisieObjectType.DIVISIE.value not in self.xml_data["objectTypen"]:
-                    self.xml_data["objectTypen"].append(OwDivisieObjectType.DIVISIE.value)
+            if object_type not in object_types:
+                object_types.append(object_type)
 
-            new_annotation = Annotation(divisie=ow_div, tekstdeel=ow_text)
-            self.xml_data["annotaties"].append(new_annotation)
-
-            if OwDivisieObjectType.TEKSTDEEL.value not in self.xml_data["objectTypen"]:
-                self.xml_data["objectTypen"].append(OwDivisieObjectType.TEKSTDEEL.value)
+        if OwDivisieObjectType.TEKSTDEEL.value not in object_types:
+            object_types.append(OwDivisieObjectType.TEKSTDEEL.value)
 
     def create_file(self):
         content = load_template(
